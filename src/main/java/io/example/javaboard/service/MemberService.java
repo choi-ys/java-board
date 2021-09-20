@@ -1,6 +1,7 @@
 package io.example.javaboard.service;
 
 import io.example.javaboard.domain.dto.request.SignupRequest;
+import io.example.javaboard.domain.dto.response.SignupResponse;
 import io.example.javaboard.domain.member.Member;
 import io.example.javaboard.repository.MemberRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;

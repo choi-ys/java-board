@@ -1,4 +1,4 @@
-package io.example.javaboard.service;
+package io.example.javaboard.domain.dto.response;
 
 import io.example.javaboard.domain.member.Member;
 import lombok.AccessLevel;
