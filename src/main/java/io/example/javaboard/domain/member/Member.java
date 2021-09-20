@@ -56,21 +56,22 @@ public class Member {
     private Set<MemberRole> roles = new HashSet<>();
 
     @Column(name = "certify", nullable = false)
-    private Boolean certify;
+    private boolean certify;
 
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    private boolean enabled;
 
     // * --------------------------------------------------------------
     // * Header : 도메인 생성
     // * @author : choi-ys
     // * @date : 2021/09/20 11:57 오후
     // * --------------------------------------------------------------
-    public Member(String email, String name, String password) {
+    public Member(String email, String password, String name, String nickname) {
         this.email = email;
-        this.name = name;
         this.password = password;
-        this.addRoleSet(Set.of(MemberRole.MEMBER));
+        this.name = name;
+        this.nickname = nickname;
+        addRoleSet(Set.of(MemberRole.MEMBER));
     }
 
     // * --------------------------------------------------------------
