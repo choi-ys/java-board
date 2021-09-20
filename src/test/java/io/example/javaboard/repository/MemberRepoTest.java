@@ -1,10 +1,14 @@
 package io.example.javaboard.repository;
 
+import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
+import io.example.javaboard.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.javaboard.domain.member.Member;
 import io.example.javaboard.domain.member.MemberRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
@@ -16,9 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author : choi-ys
  * @date : 2021/09/21 12:36 오전
  */
-@DataJpaTest
-@DisplayName("Repo:Member")
+@DataJpaTest(showSql = false)
+@ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
+@Import(P6spyLogMessageFormatConfiguration.class)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DisplayName("Repo:Member")
 class MemberRepoTest {
 
     private final MemberRepo memberRepo;
