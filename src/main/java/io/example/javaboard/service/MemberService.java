@@ -28,6 +28,6 @@ public class MemberService {
            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
         }
         Member save = memberRepo.save(signupRequest.toEntity(passwordEncoder));
-        return SignupResponse.mapFor(save);
+        return SignupResponse.mapTo(save);
     }
 }
