@@ -1,13 +1,21 @@
 package io.example.javaboard.controller;
 
 import io.example.javaboard.domain.dto.request.SignupRequest;
+import io.example.javaboard.domain.dto.response.SignupResponse;
 import io.example.javaboard.service.MemberService;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * @author : choi-ys
@@ -29,6 +37,18 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity signup(@RequestBody SignupRequest signupRequest) {
-        return ResponseEntity.ok(memberService.signup(signupRequest));
+        SignupResponse signupResponse = memberService.signup(signupRequest);
+
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
+                .signup(signupRequest))
+                .slash(signupResponse.getId());
+
+        URI createdUri = selfLinkBuilder.toUri();
+
+        EntityModel<SignupResponse> entityModel = EntityModel.of(signupResponse);
+        entityModel.add(selfLinkBuilder.withSelfRel());
+
+        // TODO: 용석(2021/09/21): Add to api docs link info
+        return ResponseEntity.created(createdUri).body(entityModel);
     }
 }

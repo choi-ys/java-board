@@ -53,12 +53,14 @@ class MemberControllerTest {
 
         // Then
         resultActions.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
+                .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect(header().exists(HttpHeaders.CONTENT_TYPE))
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("email").value(signupRequest.getEmail()))
                 .andExpect(jsonPath("name").value(signupRequest.getName()))
                 .andExpect(jsonPath("nickname").value(signupRequest.getNickname()))
+                .andExpect(jsonPath("_links.self").exists())
         ;
     }
 }
