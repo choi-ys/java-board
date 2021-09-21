@@ -63,7 +63,7 @@ class MemberRepoTest {
     }
 
     @Test
-    @DisplayName("회원 객체 조회")
+    @DisplayName("회원 객체 조회:Id")
     public void findById() {
         // Given
         String email = "project.log.062@gmail.com";
@@ -115,6 +115,36 @@ class MemberRepoTest {
         assertThrows(
                 Exception.class,
                 () -> memberRepo.findById(savedMember.getId()).get(), "Remove 상태의 Entity 조회 시 NoSuchElementException 발생 여부 확인"
+        );
+    }
+    
+    @Test
+    @DisplayName("회원 객체 조회:Email")
+    public void findByEmail(){
+        // Given
+        String email = "project.log.062@gmail.com";
+        String password = "password";
+        String name = "choi-ys";
+        String nickname = "whypie";
+
+        Member member = new Member(email, password, name, nickname);
+        Member savedMember = memberRepo.save(member);
+        entityManager.flush();
+        entityManager.clear();
+
+        // When
+        Member expected = memberRepo.findByEmail(savedMember.getEmail()).orElseThrow();
+
+        // Then
+        assertAll(
+                () -> assertEquals(expected.getId(), savedMember.getId()),
+                () -> assertEquals(expected.getEmail(), savedMember.getEmail()),
+                () -> assertEquals(expected.getPassword(), savedMember.getPassword()),
+                () -> assertEquals(expected.getName(), savedMember.getName()),
+                () -> assertEquals(expected.getNickname(), savedMember.getNickname()),
+                () -> assertEquals(expected.getRoles(), savedMember.getRoles()),
+                () -> assertEquals(expected.isCertify(), savedMember.isCertify()),
+                () -> assertEquals(expected.isEnabled(), savedMember.isEnabled())
         );
     }
 }
