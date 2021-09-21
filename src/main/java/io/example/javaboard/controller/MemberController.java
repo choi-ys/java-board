@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -36,7 +37,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
         SignupResponse signupResponse = memberService.signup(signupRequest);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
