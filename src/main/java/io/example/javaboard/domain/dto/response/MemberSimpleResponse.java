@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * @date : 2021/09/21 3:22 오전
  */
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSimpleResponse {
 
     private Long id;
