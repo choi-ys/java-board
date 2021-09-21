@@ -1,7 +1,7 @@
 package io.example.javaboard.controller;
 
 import io.example.javaboard.domain.dto.request.SignupRequest;
-import io.example.javaboard.domain.dto.response.SignupResponse;
+import io.example.javaboard.domain.dto.response.MemberSimpleResponse;
 import io.example.javaboard.service.MemberService;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -38,15 +38,15 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
-        SignupResponse signupResponse = memberService.signup(signupRequest);
+        MemberSimpleResponse memberSimpleResponse = memberService.signup(signupRequest);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
                 .signup(signupRequest))
-                .slash(signupResponse.getId());
+                .slash(memberSimpleResponse.getId());
 
         URI createdUri = selfLinkBuilder.toUri();
 
-        EntityModel<SignupResponse> entityModel = EntityModel.of(signupResponse);
+        EntityModel<MemberSimpleResponse> entityModel = EntityModel.of(memberSimpleResponse);
         entityModel.add(selfLinkBuilder.withSelfRel());
 
         // TODO: 용석(2021/09/21): Add to api docs link info

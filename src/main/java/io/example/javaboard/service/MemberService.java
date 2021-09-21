@@ -1,7 +1,7 @@
 package io.example.javaboard.service;
 
 import io.example.javaboard.domain.dto.request.SignupRequest;
-import io.example.javaboard.domain.dto.response.SignupResponse;
+import io.example.javaboard.domain.dto.response.MemberSimpleResponse;
 import io.example.javaboard.domain.member.Member;
 import io.example.javaboard.repository.MemberRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,11 +24,11 @@ public class MemberService {
     }
 
     @Transactional
-    public SignupResponse signup(SignupRequest signupRequest){
+    public MemberSimpleResponse signup(SignupRequest signupRequest){
         if(memberRepo.existsByEmail(signupRequest.getEmail())){
            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
         }
         Member save = memberRepo.save(signupRequest.toEntity(passwordEncoder));
-        return SignupResponse.mapTo(save);
+        return MemberSimpleResponse.mapTo(save);
     }
 }

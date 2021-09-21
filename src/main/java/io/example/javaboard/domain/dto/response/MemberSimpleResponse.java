@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SignupResponse {
+public class MemberSimpleResponse {
 
     private Long id;
     private String email;
@@ -23,7 +23,7 @@ public class SignupResponse {
     // * @author : choi-ys
     // * @date : 2021/09/21 3:28 오전
     // * --------------------------------------------------------------
-    public SignupResponse(Long id, String email, String name, String nickname) {
+    public MemberSimpleResponse(Long id, String email, String name, String nickname) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -35,8 +35,8 @@ public class SignupResponse {
     // * @author : choi-ys
     // * @date : 2021/09/21 3:28 오전
     // * --------------------------------------------------------------
-    public static SignupResponse mapTo(Member member) {
-        return new SignupResponse(
+    public static MemberSimpleResponse mapTo(Member member) {
+        return new MemberSimpleResponse(
                 member.getId(),
                 member.getEmail(),
                 member.getName(),
