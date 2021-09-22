@@ -6,6 +6,7 @@ import io.example.board.domain.member.Member;
 import io.example.board.domain.member.MemberRole;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,11 +42,7 @@ class TokenProviderTest {
     @DisplayName("Token 생성")
     public void createToken() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
         member.addRoles(Set.of(MemberRole.ADMIN, MemberRole.SYSTEM_ADMIN));
         LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
 

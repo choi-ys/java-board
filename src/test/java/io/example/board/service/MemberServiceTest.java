@@ -3,6 +3,7 @@ package io.example.board.service;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.member.Member;
 import io.example.board.repository.MemberRepo;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,12 +39,7 @@ class MemberServiceTest {
     @DisplayName("회원 가입")
     public void signup() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        SignupRequest signupRequest = new SignupRequest(email, password, name, nickname);
+        SignupRequest signupRequest = MemberGenerator.signupRequest();
 
         given(memberRepo.save(any(Member.class))).will(AdditionalAnswers.returnsFirstArg());
 

@@ -12,6 +12,7 @@ import io.example.board.domain.member.Member;
 import io.example.board.domain.member.MemberRole;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,12 +48,7 @@ class TokenVerifierTest {
     }
 
     private Token generateToken() {
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-        Member member = new Member(email, password, name, nickname);
-
+        Member member = MemberGenerator.member();
         LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
         return tokenProvider.createToken(loginUserAdapter);
     }
@@ -189,11 +185,7 @@ class TokenVerifierTest {
     @DisplayName("인증된 사용자 정보 조회")
     public void getAuthentication() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
 
         Token token = tokenProvider.createToken(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
 
@@ -203,7 +195,7 @@ class TokenVerifierTest {
 
         // Then
         assertAll(
-                () -> assertEquals(loginUserAdapter.getUsername(), email),
+                () -> assertEquals(loginUserAdapter.getUsername(), member.getEmail()),
                 () -> assertEquals(loginUserAdapter.getAuthorities(), member.mapToSimpleGrantedAuthority())
         );
     }
