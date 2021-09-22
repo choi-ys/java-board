@@ -3,10 +3,12 @@ package io.example.board.service;
 import io.example.board.config.security.jwt.provider.TokenProvider;
 import io.example.board.domain.dto.request.LoginRequest;
 import io.example.board.domain.dto.response.LoginResponse;
+import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.repository.MemberRepo;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +32,12 @@ public class LoginService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        final String loginFailMessage = "요청에 해당하는 사용자 정보를 찾을 수 없습니다.";
         Member member = memberRepo.findByEmail(loginRequest.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException(loginFailMessage)
+                () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException(loginFailMessage);
+            throw new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message);
         }
 
         LoginUserAdapter principal = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
