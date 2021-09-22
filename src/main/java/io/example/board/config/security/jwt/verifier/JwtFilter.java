@@ -1,5 +1,7 @@
 package io.example.board.config.security.jwt.verifier;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -27,7 +29,8 @@ public class JwtFilter extends GenericFilterBean {
         if ("" != token) {
             VerifyResult verifyResult = tokenVerifier.verify(token);
             if (verifyResult.isSuccess()) {
-                //                SecurityContextHolder.getContext().setAuthentication();
+                Authentication authentication = tokenVerifier.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 
