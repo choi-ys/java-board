@@ -1,13 +1,12 @@
 package io.example.javaboard.service;
 
+import io.example.javaboard.config.security.jwt.provider.TokenProvider;
 import io.example.javaboard.domain.dto.request.LoginRequest;
 import io.example.javaboard.domain.dto.response.LoginResponse;
 import io.example.javaboard.domain.member.Member;
 import io.example.javaboard.domain.vo.login.LoginUserAdapter;
+import io.example.javaboard.domain.vo.token.Token;
 import io.example.javaboard.repository.MemberRepo;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,12 @@ public class LoginService {
 
     private final MemberRepo memberRepo;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
-    public LoginService(MemberRepo memberRepo, PasswordEncoder passwordEncoder) {
+    public LoginService(MemberRepo memberRepo, PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
         this.memberRepo = memberRepo;
         this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -39,11 +40,9 @@ public class LoginService {
             throw new IllegalArgumentException(loginFailMessage);
         }
 
-        LoginUserAdapter principal = new LoginUserAdapter(member);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        LoginUserAdapter principal = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
+        Token token = tokenProvider.createToken(principal);
 
-        // TODO: 용석(2021/09/22): Add created JWT to LoginResponse
-        return LoginResponse.mapTo(member);
+        return LoginResponse.mapTo(member, token);
     }
 }

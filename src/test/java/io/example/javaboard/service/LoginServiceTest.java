@@ -1,8 +1,10 @@
 package io.example.javaboard.service;
 
+import io.example.javaboard.config.security.jwt.provider.TokenProvider;
 import io.example.javaboard.domain.dto.request.LoginRequest;
 import io.example.javaboard.domain.dto.response.LoginResponse;
 import io.example.javaboard.domain.member.Member;
+import io.example.javaboard.domain.vo.login.LoginUserAdapter;
 import io.example.javaboard.repository.MemberRepo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -26,6 +29,7 @@ import static org.mockito.Mockito.verify;
  * @date : 2021/09/22 2:38 오전
  */
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Service:Login")
 class LoginServiceTest {
 
     @Mock
@@ -33,6 +37,9 @@ class LoginServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private TokenProvider tokenProvider;
 
     @InjectMocks
     private LoginService loginService;
@@ -58,6 +65,7 @@ class LoginServiceTest {
         // Then
         verify(memberRepo, times(1)).findByEmail(anyString());
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
+        verify(tokenProvider, times(1)).createToken(any(LoginUserAdapter.class));
 
         assertAll(
                 () -> assertEquals(loginResponse.getEmail(), email),

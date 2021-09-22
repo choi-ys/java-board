@@ -1,8 +1,10 @@
 package io.example.javaboard.domain.vo.login;
 
-import io.example.javaboard.domain.member.Member;
 import lombok.Getter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
+import java.util.Set;
 
 /**
  * @author : choi-ys
@@ -13,15 +15,8 @@ public class LoginUserAdapter extends User {
 
     private LoginUser loginUser;
 
-    public LoginUserAdapter(Member member) {
-        super(member.getEmail(),
-                "",
-                member.isEnabled(),
-                member.isEnabled(),
-                member.isEnabled(),
-                member.isEnabled(),
-                member.mapToSimpleGrantedAuthority()
-        );
-        this.loginUser = new LoginUser(member.getEmail(), member.mapToSimpleGrantedAuthority());
+    public LoginUserAdapter(String username, Set<SimpleGrantedAuthority> authorities) {
+        super(username, "", authorities);
+        this.loginUser = loginUser;
     }
 }
