@@ -70,8 +70,7 @@ class LoginServiceTest {
         assertAll(
                 () -> assertEquals(loginResponse.getEmail(), email),
                 () -> assertEquals(loginResponse.getName(), name),
-                () -> assertEquals(loginResponse.getNickname(), nickname),
-                () -> assertEquals(loginResponse.getRoles(), member.getRoles())
+                () -> assertEquals(loginResponse.getNickname(), nickname)
         );
     }
 }

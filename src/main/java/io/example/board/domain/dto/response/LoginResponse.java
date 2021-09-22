@@ -17,12 +17,10 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginResponse extends MemberSimpleResponse {
 
-    private Set<MemberRole> roles;
     private Token token;
 
-    public LoginResponse(Long id, String email, String name, String nickname, Set<MemberRole> roles, Token token) {
+    private LoginResponse(Long id, String email, String name, String nickname, Set<MemberRole> roles, Token token) {
         super(id, email, name, nickname);
-        this.roles = roles;
         this.token = token;
     }
 
