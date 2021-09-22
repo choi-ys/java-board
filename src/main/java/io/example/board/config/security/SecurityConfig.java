@@ -28,12 +28,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .apply(new JwtConfigurer(tokenVerifier))
                 .and()
+
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
                 .authorizeRequests(
                         it -> {
                             it.antMatchers(HttpMethod.POST, "/member").permitAll();
+                            it.antMatchers(HttpMethod.POST, "/login").permitAll();
                             it.anyRequest().authenticated();
                         }
                 )
