@@ -4,6 +4,7 @@ import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfi
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.member.Member;
 import io.example.board.domain.member.MemberRole;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -39,12 +40,7 @@ class MemberRepoTest {
     @DisplayName("회원 객체 저장")
     public void save() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
 
         // When
         Member expected = memberRepo.save(member);
@@ -52,10 +48,10 @@ class MemberRepoTest {
         // Then
         assertAll(
                 () -> assertNotNull(member.getId(), "Persist 상태의 Entity Id 항목의 Auto Generated 여부 확인"),
-                () -> assertEquals(expected.getEmail(), email),
-                () -> assertEquals(expected.getPassword(), password),
-                () -> assertEquals(expected.getName(), name),
-                () -> assertEquals(expected.getNickname(), nickname),
+                () -> assertEquals(expected.getEmail(), member.getEmail()),
+                () -> assertEquals(expected.getPassword(), member.getPassword()),
+                () -> assertEquals(expected.getName(), member.getName()),
+                () -> assertEquals(expected.getNickname(), member.getNickname()),
                 () -> assertEquals(expected.getRoles(), Set.of(MemberRole.MEMBER), "Entity 객체 생성 시, 'MEMBER' 권한 포함 여부 확인"),
                 () -> assertFalse(expected.isCertify(), "Entity 객체 생성 시, boolean 항목의 기본값 false 적용 여부 확인"),
                 () -> assertFalse(expected.isEnabled(), "Entity 객체 생성 시 , boolean 항목의 기본값 false 적용 여부 확인")
@@ -66,12 +62,7 @@ class MemberRepoTest {
     @DisplayName("회원 객체 조회:Id")
     public void findById() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
         Member savedMember = memberRepo.save(member);
         entityManager.flush();
         entityManager.clear();
@@ -96,12 +87,7 @@ class MemberRepoTest {
     @DisplayName("회원 객체 삭제")
     public void delete() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
         Member savedMember = memberRepo.save(member);
         entityManager.flush();
         entityManager.clear();
@@ -117,17 +103,12 @@ class MemberRepoTest {
                 () -> memberRepo.findById(savedMember.getId()).get(), "Remove 상태의 Entity 조회 시 NoSuchElementException 발생 여부 확인"
         );
     }
-    
+
     @Test
     @DisplayName("회원 객체 조회:Email")
-    public void findByEmail(){
+    public void findByEmail() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
         Member savedMember = memberRepo.save(member);
         entityManager.flush();
         entityManager.clear();

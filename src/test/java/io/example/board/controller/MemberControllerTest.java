@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.error.ErrorMessage;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,7 @@ class MemberControllerTest {
     @DisplayName("[200:POST]회원가입")
     public void signup() throws Exception {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-
-        SignupRequest signupRequest = new SignupRequest(email, password, name, nickname);
+        SignupRequest signupRequest = MemberGenerator.signupRequest();
 
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)

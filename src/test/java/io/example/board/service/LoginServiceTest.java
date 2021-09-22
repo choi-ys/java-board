@@ -6,6 +6,7 @@ import io.example.board.domain.dto.response.LoginResponse;
 import io.example.board.domain.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.repository.MemberRepo;
+import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,16 +49,12 @@ class LoginServiceTest {
     @DisplayName("로그인")
     public void login() {
         // Given
-        String email = "project.log.062@gmail.com";
-        String password = "password";
-        String name = "choi-ys";
-        String nickname = "whypie";
-        Member member = new Member(email, password, name, nickname);
+        Member member = MemberGenerator.member();
 
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(member.getEmail(), member.getPassword());
 
         // When
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -68,9 +65,9 @@ class LoginServiceTest {
         verify(tokenProvider, times(1)).createToken(any(LoginUserAdapter.class));
 
         assertAll(
-                () -> assertEquals(loginResponse.getEmail(), email),
-                () -> assertEquals(loginResponse.getName(), name),
-                () -> assertEquals(loginResponse.getNickname(), nickname)
+                () -> assertEquals(loginResponse.getEmail(), member.getEmail()),
+                () -> assertEquals(loginResponse.getName(), member.getName()),
+                () -> assertEquals(loginResponse.getNickname(), member.getNickname())
         );
     }
 }
