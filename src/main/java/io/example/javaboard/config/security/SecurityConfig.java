@@ -1,5 +1,7 @@
 package io.example.javaboard.config.security;
 
+import io.example.javaboard.config.security.jwt.verifier.JwtConfigurer;
+import io.example.javaboard.config.security.jwt.verifier.TokenVerifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,11 +15,19 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final TokenVerifier tokenVerifier;
+
+    public SecurityConfig(TokenVerifier tokenVerifier) {
+        this.tokenVerifier = tokenVerifier;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .httpBasic().disable()
+                .apply(new JwtConfigurer(tokenVerifier))
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
