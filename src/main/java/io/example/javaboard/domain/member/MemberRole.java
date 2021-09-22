@@ -7,5 +7,5 @@ package io.example.javaboard.domain.member;
 public enum MemberRole {
     MEMBER,
     ADMIN,
-    SYSTEM,
+    SYSTEM_ADMIN,
 }

@@ -46,7 +46,7 @@ class TokenProviderTest {
         String name = "choi-ys";
         String nickname = "whypie";
         Member member = new Member(email, password, name, nickname);
-        member.addRoleSet(Set.of(MemberRole.ADMIN, MemberRole.SYSTEM));
+        member.addRoles(Set.of(MemberRole.ADMIN, MemberRole.SYSTEM_ADMIN));
         LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
 
         // When

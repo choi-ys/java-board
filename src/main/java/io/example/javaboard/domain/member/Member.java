@@ -73,7 +73,7 @@ public class Member {
         this.password = password;
         this.name = name;
         this.nickname = nickname;
-        addRoleSet(Set.of(MemberRole.MEMBER));
+        addRoles(Set.of(MemberRole.MEMBER));
     }
 
     // * --------------------------------------------------------------
@@ -81,11 +81,11 @@ public class Member {
     // * @author : choi-ys
     // * @date : 2021/09/20 11:57 오후
     // * --------------------------------------------------------------
-    public void addRoleSet(Set<MemberRole> additionRoleSet) {
+    public void addRoles(Set<MemberRole> additionRoleSet) {
         roles.addAll(additionRoleSet);
     }
 
-    public void removeRoleSet(Set<MemberRole> removalRoleSet) {
+    public void removeRoles(Set<MemberRole> removalRoleSet) {
         roles.removeAll(removalRoleSet);
     }
 
