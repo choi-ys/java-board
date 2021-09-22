@@ -3,7 +3,11 @@ package io.example.javaboard.service;
 import io.example.javaboard.domain.dto.request.LoginRequest;
 import io.example.javaboard.domain.dto.response.LoginResponse;
 import io.example.javaboard.domain.member.Member;
+import io.example.javaboard.domain.vo.login.LoginUserAdapter;
 import io.example.javaboard.repository.MemberRepo;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +38,11 @@ public class LoginService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException(loginFailMessage);
         }
+
+        LoginUserAdapter principal = new LoginUserAdapter(member);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         // TODO: 용석(2021/09/22): Add created JWT to LoginResponse
         return LoginResponse.mapTo(member);
     }
