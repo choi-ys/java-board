@@ -22,8 +22,8 @@ public class MethodArgumentNotValidErrorResource extends ErrorResource {
     // * @author : choi-ys
     // * @date : 2021/09/21 6:24 오후
     // * --------------------------------------------------------------
-    public MethodArgumentNotValidErrorResource(ErrorMessage errorMessage, HttpServletRequest httpServletRequest, List<FieldError> fieldErrors) {
-        super(errorMessage, httpServletRequest);
+    public MethodArgumentNotValidErrorResource(ErrorCode errorCode, HttpServletRequest httpServletRequest, List<FieldError> fieldErrors) {
+        super(errorCode, httpServletRequest);
         this.errorDetails = ErrorDetail.mapTo(fieldErrors);
     }
 }

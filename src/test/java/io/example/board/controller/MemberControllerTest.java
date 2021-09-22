@@ -3,7 +3,7 @@ package io.example.board.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
 import io.example.board.domain.dto.request.SignupRequest;
-import io.example.board.domain.dto.response.error.ErrorMessage;
+import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,8 +76,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
-                .andExpect(jsonPath("code").value(ErrorMessage.HTTP_MESSAGE_NOT_READABLE.name()))
-                .andExpect(jsonPath("message").value(ErrorMessage.HTTP_MESSAGE_NOT_READABLE.message))
+                .andExpect(jsonPath("code").value(ErrorCode.HTTP_MESSAGE_NOT_READABLE.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.HTTP_MESSAGE_NOT_READABLE.message))
         ;
     }
 
@@ -100,8 +100,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
-                .andExpect(jsonPath("code").value(ErrorMessage.METHOD_ARGUMENT_NOT_VALID.name()))
-                .andExpect(jsonPath("message").value(ErrorMessage.METHOD_ARGUMENT_NOT_VALID.message))
+                .andExpect(jsonPath("code").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.message))
                 .andExpect(jsonPath("errorDetails").exists())
         ;
     }
@@ -125,8 +125,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
-                .andExpect(jsonPath("code").value(ErrorMessage.HTTP_MEDIA_TYPE_NOT_SUPPORTED.name()))
-                .andExpect(jsonPath("message").value(ErrorMessage.HTTP_MEDIA_TYPE_NOT_SUPPORTED.message))
+                .andExpect(jsonPath("code").value(ErrorCode.HTTP_MEDIA_TYPE_NOT_SUPPORTED.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.HTTP_MEDIA_TYPE_NOT_SUPPORTED.message))
         ;
     }
 }
