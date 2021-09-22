@@ -1,4 +1,4 @@
-package io.example.board.advicd.exception;
+package io.example.board.advice;
 
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.dto.response.error.ErrorResource;
