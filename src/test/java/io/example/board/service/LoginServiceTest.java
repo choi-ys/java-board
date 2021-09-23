@@ -3,7 +3,6 @@ package io.example.board.service;
 import io.example.board.config.security.jwt.provider.TokenProvider;
 import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.domain.dto.request.LoginRequest;
-import io.example.board.domain.dto.request.RefreshTokenRequest;
 import io.example.board.domain.dto.response.LoginResponse;
 import io.example.board.domain.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
@@ -82,14 +81,14 @@ class LoginServiceTest {
     public void refresh() {
         // Given
         Member member = MemberGenerator.member();
-        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(TokenGenerator.generateJWT(), TokenGenerator.generateJWT());
+        Token token = TokenGenerator.generateMockingToken();
 
         given(tokenVerifier.verify(anyString())).willReturn(TokenGenerator.generateVerifyResult());
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
-        given(tokenProvider.createToken(any(LoginUserAdapter.class))).willReturn(TokenGenerator.generateMockingToken());
+        given(tokenProvider.createToken(any(LoginUserAdapter.class))).willReturn(token);
 
         // When
-        Token refreshedToken = loginService.refresh(refreshTokenRequest);
+        Token refreshedToken = loginService.refresh(token.getRefreshToken());
 
         // Then
         verify(tokenVerifier, times(1)).verify(anyString());

@@ -2,6 +2,7 @@ package io.example.board.utils.generator;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.impl.PublicClaims;
 import com.auth0.jwt.interfaces.Claim;
 import io.example.board.config.security.jwt.common.ClaimKey;
 import io.example.board.config.security.jwt.common.TokenType;
@@ -39,9 +40,19 @@ public class TokenGenerator {
         this.tokenProvider = tokenProvider;
     }
 
+    public Token generateToken() {
+        Member savedMember = memberGenerator.savedMember();
+        LoginUserAdapter loginUserAdapter = new LoginUserAdapter(savedMember.getEmail(), savedMember.mapToSimpleGrantedAuthority());
+        return tokenProvider.createToken(loginUserAdapter);
+    }
+
     public Token generateToken(Member member) {
         LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
         return tokenProvider.createToken(loginUserAdapter);
+    }
+
+    public static String getBearerToken(String token) {
+        return "Bearer " + token;
     }
 
     public static VerifyResult generateVerifyResult() {

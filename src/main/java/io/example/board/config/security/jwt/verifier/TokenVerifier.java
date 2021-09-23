@@ -39,7 +39,7 @@ public class TokenVerifier implements InitializingBean {
         ALGORITHM = Algorithm.HMAC256(SIGNATURE);
     }
 
-    public String resolve(HttpServletRequest httpServletRequest) {
+    public static String resolve(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader(AUTHORIZATION);
         if (!StringUtils.hasText(bearerToken)) {
             return "";

@@ -4,7 +4,6 @@ import io.example.board.config.security.jwt.provider.TokenProvider;
 import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.config.security.jwt.verifier.VerifyResult;
 import io.example.board.domain.dto.request.LoginRequest;
-import io.example.board.domain.dto.request.RefreshTokenRequest;
 import io.example.board.domain.dto.response.LoginResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.member.Member;
@@ -52,8 +51,8 @@ public class LoginService {
         return LoginResponse.mapTo(member, token);
     }
 
-    public Token refresh(RefreshTokenRequest refreshTokenRequest){
-        VerifyResult refreshTokenVerifyResult = tokenVerifier.verify(refreshTokenRequest.getRefreshToken());
+    public Token refresh(String refreshToken) {
+        VerifyResult refreshTokenVerifyResult = tokenVerifier.verify(refreshToken);
         Member member = memberRepo.findByEmail(refreshTokenVerifyResult.getUsername()).orElseThrow(
                 () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
