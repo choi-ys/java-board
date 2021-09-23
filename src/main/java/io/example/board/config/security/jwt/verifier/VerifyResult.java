@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VerifyResult {
-    private boolean success;
     private String issuer;
     private String subject;
     private String audience;
@@ -29,8 +28,7 @@ public class VerifyResult {
     private String username;
     private Set<SimpleGrantedAuthority> authorities;
 
-    private VerifyResult(boolean success, String issuer, String subject, String audience, Long issuedAt, Long expiresAt, String use, String username, Set<SimpleGrantedAuthority> authorities) {
-        this.success = success;
+    private VerifyResult(String issuer, String subject, String audience, Long issuedAt, Long expiresAt, String use, String username, Set<SimpleGrantedAuthority> authorities) {
         this.issuer = issuer;
         this.subject = subject;
         this.audience = audience;
@@ -41,9 +39,8 @@ public class VerifyResult {
         this.authorities = authorities;
     }
 
-    public static VerifyResult mapTo(boolean success, Map<String, Claim> claims) {
+    public static VerifyResult mapTo(Map<String, Claim> claims) {
         return new VerifyResult(
-                success,
                 claims.get(ClaimKey.ISS.value).asString(),
                 claims.get(ClaimKey.SUB.value).asString(),
                 claims.get(ClaimKey.AUD.value).asString(),

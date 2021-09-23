@@ -13,20 +13,25 @@ import io.example.board.domain.member.MemberRole;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.TokenGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static io.example.board.utils.LocalDateTimeUtils.timestampToLocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -35,38 +40,51 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Import(TokenGenerator.class)
 @ActiveProfiles("test")
 @DisplayName("Component:TokenVerifier")
 class TokenVerifierTest {
 
     private final TokenProvider tokenProvider;
     private final TokenVerifier tokenVerifier;
+    private final TokenGenerator tokenGenerator;
 
-    public TokenVerifierTest(TokenProvider tokenProvider, TokenVerifier tokenVerifier) {
+    public TokenVerifierTest(TokenProvider tokenProvider, TokenVerifier tokenVerifier, TokenGenerator tokenGenerator) {
         this.tokenProvider = tokenProvider;
         this.tokenVerifier = tokenVerifier;
-    }
-
-    private Token generateToken() {
-        Member member = MemberGenerator.member();
-        LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
-        return tokenProvider.createToken(loginUserAdapter);
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Test
     @DisplayName("정상 JWT 검증")
     public void verify() {
         // Given
-        Token token = generateToken();
+        Member member = MemberGenerator.member();
+        Token createdToken = tokenGenerator.generateToken(member);
 
         // When
-        VerifyResult accessTokenVerifyResult = tokenVerifier.verify(token.getAccessToken());
-        VerifyResult refreshTokenVerifyResult = tokenVerifier.verify(token.getRefreshToken());
+        VerifyResult accessTokenVerifyResult = tokenVerifier.verify(createdToken.getAccessToken());
+        VerifyResult refreshTokenVerifyResult = tokenVerifier.verify(createdToken.getRefreshToken());
 
-        // Then
+        LocalDateTime accessExpiredLocalDateTime = timestampToLocalDateTime(createdToken.getAccessExpired().getTime());
+        LocalDateTime refreshExpiredLocalDateTime = timestampToLocalDateTime(createdToken.getRefreshExpired().getTime());
+        DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         assertAll(
-                () -> assertTrue(accessTokenVerifyResult.isSuccess()),
-                () -> assertTrue(refreshTokenVerifyResult.isSuccess())
+                () -> assertEquals(accessTokenVerifyResult.getUsername(), member.getEmail()),
+                () -> assertEquals(refreshTokenVerifyResult.getUsername(), accessTokenVerifyResult.getUsername()),
+                () -> assertTrue(accessTokenVerifyResult.getAuthorities().containsAll(member.mapToSimpleGrantedAuthority()), "Access Token의 payload에 Authority 포함 여부 확인"),
+                () -> assertTrue(refreshTokenVerifyResult.getAuthorities().containsAll(member.mapToSimpleGrantedAuthority()), "Refresh Token의 payload에 Authority 포함 여부 확인"),
+                () -> assertEquals(
+                        LocalDateTime.now().plusMinutes(10).format(ofPattern),
+                        accessExpiredLocalDateTime.format(ofPattern),
+                        "발급된 접근 토큰의 유효기간이 10분인지 확인"
+                ),
+                () -> assertEquals(
+                        LocalDateTime.now().plusMinutes(20).format(ofPattern),
+                        refreshExpiredLocalDateTime.format(ofPattern),
+                        "발급된 갱신 토큰의 유효기간이 20분인지 확인"
+                )
         );
     }
 

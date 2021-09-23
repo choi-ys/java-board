@@ -57,10 +57,10 @@ public class TokenVerifier implements InitializingBean {
         try {
             DecodedJWT verify = JWT.require(ALGORITHM).build().verify(token);
             Map<String, Claim> claims = verify.getClaims();
-            return VerifyResult.mapTo(true, claims);
+            return VerifyResult.mapTo(claims);
         } catch (TokenExpiredException e) { // 유효기간이 만료된 토큰
             DecodedJWT decode = JWT.decode(token);
-            VerifyResult verifyResult = VerifyResult.mapTo(false, decode.getClaims());
+            VerifyResult verifyResult = VerifyResult.mapTo(decode.getClaims());
             throw new TokenExpiredException("유효기간이 만료 되었습니다." + LocalDateTimeUtils.timestampToLocalDateTime(verifyResult.getExpiresAt()));
         } catch (JWTDecodeException e) { // 유효하지 못한 형식의 토큰
             throw new JWTDecodeException("잘못된 형식의 토큰입니다.");

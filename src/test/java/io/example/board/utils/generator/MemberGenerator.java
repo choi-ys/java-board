@@ -1,10 +1,9 @@
 package io.example.board.utils.generator;
 
 import io.example.board.domain.dto.request.SignupRequest;
-import io.example.board.domain.dto.response.MemberSimpleResponse;
 import io.example.board.domain.member.Member;
+import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.repository.MemberRepo;
-import io.example.board.service.MemberService;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.test.context.TestConstructor;
 
@@ -37,5 +36,10 @@ public class MemberGenerator {
 
     public static SignupRequest signupRequest() {
         return new SignupRequest(email, password, name, nickname);
+    }
+
+    public static LoginUserAdapter loginUserAdapter() {
+        Member member = member();
+        return new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
     }
 }

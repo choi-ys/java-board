@@ -27,11 +27,9 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = tokenVerifier.resolve((HttpServletRequest) servletRequest);
         if ("" != token) {
-            VerifyResult verifyResult = tokenVerifier.verify(token);
-            if (verifyResult.isSuccess()) {
-                Authentication authentication = tokenVerifier.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            tokenVerifier.verify(token);
+            Authentication authentication = tokenVerifier.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
