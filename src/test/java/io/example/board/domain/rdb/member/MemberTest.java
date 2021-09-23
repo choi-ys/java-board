@@ -1,4 +1,4 @@
-package io.example.board.domain.member;
+package io.example.board.domain.rdb.member;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

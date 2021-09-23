@@ -2,13 +2,12 @@ package io.example.board.utils.generator;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.impl.PublicClaims;
 import com.auth0.jwt.interfaces.Claim;
 import io.example.board.config.security.jwt.common.ClaimKey;
 import io.example.board.config.security.jwt.common.TokenType;
 import io.example.board.config.security.jwt.provider.TokenProvider;
 import io.example.board.config.security.jwt.verifier.VerifyResult;
-import io.example.board.domain.member.Member;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
 import org.springframework.boot.test.context.TestComponent;

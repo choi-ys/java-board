@@ -1,7 +1,7 @@
 package io.example.board.domain.dto.response;
 
-import io.example.board.domain.member.Member;
-import io.example.board.domain.member.MemberRole;
+import io.example.board.domain.rdb.member.Member;
+import io.example.board.domain.rdb.member.MemberRole;
 import io.example.board.domain.vo.token.Token;
 import lombok.AccessLevel;
 import lombok.Getter;

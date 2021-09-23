@@ -1,9 +1,9 @@
 package io.example.board.utils.generator;
 
 import io.example.board.domain.dto.request.SignupRequest;
-import io.example.board.domain.member.Member;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
-import io.example.board.repository.MemberRepo;
+import io.example.board.repository.rdb.member.MemberRepo;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.test.context.TestConstructor;
 

@@ -2,8 +2,8 @@ package io.example.board.service;
 
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.MemberSimpleResponse;
-import io.example.board.domain.member.Member;
-import io.example.board.repository.MemberRepo;
+import io.example.board.domain.rdb.member.Member;
+import io.example.board.repository.rdb.member.MemberRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

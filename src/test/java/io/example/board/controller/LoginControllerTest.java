@@ -5,7 +5,7 @@ import io.example.board.config.test.EnableMockMvc;
 import io.example.board.domain.dto.request.LoginRequest;
 import io.example.board.domain.dto.response.MemberSimpleResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
-import io.example.board.domain.member.Member;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.service.MemberService;
 import io.example.board.utils.generator.MemberGenerator;

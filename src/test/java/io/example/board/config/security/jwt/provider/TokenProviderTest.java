@@ -2,8 +2,8 @@ package io.example.board.config.security.jwt.provider;
 
 import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.config.security.jwt.verifier.VerifyResult;
-import io.example.board.domain.member.Member;
-import io.example.board.domain.member.MemberRole;
+import io.example.board.domain.rdb.member.Member;
+import io.example.board.domain.rdb.member.MemberRole;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;

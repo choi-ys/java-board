@@ -1,6 +1,6 @@
-package io.example.board.repository;
+package io.example.board.repository.rdb.member;
 
-import io.example.board.domain.member.Member;
+import io.example.board.domain.rdb.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

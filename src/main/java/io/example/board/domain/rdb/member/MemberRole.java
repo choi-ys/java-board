@@ -1,4 +1,4 @@
-package io.example.board.domain.member;
+package io.example.board.domain.rdb.member;
 
 /**
  * @author : choi-ys

@@ -1,6 +1,6 @@
 package io.example.board.domain.dto.response;
 
-import io.example.board.domain.member.Member;
+import io.example.board.domain.rdb.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
