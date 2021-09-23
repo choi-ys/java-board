@@ -1,12 +1,16 @@
 package io.example.board.service;
 
 import io.example.board.config.security.jwt.provider.TokenProvider;
+import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.domain.dto.request.LoginRequest;
+import io.example.board.domain.dto.request.RefreshTokenRequest;
 import io.example.board.domain.dto.response.LoginResponse;
 import io.example.board.domain.member.Member;
 import io.example.board.domain.vo.login.LoginUserAdapter;
+import io.example.board.domain.vo.token.Token;
 import io.example.board.repository.MemberRepo;
 import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.TokenGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -41,6 +44,9 @@ class LoginServiceTest {
 
     @Mock
     private TokenProvider tokenProvider;
+
+    @Mock
+    private TokenVerifier tokenVerifier;
 
     @InjectMocks
     private LoginService loginService;
@@ -68,6 +74,33 @@ class LoginServiceTest {
                 () -> assertEquals(loginResponse.getEmail(), member.getEmail()),
                 () -> assertEquals(loginResponse.getName(), member.getName()),
                 () -> assertEquals(loginResponse.getNickname(), member.getNickname())
+        );
+    }
+
+    @Test
+    @DisplayName("토큰 갱신")
+    public void refresh() {
+        // Given
+        Member member = MemberGenerator.member();
+        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(TokenGenerator.generateJWT(), TokenGenerator.generateJWT());
+
+        given(tokenVerifier.verify(anyString())).willReturn(TokenGenerator.generateVerifyResult());
+        given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(tokenProvider.createToken(any(LoginUserAdapter.class))).willReturn(TokenGenerator.generateMockingToken());
+
+        // When
+        Token refreshedToken = loginService.refresh(refreshTokenRequest);
+
+        // Then
+        verify(tokenVerifier, times(1)).verify(anyString());
+        verify(memberRepo, times(1)).findByEmail(anyString());
+        verify(tokenProvider, times(1)).createToken(any(LoginUserAdapter.class));
+
+        assertAll(
+                () -> assertNotNull(refreshedToken.getAccessToken()),
+                () -> assertNotNull(refreshedToken.getRefreshToken()),
+                () -> assertNotNull(refreshedToken.getAccessExpired()),
+                () -> assertNotNull(refreshedToken.getRefreshExpired())
         );
     }
 }
