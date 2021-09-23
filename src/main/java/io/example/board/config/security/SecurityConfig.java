@@ -2,6 +2,7 @@ package io.example.board.config.security;
 
 import io.example.board.config.security.jwt.verifier.JwtConfigurer;
 import io.example.board.config.security.jwt.verifier.TokenVerifier;
+import io.example.board.domain.member.MemberRole;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         it -> {
                             it.antMatchers(HttpMethod.POST, "/member").permitAll();
                             it.antMatchers(HttpMethod.POST, "/login").permitAll();
+                            it.antMatchers(HttpMethod.POST, "/refresh").hasRole(MemberRole.MEMBER.name());
                             it.anyRequest().authenticated();
                         }
                 )
