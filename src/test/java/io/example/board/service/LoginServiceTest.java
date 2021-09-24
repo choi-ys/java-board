@@ -47,6 +47,9 @@ class LoginServiceTest {
     @Mock
     private TokenVerifier tokenVerifier;
 
+    @Mock
+    private TokenService tokenService;
+
     @InjectMocks
     private LoginService loginService;
 
@@ -67,7 +70,7 @@ class LoginServiceTest {
         // Then
         verify(memberRepo, times(1)).findByEmail(anyString());
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
-        verify(tokenProvider, times(1)).createToken(any(LoginUserAdapter.class));
+        verify(tokenService, times(1)).issued(any(LoginUserAdapter.class));
 
         assertAll(
                 () -> assertEquals(loginResponse.getEmail(), member.getEmail()),
@@ -85,7 +88,7 @@ class LoginServiceTest {
 
         given(tokenVerifier.verify(anyString())).willReturn(TokenGenerator.generateVerifyResult());
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
-        given(tokenProvider.createToken(any(LoginUserAdapter.class))).willReturn(token);
+        given(tokenService.issued(any(LoginUserAdapter.class))).willReturn(token);
 
         // When
         Token refreshedToken = loginService.refresh(token.getRefreshToken());
@@ -93,7 +96,7 @@ class LoginServiceTest {
         // Then
         verify(tokenVerifier, times(1)).verify(anyString());
         verify(memberRepo, times(1)).findByEmail(anyString());
-        verify(tokenProvider, times(1)).createToken(any(LoginUserAdapter.class));
+        verify(tokenService, times(1)).issued(any(LoginUserAdapter.class));
 
         assertAll(
                 () -> assertNotNull(refreshedToken.getAccessToken()),

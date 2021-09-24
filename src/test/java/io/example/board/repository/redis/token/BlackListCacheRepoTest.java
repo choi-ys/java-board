@@ -1,7 +1,8 @@
 package io.example.board.repository.redis.token;
 
 import io.example.board.config.redis.EmbeddedRedisConfig;
-import io.example.board.domain.redis.token.WhiteListCache;
+import io.example.board.domain.rdb.member.Member;
+import io.example.board.domain.redis.token.BlackListCache;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;
 import io.example.board.utils.generator.TokenGenerator;
@@ -18,71 +19,71 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author : choi-ys
- * @date : 2021/09/24 1:21 오전
+ * @date : 2021/09/24 3:54 오후
  */
 @DataRedisTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Import(EmbeddedRedisConfig.class)
 @ActiveProfiles("test")
-@DisplayName("Repo:WhiteList")
-class WhiteListCacheRepoTest {
+@DisplayName("Repo:BlackList")
+class BlackListCacheRepoTest {
 
-    private final WhiteListCacheRepo whiteListCacheRepo;
+    private final BlackListCacheRepo blackListCacheRepo;
 
-    public WhiteListCacheRepoTest(WhiteListCacheRepo whiteListCacheRepo) {
-        this.whiteListCacheRepo = whiteListCacheRepo;
+    public BlackListCacheRepoTest(BlackListCacheRepo blackListCacheRepo) {
+        this.blackListCacheRepo = blackListCacheRepo;
     }
 
-    private WhiteListCache savedWhiteListCache() {
-        String email = MemberGenerator.email;
+    private BlackListCache savedBlackListCache() {
+        Member member = MemberGenerator.member();
         Token token = TokenGenerator.generateMockingToken();
-        WhiteListCache whiteListCache = new WhiteListCache(email, token);
-        return whiteListCacheRepo.save(whiteListCache);
+        BlackListCache blackListCache = new BlackListCache(member.getEmail(), token);
+        return blackListCacheRepo.save(blackListCache);
     }
 
     @Test
-    @DisplayName("발급 토큰 객체 저장")
+    @DisplayName("만료 대상 토큰 객체 저장")
     public void save() {
         // Given
-        String email = MemberGenerator.email;
+        Member member = MemberGenerator.member();
         Token token = TokenGenerator.generateMockingToken();
-        WhiteListCache whiteListCache = new WhiteListCache(email, token);
+        BlackListCache blackListCache = new BlackListCache(member.getEmail(), token);
 
         // When
-        WhiteListCache expected = whiteListCacheRepo.save(whiteListCache);
+        BlackListCache expected = blackListCacheRepo.save(blackListCache);
 
         // Then
         assertAll(
-                () -> assertEquals(expected.getId(), email),
-                () -> assertEquals(expected.getToken(), token)
+                () -> assertEquals(expected.getId(), member.getEmail()),
+                () -> assertTrue(expected.getToken().equals(token))
         );
     }
 
     @Test
-    @DisplayName("[Hit]발급 토큰 객체 조회")
+    @DisplayName("[Hit]만료 토큰 조회")
     public void findById() {
         // Given
-        WhiteListCache savedWhiteListCache = savedWhiteListCache();
+        BlackListCache savedBlackListCache = savedBlackListCache();
 
         // When
-        WhiteListCache expected = whiteListCacheRepo.findById(savedWhiteListCache.getId()).orElseThrow();
+        BlackListCache expected = blackListCacheRepo.findById(MemberGenerator.email).orElseThrow();
 
         // Then
         assertAll(
-                () -> assertEquals(expected.getId(), savedWhiteListCache.getId()),
-                () -> assertTrue(expected.getToken().equals(savedWhiteListCache.getToken()))
+                () -> assertEquals(expected.getId(), savedBlackListCache.getId()),
+                () -> assertTrue(expected.getToken().equals(savedBlackListCache.getToken()))
         );
     }
 
     @Test
-    @DisplayName("[Fail]발급 토큰 객체 조회")
+    @DisplayName("[Fail]만료 토큰 조회")
     public void findById_HitFail() {
         // Given
         String invalidKey = MemberGenerator.name;
 
         // When
         NoSuchElementException expected = assertThrows(NoSuchElementException.class,
-                () -> whiteListCacheRepo.findById(invalidKey).orElseThrow());
+                () -> blackListCacheRepo.findById(invalidKey).orElseThrow());
 
         // Then
         assertAll(

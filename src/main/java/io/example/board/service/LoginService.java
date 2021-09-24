@@ -27,13 +27,15 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final TokenVerifier tokenVerifier;
+    private final TokenService tokenService;
 
-    public LoginService(MemberRepo memberRepo, PasswordEncoder passwordEncoder,
-                        TokenProvider tokenProvider, TokenVerifier tokenVerifier) {
+    public LoginService(MemberRepo memberRepo, PasswordEncoder passwordEncoder, TokenProvider tokenProvider,
+                        TokenVerifier tokenVerifier, TokenService tokenService) {
         this.memberRepo = memberRepo;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.tokenVerifier = tokenVerifier;
+        this.tokenService = tokenService;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -46,7 +48,7 @@ public class LoginService {
         }
 
         LoginUserAdapter principal = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
-        Token token = tokenProvider.createToken(principal);
+        Token token = tokenService.issued(principal);
 
         return LoginResponse.mapTo(member, token);
     }
@@ -56,6 +58,7 @@ public class LoginService {
         Member member = memberRepo.findByEmail(refreshTokenVerifyResult.getUsername()).orElseThrow(
                 () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
-        return tokenProvider.createToken(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
+//        return tokenProvider.createToken(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
+        return tokenService.issued(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
     }
 }
