@@ -33,10 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author : choi-ys
  * @date : 2021/09/23 12:30 오전
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableMockMvc
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Transactional
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Import({TokenGenerator.class, MemberGenerator.class})
 @ActiveProfiles("test")
 @DisplayName("API:Login")
