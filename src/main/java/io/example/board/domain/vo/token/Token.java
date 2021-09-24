@@ -2,6 +2,7 @@ package io.example.board.domain.vo.token;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = {"accessToken", "refreshToken", "accessExpired", "refreshExpired"})
 public class Token {
 
     private String accessToken;
