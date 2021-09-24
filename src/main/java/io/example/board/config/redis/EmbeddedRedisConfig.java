@@ -1,6 +1,7 @@
 package io.example.board.config.redis;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -32,8 +33,14 @@ public class EmbeddedRedisConfig {
     public void redisServer() throws IOException {
         int port = isRedisRunning() ? findAvailablePort() : redisPort;
         redisServer = new RedisServer(port);
-        redisServer.start();
-        log.debug("[Embedded Redis]start on [{}] by [{}]", System.getProperty("os.name"), port);
+
+        try {
+            redisServer.start();
+        } catch (BeanCreationException e) {
+            port = findAvailablePort();
+            redisServer = new RedisServer(port);
+        }
+        log.debug("[Embedded Redis ::] Start on [{}] by [{}] port", System.getProperty("os.name"), port);
     }
 
     @PreDestroy
@@ -58,32 +65,35 @@ public class EmbeddedRedisConfig {
         for (int port = 10000; port <= 65535; port++) {
             Process process = executeGrepProcessCommand(port);
             if (!isRunning(process)) {
-                log.debug("[Embedded Redis]running by [{}] port... find not using [{}] port", redisPort, port);
+                log.debug("[Embedded Redis ::] Running by [{}] port... find not using [{}] port", redisPort, port);
                 return port;
             }
         }
 
-        throw new IllegalArgumentException("[Embedded Redis]Not Found Available port: 10000 ~ 65535");
+        throw new IllegalArgumentException("[Embedded Redis ::] Not Found Available port: 10000 ~ 65535");
     }
 
     /**
      * 해당 port를 사용중인 프로세스 확인하는 sh 실행
      */
     private Process executeGrepProcessCommand(int port) throws IOException {
-        os = System.getProperty("os.name").contains("win") ? OS.WINDOWS : OS.OTHERS;
+        os = System.getProperty("os.name").toLowerCase().contains("win") ? OS.WINDOWS : OS.OTHERS;
         String command;
         String[] shell;
+
         switch (os) {
             case WINDOWS:
-                command = String.format("netstat -nao | find LISTEN | find %d", port);
+                command = String.format("netstat -nao | find \"LISTEN\" | find \"%d\"", port);
                 shell = new String[]{"cmd.exe", "/y", "/c", command};
+                break;
             case OTHERS:
                 command = String.format("netstat -nat | grep LISTEN | grep %d", port);
                 shell = new String[]{"/bin/sh", "-c", command};
                 break;
             default:
-                throw new IllegalStateException("[Embedded Redis]Unexpected value: " + os);
+                throw new IllegalStateException("[Embedded Redis ::] Unexpected value: " + os);
         }
+
         return Runtime.getRuntime().exec(shell);
     }
 
@@ -102,8 +112,8 @@ public class EmbeddedRedisConfig {
 
         } catch (Exception e) {
         }
-        log.debug("[Embedded Redis]pid info [{}] by execute command [{}], check isRunning -> {}",
-                pidInfo, line, StringUtils.isEmpty(pidInfo.toString())
+        log.debug("[Embedded Redis ::] Pid info [{}] by execute command [{}], check isRunning -> {}",
+                pidInfo, line, !StringUtils.hasText(pidInfo.toString())
         );
         return StringUtils.hasText(pidInfo.toString());
     }
