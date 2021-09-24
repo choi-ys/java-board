@@ -24,9 +24,9 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberSimpleResponse signup(SignupRequest signupRequest){
-        if(memberRepo.existsByEmail(signupRequest.getEmail())){
-           throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+    public MemberSimpleResponse signup(SignupRequest signupRequest) {
+        if (memberRepo.existsByEmail(signupRequest.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
         }
         Member save = memberRepo.save(signupRequest.toEntity(passwordEncoder));
         return MemberSimpleResponse.mapTo(save);

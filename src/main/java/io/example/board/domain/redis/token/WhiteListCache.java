@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-
 /**
  * @author : choi-ys
  * @date : 2021/09/24 1:06 오전

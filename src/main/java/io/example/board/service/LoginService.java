@@ -58,7 +58,6 @@ public class LoginService {
         Member member = memberRepo.findByEmail(refreshTokenVerifyResult.getUsername()).orElseThrow(
                 () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
-//        return tokenProvider.createToken(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
         return tokenService.issued(new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority()));
     }
 }

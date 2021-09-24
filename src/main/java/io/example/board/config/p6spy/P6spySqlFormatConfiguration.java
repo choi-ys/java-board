@@ -20,18 +20,18 @@ public class P6spySqlFormatConfiguration implements MessageFormattingStrategy {
         sql = formatSql(category, sql);
         return "\n -> [Meta info] : " +
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(now)), TimeZone.getDefault().toZoneId()) +
-                " | duration " + elapsed +"ms" + " | connection : " + connectionId + sql;
+                " | duration " + elapsed + "ms" + " | connection : " + connectionId + sql;
     }
 
-    private String formatSql(String category,String sql) {
-        if(sql ==null || sql.trim().equals("")) return sql;
+    private String formatSql(String category, String sql) {
+        if (sql == null || sql.trim().equals("")) return sql;
 
         // Only format Statement, distinguish DDL And DML
         if (Category.STATEMENT.getName().equals(category)) {
             String tmpsql = sql.trim().toLowerCase(Locale.ROOT);
-            if(tmpsql.startsWith("create") || tmpsql.startsWith("alter") || tmpsql.startsWith("comment")) {
+            if (tmpsql.startsWith("create") || tmpsql.startsWith("alter") || tmpsql.startsWith("comment")) {
                 sql = FormatStyle.DDL.getFormatter().format(sql);
-            }else {
+            } else {
                 sql = FormatStyle.BASIC.getFormatter().format(sql);
             }
             sql = "\n -> [Hibernate format] : " + sql;
