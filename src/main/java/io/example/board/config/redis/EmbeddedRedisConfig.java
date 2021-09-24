@@ -70,7 +70,7 @@ public class EmbeddedRedisConfig {
      * 해당 port를 사용중인 프로세스 확인하는 sh 실행
      */
     private Process executeGrepProcessCommand(int port) throws IOException {
-        os = System.getProperty("os.name").contains("Windows") ? OS.WINDOWS : OS.OTHERS;
+        os = System.getProperty("os.name").contains("win") ? OS.WINDOWS : OS.OTHERS;
         String command;
         String[] shell;
         switch (os) {
@@ -78,7 +78,7 @@ public class EmbeddedRedisConfig {
                 command = String.format("netstat -nao | find LISTEN | find %d", port);
                 shell = new String[]{"cmd.exe", "/y", "/c", command};
             case OTHERS:
-                command = String.format("netstat -nat | grep LISTEN|grep %d", port);
+                command = String.format("netstat -nat | grep LISTEN | grep %d", port);
                 shell = new String[]{"/bin/sh", "-c", command};
                 break;
             default:
