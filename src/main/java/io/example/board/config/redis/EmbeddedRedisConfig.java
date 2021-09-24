@@ -1,7 +1,6 @@
 package io.example.board.config.redis;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -27,7 +26,6 @@ public class EmbeddedRedisConfig {
     private int redisPort;
 
     private RedisServer redisServer;
-    private OS os = OS.WINDOWS;
 
     @PostConstruct
     public void redisServer() throws IOException {
@@ -36,7 +34,7 @@ public class EmbeddedRedisConfig {
 
         try {
             redisServer.start();
-        } catch (BeanCreationException e) {
+        } catch (Exception e) {
             port = findAvailablePort();
             redisServer = new RedisServer(port);
         }
@@ -61,7 +59,6 @@ public class EmbeddedRedisConfig {
      * 현재 PC/서버에서 사용가능한 포트 조회
      */
     public int findAvailablePort() throws IOException {
-
         for (int port = 10000; port <= 65535; port++) {
             Process process = executeGrepProcessCommand(port);
             if (!isRunning(process)) {
@@ -69,7 +66,6 @@ public class EmbeddedRedisConfig {
                 return port;
             }
         }
-
         throw new IllegalArgumentException("[Embedded Redis ::] Not Found Available port: 10000 ~ 65535");
     }
 
@@ -77,24 +73,31 @@ public class EmbeddedRedisConfig {
      * 해당 port를 사용중인 프로세스 확인하는 sh 실행
      */
     private Process executeGrepProcessCommand(int port) throws IOException {
-        os = System.getProperty("os.name").toLowerCase().contains("win") ? OS.WINDOWS : OS.OTHERS;
-        String command;
-        String[] shell;
+        return Runtime.getRuntime().exec(osShellCommand(port));
+    }
 
-        switch (os) {
+    /**
+     * OS별 수행 shell command 반환
+     *
+     * @param port 현재 구동 환경에서 점유되지 않아 사용 가능한 port
+     */
+    public String[] osShellCommand(int port) {
+        switch (findOS()) {
             case WINDOWS:
-                command = String.format("netstat -nao | find \"LISTEN\" | find \"%d\"", port);
-                shell = new String[]{"cmd.exe", "/y", "/c", command};
-                break;
+                return OS.WINDOWS.mapTo(port);
             case OTHERS:
-                command = String.format("netstat -nat | grep LISTEN | grep %d", port);
-                shell = new String[]{"/bin/sh", "-c", command};
-                break;
+                return OS.OTHERS.mapTo(port);
             default:
-                throw new IllegalStateException("[Embedded Redis ::] Unexpected value: " + os);
+                throw new IllegalStateException("[Embedded Redis ::] Unexpected value: " + findOS());
         }
+    }
 
-        return Runtime.getRuntime().exec(shell);
+    /**
+     * 현재 구동중인 OS 반환
+     */
+    public OS findOS() {
+        String os = System.getProperty("os.name");
+        return os.toLowerCase().contains(OS.WINDOWS.name().toLowerCase()) ? OS.WINDOWS : OS.OTHERS;
     }
 
     /**
