@@ -112,4 +112,16 @@ class PostServiceTest {
 
         verify(postRepo, times(1)).findById(postUpdateRequest.getId());
     }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    public void delete() {
+        // Given
+        Post postMock = generatePostMock();
+        given(postRepo.findById(anyLong())).willReturn(Optional.of(postMock));
+
+        // When
+        postService.delete(0L);
+        verify(postRepo, times(1)).delete(postMock);
+    }
 }

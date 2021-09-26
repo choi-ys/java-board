@@ -47,4 +47,10 @@ public class PostService {
         post.update(postUpdateRequest);
         return PostResponse.mapTo(post);
     }
+
+    public void delete(long postId) {
+        postRepo.delete(postRepo.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException()
+        ));
+    }
 }

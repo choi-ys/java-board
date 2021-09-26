@@ -36,6 +36,9 @@ public class Post {
     @Column(name = "display", nullable = false)
     private boolean display = true;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
