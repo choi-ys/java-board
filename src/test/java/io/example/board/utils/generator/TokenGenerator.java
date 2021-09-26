@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @TestComponent
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Import(MemberGenerator.class)
+// TODO: 용석(2021-09-27) : assertions saved object (Assert.notNull(id, "Entity must be saved")
 public class TokenGenerator {
 
     private final MemberGenerator memberGenerator;
@@ -45,8 +46,8 @@ public class TokenGenerator {
         return tokenProvider.createToken(loginUserAdapter);
     }
 
-    public Token generateToken(Member member) {
-        LoginUserAdapter loginUserAdapter = new LoginUserAdapter(member.getEmail(), member.mapToSimpleGrantedAuthority());
+    public Token generateToken(Member savedMember) {
+        LoginUserAdapter loginUserAdapter = new LoginUserAdapter(savedMember.getEmail(), savedMember.mapToSimpleGrantedAuthority());
         return tokenProvider.createToken(loginUserAdapter);
     }
 

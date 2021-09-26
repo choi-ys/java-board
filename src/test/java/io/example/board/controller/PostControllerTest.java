@@ -43,13 +43,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final MemberGenerator memberGenerator;
     private final TokenGenerator tokenGenerator;
     private final PostGenerator postGenerator;
 
-    public PostControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
+    public PostControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, MemberGenerator memberGenerator,
                               TokenGenerator tokenGenerator, PostGenerator postGenerator) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.memberGenerator = memberGenerator;
         this.tokenGenerator = tokenGenerator;
         this.postGenerator = postGenerator;
     }
@@ -231,8 +233,10 @@ class PostControllerTest {
     @DisplayName("[200:PATCH]게시글 수정")
     public void update() throws Exception {
         // Given
-        Token token = tokenGenerator.generateToken(MemberGenerator.member());
-        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest();
+        Member savedMember = memberGenerator.savedMember();
+        Post savedPost = postGenerator.savedPost(savedMember);
+        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest(savedPost);
+        Token token = tokenGenerator.generateToken(savedMember);
 
         // When
         ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
@@ -259,7 +263,8 @@ class PostControllerTest {
     public void update_Fail_Cause_BadCredentials() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken(new Member("choi.ys@naver.com", "password", "용석", "noel"));
-        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest();
+        Post savedPost = postGenerator.savedPost();
+        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest(savedPost);
 
         // When
         ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)

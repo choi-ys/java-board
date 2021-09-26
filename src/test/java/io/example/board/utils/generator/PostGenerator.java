@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
  */
 @TestComponent
 @Import(MemberGenerator.class)
+// TODO: 용석(2021-09-27) : assertions saved object (Assert.notNull(id, "Entity must be saved")
 public class PostGenerator {
 
     private final MemberGenerator memberGenerator;
@@ -43,9 +44,9 @@ public class PostGenerator {
         return postRepo.save(post(savedMember));
     }
 
-    public PostUpdateRequest postUpdateRequest() {
+    public PostUpdateRequest postUpdateRequest(Post savedPost) {
         return new PostUpdateRequest(
-                savedPost().getId(),
+                savedPost.getId(),
                 "수정된 제목",
                 "수정된 본문",
                 true
