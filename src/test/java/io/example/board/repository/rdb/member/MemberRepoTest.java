@@ -1,10 +1,9 @@
-package io.example.board.repository;
+package io.example.board.repository.rdb.member;
 
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.member.MemberRole;
-import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
