@@ -1,7 +1,7 @@
 package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
-import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.rdb.member.Member;
@@ -28,9 +28,9 @@ public class PostService {
         this.postRepo = postRepo;
     }
 
-    public PostResponse create(PostRequest postRequest, LoginUser loginUser) {
+    public PostResponse create(PostCreateRequest postCreateRequest, LoginUser loginUser) {
         Member member = memberRepo.findByEmail(loginUser.getEmail()).orElseThrow();
-        Post post = postRepo.save(postRequest.toEntity(member));
+        Post post = postRepo.save(postCreateRequest.toEntity(member));
         return PostResponse.mapTo(post);
     }
 

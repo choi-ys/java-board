@@ -2,7 +2,7 @@ package io.example.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
-import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;
 import io.example.board.utils.generator.PostGenerator;
@@ -60,13 +60,13 @@ class PostControllerTest {
     public void create() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken();
-        PostRequest postRequest = PostGenerator.postRequest();
+        PostCreateRequest postCreateRequest = PostGenerator.postRequest();
 
         // When
         ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(postRequest))
+                .content(this.objectMapper.writeValueAsString(postCreateRequest))
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
 
@@ -76,8 +76,8 @@ class PostControllerTest {
                 .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect(header().exists(HttpHeaders.CONTENT_TYPE))
                 .andExpect(jsonPath("id").exists())
-                .andExpect(jsonPath("title").value(postRequest.getTitle()))
-                .andExpect(jsonPath("content").value(postRequest.getContent()))
+                .andExpect(jsonPath("title").value(postCreateRequest.getTitle()))
+                .andExpect(jsonPath("content").value(postCreateRequest.getContent()))
                 .andExpect(jsonPath("viewCount").value(0L))
                 .andExpect(jsonPath("display").value(true))
                 .andExpect(jsonPath("writer").exists())

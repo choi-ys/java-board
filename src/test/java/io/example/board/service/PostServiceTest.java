@@ -1,7 +1,7 @@
 package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
-import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
@@ -49,14 +49,14 @@ class PostServiceTest {
     public void create() {
         // Given
         Member member = MemberGenerator.member();
-        PostRequest postRequest = PostGenerator.postRequest();
+        PostCreateRequest postCreateRequest = PostGenerator.postRequest();
         LoginUserAdapter loginUserAdapter = MemberGenerator.loginUserAdapter();
 
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
         given(postRepo.save(any(Post.class))).will(AdditionalAnswers.returnsFirstArg());
 
         // When
-        postService.create(postRequest, loginUserAdapter.getLoginUser());
+        postService.create(postCreateRequest, loginUserAdapter.getLoginUser());
 
         // Then
         verify(memberRepo, times(1)).findByEmail(anyString());

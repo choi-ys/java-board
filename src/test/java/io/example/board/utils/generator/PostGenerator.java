@@ -1,6 +1,6 @@
 package io.example.board.utils.generator;
 
-import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.repository.rdb.post.PostRepo;
@@ -39,8 +39,8 @@ public class PostGenerator {
         return new Post(title, content, MemberGenerator.member());
     }
 
-    public static PostRequest postRequest() {
-        return new PostRequest(title, content);
+    public static PostCreateRequest postRequest() {
+        return new PostCreateRequest(title, content);
     }
 
     public static PostUpdateRequest postUpdateRequest() {

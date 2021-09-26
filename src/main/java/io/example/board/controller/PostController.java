@@ -1,6 +1,6 @@
 package io.example.board.controller;
 
-import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.vo.login.CurrentUser;
 import io.example.board.domain.vo.login.LoginUser;
@@ -38,11 +38,11 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody PostRequest postRequest, @CurrentUser LoginUser loginUser) {
-        PostResponse postResponse = postService.create(postRequest, loginUser);
+    public ResponseEntity create(@Valid @RequestBody PostCreateRequest postCreateRequest, @CurrentUser LoginUser loginUser) {
+        PostResponse postResponse = postService.create(postCreateRequest, loginUser);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
-                .create(postRequest, loginUser))
+                .create(postCreateRequest, loginUser))
                 .slash(postResponse.getId());
 
         EntityModel<PostResponse> entityModel = EntityModel.of(postResponse);
