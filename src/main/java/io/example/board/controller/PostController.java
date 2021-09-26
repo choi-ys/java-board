@@ -1,6 +1,7 @@
 package io.example.board.controller;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
+import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.vo.login.CurrentUser;
 import io.example.board.domain.vo.login.LoginUser;
@@ -52,5 +53,11 @@ public class PostController {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         // TODO: 용석(2021-09-27) : [PATCH, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.ok(postService.findByIdAndDisplayTrue(id));
+    }
+
+    @PatchMapping
+    public ResponseEntity update(@Valid @RequestBody PostUpdateRequest postUpdateRequest, @CurrentUser LoginUser loginUser) {
+        // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
+        return ResponseEntity.ok(postService.update(postUpdateRequest, loginUser));
     }
 }

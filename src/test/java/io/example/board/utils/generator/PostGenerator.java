@@ -39,6 +39,19 @@ public class PostGenerator {
         return postRepo.save(post());
     }
 
+    public Post savedPost(Member savedMember) {
+        return postRepo.save(post(savedMember));
+    }
+
+    public PostUpdateRequest postUpdateRequest() {
+        return new PostUpdateRequest(
+                savedPost().getId(),
+                "수정된 제목",
+                "수정된 본문",
+                true
+        );
+    }
+
     public static Post postMock() {
         return new Post(title, content, MemberGenerator.member());
     }
@@ -47,7 +60,7 @@ public class PostGenerator {
         return new PostCreateRequest(title, content);
     }
 
-    public static PostUpdateRequest postUpdateRequest() {
+    public static PostUpdateRequest postUpdateRequestMock() {
         return new PostUpdateRequest(
                 0L,
                 "수정된 제목",

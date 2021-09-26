@@ -3,7 +3,9 @@ package io.example.board.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
 import io.example.board.domain.dto.request.PostCreateRequest;
+import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;
@@ -23,8 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -223,6 +224,54 @@ class PostControllerTest {
                 .andExpect(jsonPath("path").value(urlTemplate))
                 .andExpect(jsonPath("code").value(ErrorCode.RESOURCE_NOT_FOUND.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.RESOURCE_NOT_FOUND.message))
+        ;
+    }
+
+    @Test
+    @DisplayName("[200:PATCH]게시글 수정")
+    public void update() throws Exception {
+        // Given
+        Token token = tokenGenerator.generateToken(MemberGenerator.member());
+        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest();
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(postUpdateRequest))
+                .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(postUpdateRequest.getId()))
+                .andExpect(jsonPath("title").value(postUpdateRequest.getTitle()))
+                .andExpect(jsonPath("content").value(postUpdateRequest.getContent()))
+                .andExpect(jsonPath("viewCount").exists())
+                .andExpect(jsonPath("display").exists())
+                .andExpect(jsonPath("writer").isNotEmpty())
+        ;
+    }
+
+    @Test
+    @DisplayName("[403:PATCH]게시글 수정(게시자가 아닌 사용자의 요청)")
+    public void update_Fail_Cause_BadCredentials() throws Exception {
+        // Given
+        Token token = tokenGenerator.generateToken(new Member("choi.ys@naver.com", "password", "용석", "noel"));
+        PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest();
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(postUpdateRequest))
+                .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isUnauthorized())
         ;
     }
 }
