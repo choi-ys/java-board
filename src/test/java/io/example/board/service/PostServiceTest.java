@@ -77,7 +77,7 @@ class PostServiceTest {
         // When
         Exception expected = assertThrows(
                 ResourceNotFoundException.class,
-                () -> postService.findByIdAndDisplay(0L)
+                () -> postService.findByIdAndDisplayTrue(0L)
         );
 
         // Then

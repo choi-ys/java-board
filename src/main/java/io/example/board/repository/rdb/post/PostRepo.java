@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface PostRepo extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = "member")
-    Optional<Post> findByIdAndDisplay(Long aLong, boolean display);
+    Optional<Post> findByIdAndDisplayTrue(Long id);
 }

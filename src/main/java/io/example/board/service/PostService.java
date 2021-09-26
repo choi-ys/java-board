@@ -34,8 +34,8 @@ public class PostService {
         return PostResponse.mapTo(post);
     }
 
-    public PostResponse findByIdAndDisplay(long postId) {
-        return PostResponse.mapTo(postRepo.findByIdAndDisplay(postId, true).orElseThrow(
+    public PostResponse findByIdAndDisplayTrue(long postId) {
+        return PostResponse.mapTo(postRepo.findByIdAndDisplayTrue(postId).orElseThrow(
                 () -> new ResourceNotFoundException()
         ));
     }

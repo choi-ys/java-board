@@ -101,7 +101,7 @@ class PostRepoTest {
         entityManager.clear();
 
         // When
-        Post expected = postRepo.findByIdAndDisplay(savedPost.getId(), true).orElseThrow();
+        Post expected = postRepo.findByIdAndDisplayTrue(savedPost.getId()).orElseThrow();
 
         // Then
         assertAll(
@@ -115,11 +115,19 @@ class PostRepoTest {
     public void findByIdAndDisplay_Fail_CauseNotDisplayedResource() {
         // Given
         Post savedPost = savedPost(memberGenerator.savedMember());
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
+                savedPost.getId(),
+                savedPost.getTitle(),
+                savedPost.getContent(),
+                false
+        );
+        savedPost.update(postUpdateRequest);
+        entityManager.flush();
         entityManager.clear();
 
         // When
         RuntimeException expected = assertThrows(NoSuchElementException.class,
-                () -> postRepo.findByIdAndDisplay(savedPost.getId(), false).orElseThrow()
+                () -> postRepo.findByIdAndDisplayTrue(savedPost.getId()).orElseThrow()
         );
 
         // Then
