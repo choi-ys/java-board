@@ -259,7 +259,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("[403:PATCH]게시글 수정(게시자가 아닌 사용자의 요청)")
+    @DisplayName("[401:PATCH]게시글 수정(게시자가 아닌 사용자의 요청)")
     public void update_Fail_Cause_BadCredentials() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken(new Member("choi.ys@naver.com", "password", "용석", "noel"));
@@ -277,6 +277,61 @@ class PostControllerTest {
         // Then
         resultActions.andDo(print())
                 .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("method").exists())
+                .andExpect(jsonPath("path").value(POST_URL))
+                .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
+        ;
+    }
+
+    @Test
+    @DisplayName("[204:DELETE]게시글 삭제")
+    public void deletePost() throws Exception {
+        // Given
+        Member savedMember = memberGenerator.savedMember();
+        Post savedPost = postGenerator.savedPost(savedMember);
+        Token token = tokenGenerator.generateToken(savedMember);
+        String urlTemplate = POST_URL + "/" + savedPost.getId();
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(delete(urlTemplate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist())
+        ;
+    }
+
+    @Test
+    @DisplayName("[401:DELETE]게시글 삭제(게시자가 아닌 사용자의 요청)")
+    public void deletePost_Fail_Cause_BadCredentials() throws Exception {
+        // Given
+        Member savedMember = memberGenerator.savedMember();
+        Post savedPost = postGenerator.savedPost(savedMember);
+        Token token = tokenGenerator.generateToken(MemberGenerator.secondMember());
+        String urlTemplate = POST_URL + "/" + savedPost.getId();
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(delete(urlTemplate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("method").exists())
+                .andExpect(jsonPath("path").value(urlTemplate))
+                .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
         ;
     }
 }

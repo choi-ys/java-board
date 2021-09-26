@@ -60,4 +60,11 @@ public class PostController {
         // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.ok(postService.update(postUpdateRequest, loginUser));
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id, @CurrentUser LoginUser loginUser) {
+        // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
+        postService.delete(id, loginUser);
+        return ResponseEntity.noContent().build();
+    }
 }
