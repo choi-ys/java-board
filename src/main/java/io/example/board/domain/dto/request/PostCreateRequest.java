@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 public class PostCreateRequest {
 
     @NotBlank(message = "제목은 필수 입력 사항입니다.")
-    @Size(min = 20, max = 50, message = "비밀번호는 8~20자 이내로 입력하세요.")
+    @Size(min = 1, max = 50, message = "게시글 제목은 1~50자 이내로 입력하세요.")
     private String title;
 
     @NotBlank(message = "본문은 필수 입력 사항입니다.")
