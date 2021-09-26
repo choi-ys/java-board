@@ -64,4 +64,8 @@ public class Post {
         this.content = postUpdateRequest.getContent();
         this.display = postUpdateRequest.isDisplay();
     }
+
+    public void delete() {
+        this.deleted = true;
+    }
 }
