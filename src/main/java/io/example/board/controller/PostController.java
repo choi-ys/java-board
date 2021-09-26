@@ -9,10 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -40,7 +37,6 @@ public class PostController {
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody PostCreateRequest postCreateRequest, @CurrentUser LoginUser loginUser) {
         PostResponse postResponse = postService.create(postCreateRequest, loginUser);
-
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
                 .create(postCreateRequest, loginUser))
                 .slash(postResponse.getId());
@@ -48,6 +44,13 @@ public class PostController {
         EntityModel<PostResponse> entityModel = EntityModel.of(postResponse);
         entityModel.add(selfLinkBuilder.withSelfRel());
 
+        // TODO: 용석(2021-09-27) : [GET, PATCH, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.created(selfLinkBuilder.toUri()).body(entityModel);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        // TODO: 용석(2021-09-27) : [PATCH, DELETE /post, GET /search] link 정보 추가
+        return ResponseEntity.ok(postService.findByIdAndDisplayTrue(id));
     }
 }

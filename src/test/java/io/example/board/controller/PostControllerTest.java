@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
+import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.token.Token;
 import io.example.board.utils.generator.MemberGenerator;
 import io.example.board.utils.generator.PostGenerator;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -41,15 +43,13 @@ class PostControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final TokenGenerator tokenGenerator;
-    private final MemberGenerator memberGenerator;
     private final PostGenerator postGenerator;
 
-    public PostControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, TokenGenerator tokenGenerator,
-                              MemberGenerator memberGenerator, PostGenerator postGenerator) {
+    public PostControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
+                              TokenGenerator tokenGenerator, PostGenerator postGenerator) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.tokenGenerator = tokenGenerator;
-        this.memberGenerator = memberGenerator;
         this.postGenerator = postGenerator;
     }
 
@@ -57,7 +57,6 @@ class PostControllerTest {
 
     @Test
     @DisplayName("[200:POST]게시글 생성")
-    @Disabled
     public void create() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken();
@@ -81,14 +80,13 @@ class PostControllerTest {
                 .andExpect(jsonPath("content").value(postCreateRequest.getContent()))
                 .andExpect(jsonPath("viewCount").value(0L))
                 .andExpect(jsonPath("display").value(true))
-                .andExpect(jsonPath("writer").exists())
+                .andExpect(jsonPath("writer").isNotEmpty())
                 .andExpect(jsonPath("_links.self").exists())
         ;
     }
 
     @Test
-    @DisplayName("[400:POST]게시글 생성 실패 : 값이 없는 요청")
-    @Disabled
+    @DisplayName("[400:POST]게시글 생성 실패(값이 없는 요청)")
     public void create_Fail_Cause_NoArgument() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken();
@@ -112,7 +110,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("[400:POST]게시글 생성 실패 : 값이 잘못된 요청")
+    @DisplayName("[400:POST]게시글 생성 실패(값이 잘못된 요청)")
     @Disabled
     public void create_Fail_Cause_InvalidArgument() throws Exception {
         // Given
@@ -135,13 +133,12 @@ class PostControllerTest {
                 .andExpect(jsonPath("path").exists())
                 .andExpect(jsonPath("code").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.message))
-                .andExpect(jsonPath("errorDetails").exists())
+                .andExpect(jsonPath("errorDetails").isNotEmpty())
         ;
     }
 
     @Test
-    @DisplayName("[403:POST]게시글 생성 실패 : 권한이 없는 요청")
-    @Disabled
+    @DisplayName("[403:POST]게시글 생성 실패(권한이 없는 요청)")
     public void create_Fail_Cause_NoCredentials() throws Exception {
         // Given
         PostCreateRequest postCreateRequest = PostGenerator.postRequest();
@@ -156,6 +153,76 @@ class PostControllerTest {
         // Then
         resultActions.andDo(print())
                 .andExpect(status().isForbidden())
+        ;
+    }
+
+    @Test
+    @DisplayName("[200:GET]전시 상태의 게시글 조회")
+    public void findByIdAndDisplayTrue() throws Exception {
+        // Given
+        Post savedPost = postGenerator.savedPost();
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(get(POST_URL + "/" + savedPost.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(savedPost.getId()))
+                .andExpect(jsonPath("title").value(savedPost.getTitle()))
+                .andExpect(jsonPath("content").value(savedPost.getContent()))
+                .andExpect(jsonPath("viewCount").value(savedPost.getViewCount()))
+                .andExpect(jsonPath("display").value(savedPost.isDisplay()))
+                .andExpect(jsonPath("writer").isNotEmpty())
+        ;
+    }
+
+    @Test
+    @DisplayName("[400:GET]전시 상태의 게시글 조회(요청 값의 자료형이 잘못된 경우)")
+    public void findByIdAndDisplayTrue_Fail_CauseArgumentTypeMisMatch() throws Exception {
+        // Given
+        String urlTemplate = POST_URL + "/a";
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("method").exists())
+                .andExpect(jsonPath("path").value(urlTemplate))
+                .andExpect(jsonPath("code").value(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.message))
+        ;
+    }
+
+    @Test
+    @DisplayName("[404:GET]전시 상태의 게시글 조회(존재하지 않는 자원의 조회 요청)")
+    public void findByIdAndDisplayTrue_Fail_Cause_ResourceNotFound() throws Exception {
+        // Given
+        String urlTemplate = POST_URL + "/0";
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("method").exists())
+                .andExpect(jsonPath("path").value(urlTemplate))
+                .andExpect(jsonPath("code").value(ErrorCode.RESOURCE_NOT_FOUND.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.RESOURCE_NOT_FOUND.message))
         ;
     }
 }
