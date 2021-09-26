@@ -1,5 +1,6 @@
 package io.example.board.config.security;
 
+import io.example.board.config.security.endpoint.AuthenticationEndpointByRoles;
 import io.example.board.config.security.jwt.verifier.JwtConfigurer;
 import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.domain.rdb.member.MemberRole;
@@ -35,11 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests(
                         it -> {
-                            it.antMatchers(HttpMethod.POST, "/member").permitAll();
-                            it.antMatchers(HttpMethod.POST, "/login").permitAll();
-                            it.antMatchers(HttpMethod.GET, "/post/**").permitAll();
-                            it.antMatchers(HttpMethod.POST, "/refresh").hasRole(MemberRole.MEMBER.name());
-                            it.antMatchers(HttpMethod.POST, "/post").hasRole(MemberRole.MEMBER.name());
+                            it.antMatchers(HttpMethod.GET, AuthenticationEndpointByRoles.NONE.patterns(HttpMethod.GET)).permitAll();
+                            it.antMatchers(HttpMethod.POST, AuthenticationEndpointByRoles.NONE.patterns(HttpMethod.POST)).permitAll();
+
+                            it.antMatchers(HttpMethod.POST, AuthenticationEndpointByRoles.MEMBER.patterns(HttpMethod.POST)).hasRole(MemberRole.MEMBER.name());
+                            it.antMatchers(HttpMethod.PATCH, AuthenticationEndpointByRoles.MEMBER.patterns(HttpMethod.PATCH)).hasRole(MemberRole.MEMBER.name());
+                            it.antMatchers(HttpMethod.DELETE, AuthenticationEndpointByRoles.MEMBER.patterns(HttpMethod.DELETE)).hasRole(MemberRole.MEMBER.name());
+
                             it.anyRequest().authenticated();
                         }
                 )
