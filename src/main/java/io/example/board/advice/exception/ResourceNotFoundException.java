@@ -8,6 +8,6 @@ import io.example.board.domain.dto.response.error.ErrorCode;
  */
 public class ResourceNotFoundException extends IllegalArgumentException {
     public ResourceNotFoundException() {
-        super(ErrorCode.RESOURCE_NOT_FOUND_EXCEPTION.message);
+        super(ErrorCode.RESOURCE_NOT_FOUND.message);
     }
 }

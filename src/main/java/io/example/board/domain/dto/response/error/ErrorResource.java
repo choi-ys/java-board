@@ -37,7 +37,7 @@ public class ErrorResource {
         this.code = errorCode.name();
         this.message = errorCode.message;
         this.method = httpServletRequest.getMethod();
-        this.path = httpServletRequest.getPathInfo();
+        this.path = httpServletRequest.getRequestURI();
         timestamp = LocalDateTime.now();
     }
 

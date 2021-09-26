@@ -75,7 +75,7 @@ class PostServiceTest {
         // Then
         assertAll(
                 () -> assertTrue(expected instanceof IllegalArgumentException),
-                () -> assertEquals(expected.getMessage(), ErrorCode.RESOURCE_NOT_FOUND_EXCEPTION.message)
+                () -> assertEquals(expected.getMessage(), ErrorCode.RESOURCE_NOT_FOUND.message)
         );
     }
 

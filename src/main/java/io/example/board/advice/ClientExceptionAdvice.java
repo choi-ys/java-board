@@ -1,5 +1,6 @@
 package io.example.board.advice;
 
+import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.dto.response.error.ErrorResource;
 import io.example.board.domain.dto.response.error.MethodArgumentNotValidErrorResource;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date : 2021/09/21 6:16 오전
  */
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class ClientExceptionAdvice {
 
     // [400] @Valid를 이용한 유효성 검사 시, @RequestBody의 값이 없는 경우 JSR 380 Annotations이 적용된 필드의 Binding Exception
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -60,6 +61,14 @@ public class ExceptionAdvice {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResource(ErrorCode.ACCESS_DENIED, exception.getMessage(), request));
+    }
+
+    // [404] 요청에 해당하는 자원이 존재하지 않는 경우
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity resourceNotFoundException(ResourceNotFoundException exception, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResource(ErrorCode.RESOURCE_NOT_FOUND, request));
     }
 
     // [405] 허용하지 않는 Http Method 요청인 경우
