@@ -1,5 +1,6 @@
 package io.example.board.domain.rdb.post;
 
+import io.example.board.domain.dto.request.PostUpdateDto;
 import io.example.board.domain.rdb.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,5 +49,16 @@ public class Post {
         this.title = title;
         this.content = content;
         this.member = member;
+    }
+
+    // * --------------------------------------------------------------
+    // * Header : 비즈니스 로직
+    // * @author : choi-ys
+    // * @date : 2021-09-25 오후 11:10
+    // * --------------------------------------------------------------
+    public void update(PostUpdateDto postUpdateDto) {
+        this.title = postUpdateDto.getTitle();
+        this.content = postUpdateDto.getContent();
+        this.display = postUpdateDto.isDisplay();
     }
 }
