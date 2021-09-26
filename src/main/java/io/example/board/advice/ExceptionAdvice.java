@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,6 +68,14 @@ public class ExceptionAdvice {
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(new ErrorResource(ErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED, request));
+    }
+
+    // [406] 요청 Accept Type이 잘못된 경우
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity httpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException exception, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new ErrorResource(ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE, request));
     }
 
     // [415] 요청 Media Type이 잘못된 경우

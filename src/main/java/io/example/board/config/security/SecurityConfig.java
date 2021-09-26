@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             it.antMatchers(HttpMethod.POST, "/member").permitAll();
                             it.antMatchers(HttpMethod.POST, "/login").permitAll();
                             it.antMatchers(HttpMethod.POST, "/refresh").hasRole(MemberRole.MEMBER.name());
+                            it.antMatchers(HttpMethod.POST, "/post").hasRole(MemberRole.MEMBER.name());
                             it.anyRequest().authenticated();
                         }
                 )
