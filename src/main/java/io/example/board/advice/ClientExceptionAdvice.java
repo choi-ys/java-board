@@ -16,6 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +46,15 @@ public class ClientExceptionAdvice {
                         exception.getFieldErrors())
                 );
     }
+
+    // [400] @RequestParam, @PathVariable 요청값의 자료형이 잘못된 경우
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResource(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH, request));
+    }
+
 
     // [401] 유효한 자격 증명이 아닌 접근인 경우, Unauthorized Exception
     @ExceptionHandler(AuthenticationException.class)
