@@ -11,6 +11,7 @@ import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.repository.rdb.post.PostRepo;
 import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,21 +44,12 @@ class PostServiceTest {
     @InjectMocks
     PostService postService;
 
-    private Post generatePostMock() {
-        Member member = MemberGenerator.member();
-        String title = "게시글 제목";
-        String content = "게시글 본문";
-        return new Post(title, content, member);
-    }
-
     @Test
     @DisplayName("게시글 생성")
     public void create() {
         // Given
         Member member = MemberGenerator.member();
-        String title = "게시글 제목";
-        String content = "게시글 본문";
-        PostRequest postRequest = new PostRequest(title, content);
+        PostRequest postRequest = PostGenerator.postRequest();
         LoginUserAdapter loginUserAdapter = MemberGenerator.loginUserAdapter();
 
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
@@ -91,13 +83,9 @@ class PostServiceTest {
     @DisplayName("게시글 수정")
     public void update() {
         // Given
-        Post postMock = generatePostMock();
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
-                0L,
-                "수정된 제목",
-                "수정된 본문",
-                true
-        );
+        Post postMock = PostGenerator.postMock();
+        PostUpdateRequest postUpdateRequest = PostGenerator.postUpdateRequest();
+
         given(postRepo.findById(postUpdateRequest.getId())).willReturn(Optional.of(postMock));
 
         // When
@@ -117,11 +105,13 @@ class PostServiceTest {
     @DisplayName("게시글 삭제")
     public void delete() {
         // Given
-        Post postMock = generatePostMock();
+        Post postMock = PostGenerator.postMock();
         given(postRepo.findById(anyLong())).willReturn(Optional.of(postMock));
 
         // When
         postService.delete(0L);
+
+        // Then
         verify(postRepo, times(1)).delete(postMock);
     }
 }

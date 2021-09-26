@@ -1,0 +1,54 @@
+package io.example.board.utils.generator;
+
+import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.rdb.post.Post;
+import io.example.board.repository.rdb.post.PostRepo;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.context.annotation.Import;
+
+/**
+ * @author : choi-ys
+ * @date : 2021-09-27 오전 1:20
+ */
+@TestComponent
+@Import(MemberGenerator.class)
+public class PostGenerator {
+
+    private final MemberGenerator memberGenerator;
+    private final PostRepo postRepo;
+
+    public static final String title = "게시글 제목";
+    public static final String content = "게시글 본문";
+
+
+    public PostGenerator(MemberGenerator memberGenerator, PostRepo postRepo) {
+        this.memberGenerator = memberGenerator;
+        this.postRepo = postRepo;
+    }
+
+    public Post post() {
+        return new Post(title, content, memberGenerator.savedMember());
+    }
+
+    public Post savedPost() {
+        return postRepo.save(post());
+    }
+
+    public static Post postMock() {
+        return new Post(title, content, MemberGenerator.member());
+    }
+
+    public static PostRequest postRequest() {
+        return new PostRequest(title, content);
+    }
+
+    public static PostUpdateRequest postUpdateRequest() {
+        return new PostUpdateRequest(
+                0L,
+                "수정된 제목",
+                "수정된 본문",
+                true
+        );
+    }
+}

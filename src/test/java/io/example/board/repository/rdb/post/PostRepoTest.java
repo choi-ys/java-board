@@ -3,9 +3,9 @@ package io.example.board.repository.rdb.post;
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.dto.request.PostUpdateRequest;
-import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @DataJpaTest(showSql = false)
 @ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
-@Import({P6spyLogMessageFormatConfiguration.class, MemberGenerator.class})
+@Import({P6spyLogMessageFormatConfiguration.class, MemberGenerator.class, PostGenerator.class})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DisplayName("Repo:Post")
 class PostRepoTest {
@@ -32,35 +32,23 @@ class PostRepoTest {
     private final PostRepo postRepo;
     private final EntityManager entityManager;
     private final MemberGenerator memberGenerator;
+    private final PostGenerator postGenerator;
 
-    public PostRepoTest(PostRepo postRepo, EntityManager entityManager, MemberGenerator memberGenerator) {
+    public PostRepoTest(PostRepo postRepo, EntityManager entityManager, MemberGenerator memberGenerator, PostGenerator postGenerator) {
         this.postRepo = postRepo;
         this.entityManager = entityManager;
         this.memberGenerator = memberGenerator;
+        this.postGenerator = postGenerator;
     }
 
     public static final String title = "게시글 제목";
     public static final String content = "게시글 본문";
 
-    public Post generatePost() {
-        Member member = MemberGenerator.member();
-        return new Post(title, content, member);
-    }
-
-    public Post generatePost(Member savedMember) {
-        return new Post(title, content, savedMember);
-    }
-
-    public Post savedPost(Member savedMember) {
-        Post post = generatePost(savedMember);
-        return postRepo.saveAndFlush(post);
-    }
-
     @Test
     @DisplayName("게시글 객체 저장")
     public void save() {
         // Given
-        Post post = generatePost(memberGenerator.savedMember());
+        Post post = postGenerator.post();
 
         // When
         Post expected = postRepo.save(post);
@@ -80,7 +68,7 @@ class PostRepoTest {
     @DisplayName("게시글 조회")
     public void findById() {
         // Given
-        Post savedPost = savedPost(memberGenerator.savedMember());
+        Post savedPost = postGenerator.savedPost();
         entityManager.clear();
 
         // When
@@ -97,7 +85,7 @@ class PostRepoTest {
     @DisplayName("전시 상태의 게시글 조회")
     public void findByIdAndDisplay() {
         // Given
-        Post savedPost = savedPost(memberGenerator.savedMember());
+        Post savedPost = postGenerator.savedPost();
         entityManager.clear();
 
         // When
@@ -114,7 +102,7 @@ class PostRepoTest {
     @DisplayName("전시 상태의 게시글 조회 실패 : 미전시 게시글 조회 요청")
     public void findByIdAndDisplay_Fail_CauseNotDisplayedResource() {
         // Given
-        Post savedPost = savedPost(memberGenerator.savedMember());
+        Post savedPost = postGenerator.savedPost();
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                 savedPost.getId(),
                 savedPost.getTitle(),
@@ -138,9 +126,9 @@ class PostRepoTest {
     @DisplayName("게시글 수정")
     public void updateByDirtyChecking() {
         // Given
-        Post savedPost = savedPost(memberGenerator.savedMember());
-        String newTitle = "";
-        String newContent = "";
+        Post savedPost = postGenerator.savedPost();
+        String newTitle = "수정된 제목";
+        String newContent = "수정된 본문";
         boolean changedDisplay = false;
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(0L, newTitle, newContent, changedDisplay);
 
@@ -163,7 +151,7 @@ class PostRepoTest {
     @DisplayName("게시글 객체 삭제")
     public void delete() {
         // Given
-        Post savedPost = savedPost(memberGenerator.savedMember());
+        Post savedPost = postGenerator.savedPost();
 
         // When
         postRepo.delete(savedPost);
