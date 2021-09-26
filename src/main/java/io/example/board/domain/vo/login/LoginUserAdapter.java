@@ -17,6 +17,6 @@ public class LoginUserAdapter extends User {
 
     public LoginUserAdapter(String username, Set<SimpleGrantedAuthority> authorities) {
         super(username, "", authorities);
-        this.loginUser = loginUser;
+        this.loginUser = new LoginUser(username, authorities);
     }
 }

@@ -30,11 +30,11 @@ public class Post {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "display", nullable = false)
-    private boolean display = true;
-
     @Column(name = "view_count", nullable = false)
     private long viewCount;
+
+    @Column(name = "display", nullable = false)
+    private boolean display = true;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
