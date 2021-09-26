@@ -30,8 +30,17 @@ public class MemberGenerator {
     public static final String name = "choi-ys";
     public static final String nickname = "whypie";
 
+    public static String secondMemberEmail = "ys.choi@naver.com";
+    public static final String secondMemberPassword = "password";
+    public static final String secondMemberName = "choi-ys";
+    public static final String secondMemberNickname = "whypie";
+
     public static Member member() {
         return new Member(email, password, name, nickname);
+    }
+
+    public static Member secondMember() {
+        return new Member(secondMemberEmail, secondMemberPassword, secondMemberName, secondMemberNickname);
     }
 
     public static SignupRequest signupRequest() {

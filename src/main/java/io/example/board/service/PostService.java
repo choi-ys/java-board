@@ -4,11 +4,13 @@ import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
+import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.login.LoginUser;
 import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.repository.rdb.post.PostRepo;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date : 2021-09-26 오후 2:13
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PostService {
 
     private final MemberRepo memberRepo;
@@ -28,6 +30,7 @@ public class PostService {
         this.postRepo = postRepo;
     }
 
+    @Transactional
     public PostResponse create(PostCreateRequest postCreateRequest, LoginUser loginUser) {
         Member member = memberRepo.findByEmail(loginUser.getEmail()).orElseThrow();
         Post post = postRepo.save(postCreateRequest.toEntity(member));
@@ -40,14 +43,16 @@ public class PostService {
         ));
     }
 
-    public PostResponse update(PostUpdateRequest postUpdateRequest) {
-        Post post = postRepo.findById(postUpdateRequest.getId()).orElseThrow(
-                () -> new ResourceNotFoundException()
+    @Transactional
+    public PostResponse update(PostUpdateRequest postUpdateRequest, LoginUser loginUser) {
+        Post post = postRepo.findByIdAndMemberEmail(postUpdateRequest.getId(), loginUser.getEmail()).orElseThrow(
+                () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
         post.update(postUpdateRequest);
         return PostResponse.mapTo(post);
     }
 
+    @Transactional
     public void delete(long postId) {
         postRepo.delete(postRepo.findById(postId).orElseThrow(
                 () -> new ResourceNotFoundException()

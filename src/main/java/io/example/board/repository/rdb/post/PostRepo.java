@@ -14,4 +14,7 @@ public interface PostRepo extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = "member")
     Optional<Post> findByIdAndDisplayTrue(Long id);
+
+    @EntityGraph(attributePaths = "member")
+    Optional<Post> findByIdAndMemberEmail(Long id, String email);
 }

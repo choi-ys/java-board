@@ -7,6 +7,7 @@ import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
+import io.example.board.domain.vo.login.LoginUser;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.repository.rdb.post.PostRepo;
@@ -19,6 +20,8 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.Optional;
 
@@ -67,14 +70,14 @@ class PostServiceTest {
     @DisplayName("게시글 조회 실패(존재 하지 않는 자원)")
     public void findByIdAndDisplay() {
         // When
-        Exception expected = assertThrows(
+        IllegalArgumentException expected = assertThrows(
                 ResourceNotFoundException.class,
                 () -> postService.findByIdAndDisplayTrue(0L)
         );
 
         // Then
         assertAll(
-                () -> assertTrue(expected instanceof IllegalArgumentException),
+                () -> assertTrue(expected instanceof RuntimeException),
                 () -> assertEquals(expected.getMessage(), ErrorCode.RESOURCE_NOT_FOUND.message)
         );
     }
@@ -83,13 +86,14 @@ class PostServiceTest {
     @DisplayName("게시글 수정")
     public void update() {
         // Given
+        LoginUser loginUser = MemberGenerator.loginUserAdapter().getLoginUser();
         Post postMock = PostGenerator.postMock();
-        PostUpdateRequest postUpdateRequest = PostGenerator.postUpdateRequest();
+        PostUpdateRequest postUpdateRequest = PostGenerator.postUpdateRequestMock();
 
-        given(postRepo.findById(postUpdateRequest.getId())).willReturn(Optional.of(postMock));
+        given(postRepo.findByIdAndMemberEmail(postUpdateRequest.getId(), loginUser.getEmail())).willReturn(Optional.of(postMock));
 
         // When
-        PostResponse expected = postService.update(postUpdateRequest);
+        PostResponse expected = postService.update(postUpdateRequest, loginUser);
 
         // Then
         assertAll(
@@ -98,7 +102,27 @@ class PostServiceTest {
                 () -> assertEquals(expected.isDisplay(), postUpdateRequest.isDisplay())
         );
 
-        verify(postRepo, times(1)).findById(postUpdateRequest.getId());
+        verify(postRepo, times(1)).findByIdAndMemberEmail(postUpdateRequest.getId(), loginUser.getEmail());
+    }
+
+    @Test
+    @DisplayName("게시글 수정 실패(게시자가 아닌 사용자의 요청)")
+    public void update_Fail_Cause_BadCredentials() {
+        // Given
+        LoginUser loginUser = MemberGenerator.loginUserAdapter().getLoginUser();
+        PostUpdateRequest postUpdateRequest = PostGenerator.postUpdateRequestMock();
+
+        given(postRepo.findByIdAndMemberEmail(anyLong(), anyString())).willThrow(BadCredentialsException.class);
+
+        // When
+        AuthenticationException expected = assertThrows(
+                BadCredentialsException.class,
+                () -> postService.update(postUpdateRequest, loginUser)
+        );
+
+        assertTrue(expected instanceof RuntimeException);
+
+        verify(postRepo, times(1)).findByIdAndMemberEmail(anyLong(), anyString());
     }
 
     @Test

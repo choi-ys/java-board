@@ -3,6 +3,7 @@ package io.example.board.repository.rdb.post;
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.utils.generator.MemberGenerator;
 import io.example.board.utils.generator.PostGenerator;
@@ -79,6 +80,42 @@ class PostRepoTest {
                 () -> assertEquals(expected.getId(), savedPost.getId()),
                 () -> assertNotNull(expected.getMember())
         );
+    }
+
+    @Test
+    @DisplayName("나의 게시글 상세 조회")
+    public void findByIdAndMemberEmail() {
+        // Given
+        Member savedMember = memberGenerator.savedMember();
+        Post savedPost = postGenerator.savedPost(savedMember);
+        entityManager.clear();
+
+        // When
+        Post expected = postRepo.findByIdAndMemberEmail(savedPost.getId(), savedMember.getEmail()).orElseThrow();
+
+        // Then
+        assertAll(
+                () -> assertEquals(expected.getId(), savedPost.getId()),
+                () -> assertNotNull(expected.getMember())
+        );
+    }
+
+    @Test
+    @DisplayName("나의 게시글 상세 조회 실패(게시자가 아닌 사용자의 요청)")
+    public void findByIdAndMemberEmail_Fail_Cause_BadCredentials() {
+        // Given
+        String notPostedMemberEmail = "choi.ys@naver.com";
+        Post savedPost = postGenerator.savedPost();
+        entityManager.clear();
+
+        // When
+        RuntimeException expected = assertThrows(
+                RuntimeException.class,
+                () -> postRepo.findByIdAndMemberEmail(savedPost.getId(), notPostedMemberEmail).orElseThrow()
+        );
+
+        // Then
+        assertTrue(expected instanceof NoSuchElementException);
     }
 
     @Test

@@ -2,6 +2,7 @@ package io.example.board.utils.generator;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.repository.rdb.post.PostRepo;
 import org.springframework.boot.test.context.TestComponent;
@@ -21,7 +22,6 @@ public class PostGenerator {
     public static final String title = "게시글 제목";
     public static final String content = "게시글 본문";
 
-
     public PostGenerator(MemberGenerator memberGenerator, PostRepo postRepo) {
         this.memberGenerator = memberGenerator;
         this.postRepo = postRepo;
@@ -29,6 +29,10 @@ public class PostGenerator {
 
     public Post post() {
         return new Post(title, content, memberGenerator.savedMember());
+    }
+
+    public Post post(Member savedMember) {
+        return new Post(title, content, savedMember);
     }
 
     public Post savedPost() {
