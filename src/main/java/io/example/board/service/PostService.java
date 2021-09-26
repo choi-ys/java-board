@@ -53,9 +53,10 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(long postId) {
-        postRepo.delete(postRepo.findById(postId).orElseThrow(
-                () -> new ResourceNotFoundException()
-        ));
+    public void delete(long postId, LoginUser loginUser) {
+        Post post = postRepo.findByIdAndMemberEmail(postId, loginUser.getEmail()).orElseThrow(
+                () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
+        );
+        post.delete();
     }
 }

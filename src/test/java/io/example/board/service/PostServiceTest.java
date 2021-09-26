@@ -130,12 +130,33 @@ class PostServiceTest {
     public void delete() {
         // Given
         Post postMock = PostGenerator.postMock();
-        given(postRepo.findById(anyLong())).willReturn(Optional.of(postMock));
+        LoginUser loginUser = MemberGenerator.loginUserAdapter().getLoginUser();
+        given(postRepo.findByIdAndMemberEmail(anyLong(), anyString())).willReturn(Optional.of(postMock));
 
         // When
-        postService.delete(0L);
+        postService.delete(0L, loginUser);
 
         // Then
-        verify(postRepo, times(1)).delete(postMock);
+        verify(postRepo, times(1)).findByIdAndMemberEmail(anyLong(), anyString());
+        assertTrue(postMock.isDeleted());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 실패(게시자가 아닌 사용자의 요청)")
+    public void delete_Cause_BadCredentials() {
+        // Given
+        Post postMock = PostGenerator.postMock();
+        LoginUserAdapter loginUserAdapter = MemberGenerator.loginUserAdapter();
+        given(postRepo.findByIdAndMemberEmail(anyLong(), anyString())).willThrow(BadCredentialsException.class);
+
+        // When
+        AuthenticationException expected = assertThrows(
+                BadCredentialsException.class,
+                () -> postService.delete(0L, loginUserAdapter.getLoginUser())
+        );
+
+        // Then
+        verify(postRepo, times(1)).findByIdAndMemberEmail(anyLong(), anyString());
+        assertTrue(expected instanceof RuntimeException);
     }
 }
