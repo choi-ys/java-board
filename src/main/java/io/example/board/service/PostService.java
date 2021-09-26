@@ -2,6 +2,7 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -37,5 +38,13 @@ public class PostService {
         return PostResponse.mapTo(postRepo.findByIdAndDisplay(postId, true).orElseThrow(
                 () -> new ResourceNotFoundException()
         ));
+    }
+
+    public PostResponse update(PostUpdateRequest postUpdateRequest) {
+        Post post = postRepo.findById(postUpdateRequest.getId()).orElseThrow(
+                () -> new ResourceNotFoundException()
+        );
+        post.update(postUpdateRequest);
+        return PostResponse.mapTo(post);
     }
 }

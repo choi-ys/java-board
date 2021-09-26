@@ -2,6 +2,8 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostRequest;
+import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -20,8 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -84,5 +85,31 @@ class PostServiceTest {
                 () -> assertTrue(expected instanceof IllegalArgumentException),
                 () -> assertEquals(expected.getMessage(), ErrorCode.RESOURCE_NOT_FOUND_EXCEPTION.message)
         );
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+    public void update() {
+        // Given
+        Post postMock = generatePostMock();
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
+                0L,
+                "수정된 제목",
+                "수정된 본문",
+                true
+        );
+        given(postRepo.findById(postUpdateRequest.getId())).willReturn(Optional.of(postMock));
+
+        // When
+        PostResponse expected = postService.update(postUpdateRequest);
+
+        // Then
+        assertAll(
+                () -> assertEquals(expected.getTitle(), postUpdateRequest.getTitle()),
+                () -> assertEquals(expected.getContent(), postUpdateRequest.getContent()),
+                () -> assertEquals(expected.isDisplay(), postUpdateRequest.isDisplay())
+        );
+
+        verify(postRepo, times(1)).findById(postUpdateRequest.getId());
     }
 }

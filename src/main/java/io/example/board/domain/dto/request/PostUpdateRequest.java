@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostUpdateDto {
+public class PostUpdateRequest {
+
+    private Long id;
 
     private String title;
 
@@ -23,7 +25,8 @@ public class PostUpdateDto {
     // * @author : choi-ys
     // * @date : 2021-09-26 오전 12:00
     // * --------------------------------------------------------------
-    public PostUpdateDto(String title, String content, boolean display) {
+    public PostUpdateRequest(Long id, String title, String content, boolean display) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.display = display;

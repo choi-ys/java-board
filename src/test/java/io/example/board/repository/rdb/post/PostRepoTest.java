@@ -2,7 +2,7 @@ package io.example.board.repository.rdb.post;
 
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
-import io.example.board.domain.dto.request.PostUpdateDto;
+import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.utils.generator.MemberGenerator;
@@ -134,10 +134,10 @@ class PostRepoTest {
         String newTitle = "";
         String newContent = "";
         boolean changedDisplay = false;
-        PostUpdateDto postUpdateDto = new PostUpdateDto(newTitle, newContent, changedDisplay);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(0L, newTitle, newContent, changedDisplay);
 
         // When
-        savedPost.update(postUpdateDto);
+        savedPost.update(postUpdateRequest);
         entityManager.flush();
         entityManager.clear();
 
