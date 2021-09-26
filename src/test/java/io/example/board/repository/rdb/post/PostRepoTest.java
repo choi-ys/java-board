@@ -99,7 +99,7 @@ class PostRepoTest {
     }
 
     @Test
-    @DisplayName("전시 상태의 게시글 조회 실패 : 미전시 게시글 조회 요청")
+    @DisplayName("전시 상태의 게시글 조회 실패(미전시 게시글 조회 요청)")
     public void findByIdAndDisplay_Fail_CauseNotDisplayedResource() {
         // Given
         Post savedPost = postGenerator.savedPost();

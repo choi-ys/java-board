@@ -64,7 +64,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 조회 실패 : 존재 하지 않는 자원")
+    @DisplayName("게시글 조회 실패(존재 하지 않는 자원)")
     public void findByIdAndDisplay() {
         // When
         Exception expected = assertThrows(
