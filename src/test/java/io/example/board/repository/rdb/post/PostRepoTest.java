@@ -81,14 +81,49 @@ class PostRepoTest {
     public void findById() {
         // Given
         Post savedPost = savedPost(memberGenerator.savedMember());
+        entityManager.clear();
 
         // When
         Post expected = postRepo.findById(savedPost.getId()).orElseThrow();
 
         // Then
         assertAll(
-                () -> assertEquals(expected.getId(), savedPost.getId())
+                () -> assertEquals(expected.getId(), savedPost.getId()),
+                () -> assertNotNull(expected.getMember())
         );
+    }
+
+    @Test
+    @DisplayName("전시 상태의 게시글 조회")
+    public void findByIdAndDisplay() {
+        // Given
+        Post savedPost = savedPost(memberGenerator.savedMember());
+        entityManager.clear();
+
+        // When
+        Post expected = postRepo.findByIdAndDisplay(savedPost.getId(), true).orElseThrow();
+
+        // Then
+        assertAll(
+                () -> assertEquals(expected.getId(), savedPost.getId()),
+                () -> assertNotNull(expected.getMember())
+        );
+    }
+
+    @Test
+    @DisplayName("전시 상태의 게시글 조회 실패 : 미전시 게시글 조회 요청")
+    public void findByIdAndDisplay_Fail_CauseNotDisplayedResource() {
+        // Given
+        Post savedPost = savedPost(memberGenerator.savedMember());
+        entityManager.clear();
+
+        // When
+        RuntimeException expected = assertThrows(NoSuchElementException.class,
+                () -> postRepo.findByIdAndDisplay(savedPost.getId(), false).orElseThrow()
+        );
+
+        // Then
+        assertTrue(expected instanceof NoSuchElementException);
     }
 
     @Test

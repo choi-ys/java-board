@@ -1,6 +1,5 @@
 package io.example.board.domain.dto.response;
 
-import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,14 +29,14 @@ public class PostResponse {
         this.writer = writer;
     }
 
-    public static PostResponse mapTo(Post post, Member member) {
+    public static PostResponse mapTo(Post post) {
         return new PostResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getViewCount(),
                 post.isDisplay(),
-                MemberSimpleResponse.mapTo(member)
+                MemberSimpleResponse.mapTo(post.getMember())
         );
     }
 }
