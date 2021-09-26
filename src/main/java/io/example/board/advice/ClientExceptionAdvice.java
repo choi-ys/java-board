@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -55,13 +56,17 @@ public class ClientExceptionAdvice {
                 .body(new ErrorResource(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH, request));
     }
 
-
     // [401] 유효한 자격 증명이 아닌 접근인 경우, Unauthorized Exception
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity authenticationException(Exception exception, HttpServletRequest request) {
-        ErrorResource errorResource = exception instanceof BadCredentialsException ?
-                new ErrorResource(ErrorCode.BAD_CREDENTIALS, exception.getMessage(), request) :
-                new ErrorResource(ErrorCode.UNAUTHORIZED, request);
+    public ResponseEntity AuthenticationException(Exception exception, HttpServletRequest request) {
+        ErrorResource errorResource;
+        if (exception instanceof AuthenticationCredentialsNotFoundException) {
+            errorResource = new ErrorResource(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND, exception.getMessage(), request);
+        } else if (exception instanceof BadCredentialsException) {
+            errorResource = new ErrorResource(ErrorCode.BAD_CREDENTIALS, exception.getMessage(), request);
+        } else {
+            errorResource = new ErrorResource(ErrorCode.UNAUTHORIZED, request);
+        }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResource);
     }
 

@@ -157,8 +157,8 @@ class LoginControllerTest {
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
-                .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
-                .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
+                .andExpect(jsonPath("code").value(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND.message))
         ;
     }
 
@@ -183,8 +183,8 @@ class LoginControllerTest {
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
-                .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
-                .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
+                .andExpect(jsonPath("code").value(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND.message))
         ;
     }
 
