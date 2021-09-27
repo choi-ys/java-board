@@ -1,6 +1,7 @@
 package io.example.board.repository.rdb.post;
 
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
+import io.example.board.config.jpa.DataJpaAuditorConfig;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @DataJpaTest(showSql = false)
 @ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
-@Import({P6spyLogMessageFormatConfiguration.class, MemberGenerator.class, PostGenerator.class})
+@Import({P6spyLogMessageFormatConfiguration.class, MemberGenerator.class, PostGenerator.class, DataJpaAuditorConfig.class})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DisplayName("Repo:Post")
 class PostRepoTest {
@@ -60,10 +61,13 @@ class PostRepoTest {
                 () -> assertNotNull(expected.getId()),
                 () -> assertEquals(expected.getTitle(), post.getTitle()),
                 () -> assertEquals(expected.getContent(), post.getContent()),
-                () -> assertEquals(expected.getMember(), post.getMember())
+                () -> assertEquals(expected.getMember(), post.getMember()),
+                () -> assertNotNull(expected.getCreatedBy(), "Auditor를 통해 설정되는 생성주체 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getCreatedAt(), "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getUpdatedBy(), "Auditor를 통해 설정되는 수정주체 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getUpdatedAt(), "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
         );
     }
-
 
     @Test
     @DisplayName("게시글 조회")

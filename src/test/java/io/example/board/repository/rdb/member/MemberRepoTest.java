@@ -1,6 +1,7 @@
 package io.example.board.repository.rdb.member;
 
 import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
+import io.example.board.config.jpa.DataJpaAuditorConfig;
 import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.member.MemberRole;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @DataJpaTest(showSql = false)
 @ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
-@Import(P6spyLogMessageFormatConfiguration.class)
+@Import({P6spyLogMessageFormatConfiguration.class, DataJpaAuditorConfig.class})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DisplayName("Repo:Member")
 class MemberRepoTest {
@@ -54,7 +55,11 @@ class MemberRepoTest {
                 () -> assertEquals(expected.getNickname(), member.getNickname()),
                 () -> assertEquals(expected.getRoles(), Set.of(MemberRole.MEMBER), "Entity 객체 생성 시, 'MEMBER' 권한 포함 여부 확인"),
                 () -> assertFalse(expected.isCertify(), "Entity 객체 생성 시, boolean 항목의 기본값 false 적용 여부 확인"),
-                () -> assertFalse(expected.isEnabled(), "Entity 객체 생성 시 , boolean 항목의 기본값 false 적용 여부 확인")
+                () -> assertFalse(expected.isEnabled(), "Entity 객체 생성 시 , boolean 항목의 기본값 false 적용 여부 확인"),
+                () -> assertNotNull(expected.getCreatedBy(), "Auditor를 통해 설정되는 생성주체 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getCreatedAt(), "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getUpdatedBy(), "Auditor를 통해 설정되는 수정주체 정보의 null 여부를 확인"),
+                () -> assertNotNull(expected.getUpdatedAt(), "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
         );
     }
 

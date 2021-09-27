@@ -34,7 +34,11 @@ class PostTest {
                 () -> assertEquals(post.getMember(), member),
                 () -> assertNull(post.getId()),
                 () -> assertTrue(post.isDisplay()),
-                () -> assertEquals(post.getViewCount(), 0L)
+                () -> assertEquals(post.getViewCount(), 0L),
+                () -> assertEquals(post.getCreatedBy(), null, "Auditor를 통해 설정되는 생성주체 정보의 null 여부를 확인"),
+                () -> assertEquals(post.getCreatedAt(), null, "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
+                () -> assertEquals(post.getUpdatedBy(), null, "Auditor를 통해 설정되는 수정주체 정보의 null 여부를 확인"),
+                () -> assertEquals(post.getUpdatedAt(), null, "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
         );
     }
 
