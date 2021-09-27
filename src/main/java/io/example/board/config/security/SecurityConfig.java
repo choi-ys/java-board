@@ -6,6 +6,7 @@ import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.domain.rdb.member.MemberRole;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,5 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         }
                 )
         ;
+    }
+
+    // 용석(2021-09-28) : Spring REST Docs 설정 추가로 인한 Spring Boot static resource의 요청 허용 설정
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().mvcMatchers("/docs/index.html");
     }
 }
