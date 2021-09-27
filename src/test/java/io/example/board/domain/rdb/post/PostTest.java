@@ -2,8 +2,8 @@ package io.example.board.domain.rdb.post;
 
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
-import io.example.board.utils.generator.MemberGenerator;
-import io.example.board.utils.generator.PostGenerator;
+import io.example.board.utils.generator.mock.MemberGenerator;
+import io.example.board.utils.generator.mock.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

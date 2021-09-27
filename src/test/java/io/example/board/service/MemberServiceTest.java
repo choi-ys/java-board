@@ -3,7 +3,7 @@ package io.example.board.service;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.repository.rdb.member.MemberRepo;
-import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

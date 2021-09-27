@@ -1,10 +1,6 @@
 package io.example.board.config.test;
 
-import io.example.board.utils.generator.MemberGenerator;
-import io.example.board.utils.generator.PostGenerator;
-import io.example.board.utils.generator.TokenGenerator;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;

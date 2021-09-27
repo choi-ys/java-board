@@ -4,6 +4,7 @@ import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.MemberSimpleResponse;
 import io.example.board.service.MemberService;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping(
         value = "member",
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
+        produces = MediaTypes.HAL_JSON_VALUE
 )
 public class MemberController {
 

@@ -1,4 +1,4 @@
-package io.example.board.utils.generator;
+package io.example.board.utils.generator.mock;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

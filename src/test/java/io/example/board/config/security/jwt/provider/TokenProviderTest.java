@@ -6,7 +6,7 @@ import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.member.MemberRole;
 import io.example.board.domain.vo.login.LoginUserAdapter;
 import io.example.board.domain.vo.token.Token;
-import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

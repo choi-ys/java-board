@@ -4,6 +4,7 @@ import io.example.board.config.security.jwt.verifier.TokenVerifier;
 import io.example.board.domain.dto.request.LoginRequest;
 import io.example.board.domain.dto.response.LoginResponse;
 import io.example.board.service.LoginService;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,10 @@ import javax.validation.Valid;
  * @date : 2021/09/23 12:27 오전
  */
 @RestController
-@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaTypes.HAL_JSON_VALUE
+)
 public class LoginController {
 
     private final LoginService loginService;

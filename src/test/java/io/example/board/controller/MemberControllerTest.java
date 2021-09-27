@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.SpringBootTestConfig;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
-import io.example.board.utils.generator.MemberGenerator;
+import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;

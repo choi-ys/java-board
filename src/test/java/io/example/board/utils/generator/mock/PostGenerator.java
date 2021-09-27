@@ -1,4 +1,4 @@
-package io.example.board.utils.generator;
+package io.example.board.utils.generator.mock;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;

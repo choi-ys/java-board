@@ -7,6 +7,7 @@ import io.example.board.domain.vo.login.CurrentUser;
 import io.example.board.domain.vo.login.LoginUser;
 import io.example.board.service.PostService;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping(
         value = "post",
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
+        produces = MediaTypes.HAL_JSON_VALUE
 )
 public class PostController {
 

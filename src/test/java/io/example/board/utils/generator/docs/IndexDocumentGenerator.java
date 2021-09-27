@@ -1,4 +1,4 @@
-package io.example.board.config.docs.generator;
+package io.example.board.utils.generator.docs;
 
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
