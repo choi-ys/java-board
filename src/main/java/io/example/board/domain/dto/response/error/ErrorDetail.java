@@ -40,14 +40,15 @@ public class ErrorDetail {
     // * @date : 2021/09/21 6:23 오후
     // * --------------------------------------------------------------
     public static List<ErrorDetail> mapTo(List<FieldError> fieldErrors) {
-        return fieldErrors.stream().map(it ->
-                new ErrorDetail(
-                        it.getObjectName(),
-                        it.getField(),
-                        it.getCode(),
-                        it.getDefaultMessage(),
-                        it.getRejectedValue()
-                )
-        ).collect(Collectors.toList());
+        return fieldErrors.stream()
+                .map(it ->
+                        new ErrorDetail(
+                                it.getObjectName(),
+                                it.getField(),
+                                it.getCode(),
+                                it.getDefaultMessage(),
+                                it.getRejectedValue()
+                        )
+                ).collect(Collectors.toList());
     }
 }

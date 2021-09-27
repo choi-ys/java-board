@@ -1,13 +1,3 @@
 spring:
-  redis:
-    host: localhost
-    port: 6379
-
-jwt:
-  signature: test-signature-key
-  issuer: io.example.jwt
-  subject: resource-access
-  audience: client-server
-  claim-key: claim
-  access-token-validity-in-seconds-term: 600 # access token의 유효 기간 : 10분
-  refresh-token-validity-in-seconds-term: 1200 # refrehs token의 유효 기간 : 20분
+  profiles:
+    active: local
