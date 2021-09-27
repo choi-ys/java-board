@@ -2,6 +2,7 @@ package io.example.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.EnableMockMvc;
+import io.example.board.config.test.SpringBootTestConfig;
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
@@ -33,12 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author : choi-ys
  * @date : 2021-09-27 오전 1:05
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableMockMvc
-@Transactional
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@SpringBootTestConfig
 @Import({TokenGenerator.class, MemberGenerator.class, PostGenerator.class})
-@ActiveProfiles("test")
 @DisplayName("API:Post")
 class PostControllerTest {
     private final MockMvc mockMvc;

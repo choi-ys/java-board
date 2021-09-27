@@ -1,20 +1,16 @@
 package io.example.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.example.board.config.test.EnableMockMvc;
+import io.example.board.config.test.SpringBootTestConfig;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,11 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author : choi-ys
  * @date : 2021/09/21 4:04 오전
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableMockMvc
-@Transactional
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@ActiveProfiles("test")
+@SpringBootTestConfig
 @DisplayName("API:Member")
 class MemberControllerTest {
 
