@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
  * @date : 2021-09-27 오전 8:27
  */
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class Auditor {
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Auditor {
 
     @CreatedBy
     @Column(name = "created_by")
@@ -37,3 +37,5 @@ public class Auditor {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
+
+
