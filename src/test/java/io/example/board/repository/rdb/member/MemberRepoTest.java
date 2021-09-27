@@ -47,9 +47,7 @@ class MemberRepoTest {
                 () -> assertEquals(expected.getRoles(), Set.of(MemberRole.MEMBER), "Entity 객체 생성 시, 'MEMBER' 권한 포함 여부 확인"),
                 () -> assertFalse(expected.isCertify(), "Entity 객체 생성 시, boolean 항목의 기본값 false 적용 여부 확인"),
                 () -> assertFalse(expected.isEnabled(), "Entity 객체 생성 시 , boolean 항목의 기본값 false 적용 여부 확인"),
-                () -> assertNotNull(expected.getCreatedBy(), "Auditor를 통해 설정되는 생성주체 정보의 null 여부를 확인"),
                 () -> assertNotNull(expected.getCreatedAt(), "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
-                () -> assertNotNull(expected.getUpdatedBy(), "Auditor를 통해 설정되는 수정주체 정보의 null 여부를 확인"),
                 () -> assertNotNull(expected.getUpdatedAt(), "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
         );
     }

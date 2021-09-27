@@ -55,9 +55,7 @@ class PostRepoTest {
                 () -> assertEquals(expected.getTitle(), post.getTitle()),
                 () -> assertEquals(expected.getContent(), post.getContent()),
                 () -> assertEquals(expected.getMember(), post.getMember()),
-                () -> assertNotNull(expected.getCreatedBy(), "Auditor를 통해 설정되는 생성주체 정보의 null 여부를 확인"),
                 () -> assertNotNull(expected.getCreatedAt(), "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
-                () -> assertNotNull(expected.getUpdatedBy(), "Auditor를 통해 설정되는 수정주체 정보의 null 여부를 확인"),
                 () -> assertNotNull(expected.getUpdatedAt(), "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
         );
     }
