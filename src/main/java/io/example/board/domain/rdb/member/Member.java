@@ -1,5 +1,6 @@
 package io.example.board.domain.rdb.member;
 
+import io.example.board.domain.rdb.base.Auditor;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ import static javax.persistence.FetchType.EAGER;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends Auditor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

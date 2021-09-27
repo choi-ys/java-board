@@ -1,6 +1,7 @@
 package io.example.board.domain.rdb.post;
 
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.rdb.base.Auditor;
 import io.example.board.domain.rdb.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @Table(name = "post_tb")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends Auditor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
