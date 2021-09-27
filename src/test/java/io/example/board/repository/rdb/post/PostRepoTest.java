@@ -1,8 +1,6 @@
 package io.example.board.repository.rdb.post;
 
-import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
-import io.example.board.config.jpa.DataJpaAuditorConfig;
-import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
+import io.example.board.config.test.DataJpaTestConfig;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -10,10 +8,7 @@ import io.example.board.utils.generator.MemberGenerator;
 import io.example.board.utils.generator.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
 import java.util.NoSuchElementException;
@@ -24,10 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author : choi-ys
  * @date : 2021-09-25 오전 5:08
  */
-@DataJpaTest(showSql = false)
-@ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
-@Import({P6spyLogMessageFormatConfiguration.class, MemberGenerator.class, PostGenerator.class, DataJpaAuditorConfig.class})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DataJpaTestConfig
+@Import({MemberGenerator.class, PostGenerator.class})
 @DisplayName("Repo:Post")
 class PostRepoTest {
 

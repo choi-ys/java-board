@@ -1,17 +1,11 @@
 package io.example.board.repository.rdb.member;
 
-import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfiguration;
-import io.example.board.config.jpa.DataJpaAuditorConfig;
-import io.example.board.config.p6spy.P6spyLogMessageFormatConfiguration;
+import io.example.board.config.test.DataJpaTestConfig;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.member.MemberRole;
 import io.example.board.utils.generator.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -22,10 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author : choi-ys
  * @date : 2021/09/21 12:36 오전
  */
-@DataJpaTest(showSql = false)
-@ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration.class)
-@Import({P6spyLogMessageFormatConfiguration.class, DataJpaAuditorConfig.class})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DataJpaTestConfig
 @DisplayName("Repo:Member")
 class MemberRepoTest {
 
