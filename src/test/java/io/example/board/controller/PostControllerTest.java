@@ -1,7 +1,6 @@
 package io.example.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.example.board.config.test.EnableMockMvc;
 import io.example.board.config.test.SpringBootTestConfig;
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
@@ -15,15 +14,11 @@ import io.example.board.utils.generator.TokenGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
