@@ -32,7 +32,9 @@ public class PostService {
 
     @Transactional
     public PostResponse create(PostCreateRequest postCreateRequest, LoginUser loginUser) {
-        Member member = memberRepo.findByEmail(loginUser.getEmail()).orElseThrow();
+        Member member = memberRepo.findByEmail(loginUser.getEmail()).orElseThrow(
+                () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
+        );
         Post post = postRepo.save(postCreateRequest.toEntity(member));
         return PostResponse.mapTo(post);
     }
