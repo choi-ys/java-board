@@ -58,8 +58,8 @@ public class PostController {
         return ResponseEntity.ok(postService.findByIdAndDisplayTrue(id));
     }
 
-    @PatchMapping
-    public ResponseEntity update(@Valid @RequestBody PostUpdateRequest postUpdateRequest, @CurrentUser LoginUser loginUser) {
+    @PatchMapping("{id}")
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody PostUpdateRequest postUpdateRequest, @CurrentUser LoginUser loginUser) {
         // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.ok(postService.update(postUpdateRequest, loginUser));
     }

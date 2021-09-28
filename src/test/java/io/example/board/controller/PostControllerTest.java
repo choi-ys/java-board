@@ -19,10 +19,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static io.example.board.utils.generator.docs.PostDocumentGenerator.generateCreatePostDocument;
+import static io.example.board.utils.generator.docs.PostDocumentGenerator.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,7 +56,7 @@ class PostControllerTest {
     private final String POST_URL = "/post";
 
     @Test
-    @DisplayName("[200:POST]게시글 생성")
+    @DisplayName("[201:POST]게시글 생성")
     public void create() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken();
@@ -162,9 +163,10 @@ class PostControllerTest {
     public void findByIdAndDisplayTrue() throws Exception {
         // Given
         Post savedPost = postGenerator.savedPost();
+        String urlTemplate = POST_URL + "/{id}";
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(get(POST_URL + "/" + savedPost.getId())
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get(urlTemplate, savedPost.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
         );
@@ -178,6 +180,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("viewCount").value(savedPost.getViewCount()))
                 .andExpect(jsonPath("display").value(savedPost.isDisplay()))
                 .andExpect(jsonPath("writer").isNotEmpty())
+                .andDo(generateGetAnPostDocument())
         ;
     }
 
@@ -235,9 +238,10 @@ class PostControllerTest {
         Post savedPost = postGenerator.savedPost(savedMember);
         PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest(savedPost);
         Token token = tokenGenerator.generateToken(savedMember);
+        String urlTemplate = POST_URL + "/{id}";
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.patch(urlTemplate, savedPost.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postUpdateRequest))
@@ -253,6 +257,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("viewCount").exists())
                 .andExpect(jsonPath("display").exists())
                 .andExpect(jsonPath("writer").isNotEmpty())
+                .andDo(generateUpdateAnPostDocument())
         ;
     }
 
@@ -263,9 +268,10 @@ class PostControllerTest {
         Token token = tokenGenerator.generateToken(new Member("choi.ys@naver.com", "password", "용석", "noel"));
         Post savedPost = postGenerator.savedPost();
         PostUpdateRequest postUpdateRequest = postGenerator.postUpdateRequest(savedPost);
+        String urlTemplate = POST_URL + "/{id}";
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
+        ResultActions resultActions = this.mockMvc.perform(patch(urlTemplate, savedPost.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postUpdateRequest))
@@ -277,7 +283,7 @@ class PostControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
-                .andExpect(jsonPath("path").value(POST_URL))
+                .andExpect(jsonPath("path").value(POST_URL + "/" + savedPost.getId()))
                 .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
         ;
@@ -290,10 +296,10 @@ class PostControllerTest {
         Member savedMember = memberGenerator.savedMember();
         Post savedPost = postGenerator.savedPost(savedMember);
         Token token = tokenGenerator.generateToken(savedMember);
-        String urlTemplate = POST_URL + "/" + savedPost.getId();
+        String urlTemplate = POST_URL + "/{id}";
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(delete(urlTemplate)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.delete(urlTemplate, savedPost.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
@@ -303,6 +309,7 @@ class PostControllerTest {
         resultActions.andDo(print())
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist())
+                .andDo(generateDeleteAnPostDocument())
         ;
     }
 
