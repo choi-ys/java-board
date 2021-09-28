@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaTypes.HAL_JSON_VALUE
+        produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class LoginController {
 

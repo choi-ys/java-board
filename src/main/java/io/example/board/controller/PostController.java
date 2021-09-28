@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static io.example.board.controller.IndexController.profileUrl;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -45,6 +46,7 @@ public class PostController {
 
         EntityModel<PostResponse> entityModel = EntityModel.of(postResponse);
         entityModel.add(selfLinkBuilder.withSelfRel());
+        entityModel.add(profileUrl());
 
         // TODO: 용석(2021-09-27) : [GET, PATCH, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.created(selfLinkBuilder.toUri()).body(entityModel);

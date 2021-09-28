@@ -1,6 +1,7 @@
 package io.example.board.controller;
 
 import lombok.val;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.hateoas.IanaLinkRelations.INDEX;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * @author : choi-ys
@@ -28,5 +30,9 @@ public class IndexController {
         val indexRepresentationModel = new RepresentationModel();
         indexRepresentationModel.add(linkTo(this.getClass()).withRel(INDEX));
         return indexRepresentationModel;
+    }
+
+    public static Link profileUrl() {
+        return linkTo(methodOn(IndexController.class).index()).withRel("profile");
     }
 }

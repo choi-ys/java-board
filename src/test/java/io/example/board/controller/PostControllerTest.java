@@ -14,12 +14,15 @@ import io.example.board.utils.generator.mock.TokenGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.context.annotation.Import;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static io.example.board.utils.generator.docs.PostDocumentGenerator.generateCreatePostDocument;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTestConfig
 @Import({TokenGenerator.class, MemberGenerator.class, PostGenerator.class})
+@AutoConfigureRestDocs
 @DisplayName("API:Post")
 class PostControllerTest {
     private final MockMvc mockMvc;
@@ -60,7 +64,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postCreateRequest))
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
@@ -77,6 +81,8 @@ class PostControllerTest {
                 .andExpect(jsonPath("display").value(true))
                 .andExpect(jsonPath("writer").isNotEmpty())
                 .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.profile").exists())
+                .andDo(generateCreatePostDocument())
         ;
     }
 
@@ -89,7 +95,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
 
@@ -115,7 +121,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postCreateRequest))
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
@@ -141,7 +147,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postCreateRequest))
         );
 
@@ -160,7 +166,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(get(POST_URL + "/" + savedPost.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
         );
 
         // Then
@@ -184,7 +190,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
         );
 
         // Then
@@ -207,7 +213,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
         );
 
         // Then
@@ -233,7 +239,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postUpdateRequest))
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
@@ -261,7 +267,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(patch(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postUpdateRequest))
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
@@ -289,7 +295,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(delete(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
 
@@ -312,7 +318,7 @@ class PostControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(delete(urlTemplate)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getAccessToken()))
         );
 
