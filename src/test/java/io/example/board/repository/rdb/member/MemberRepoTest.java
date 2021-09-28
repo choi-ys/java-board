@@ -6,6 +6,8 @@ import io.example.board.domain.rdb.member.MemberRole;
 import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -49,6 +51,21 @@ class MemberRepoTest {
                 () -> assertFalse(expected.isEnabled(), "Entity 객체 생성 시 , boolean 항목의 기본값 false 적용 여부 확인"),
                 () -> assertNotNull(expected.getCreatedAt(), "Auditor를 통해 설정되는 생성일자 정보의 null 여부를 확인"),
                 () -> assertNotNull(expected.getUpdatedAt(), "Auditor를 통해 설정되는 수정일자 정보의 null 여부를 확인")
+        );
+    }
+
+    @Test
+    @DisplayName("회원 객체 저장 실패 : 중복된 Email")
+    public void save_Fail_Cause_DuplicatedEmail() {
+        // Given
+        Member member = new Member("rcn115@naver.com", "password", "name", "nickname");
+        Member duplicatedMember = new Member("rcn115@naver.com", "password", "test", "test");
+
+        // When
+        Member savedMember = memberRepo.save(member);
+        DataAccessException expected = assertThrows(DataIntegrityViolationException.class, () -> memberRepo.save(duplicatedMember));
+        assertAll(
+                () -> assertTrue(expected instanceof RuntimeException)
         );
     }
 
