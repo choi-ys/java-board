@@ -7,11 +7,14 @@ import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static io.example.board.utils.generator.docs.MemberDocumentGenerator.generateSignupMemberDocument;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @date : 2021/09/21 4:04 오전
  */
 @SpringBootTestConfig
+@AutoConfigureRestDocs
 @DisplayName("API:Member")
 class MemberControllerTest {
 
@@ -43,7 +47,7 @@ class MemberControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest))
         );
 
@@ -57,6 +61,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("name").value(signupRequest.getName()))
                 .andExpect(jsonPath("nickname").value(signupRequest.getNickname()))
                 .andExpect(jsonPath("_links.self").exists())
+                .andDo(generateSignupMemberDocument())
         ;
     }
 
@@ -66,7 +71,7 @@ class MemberControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
         );
 
         // Then
@@ -89,7 +94,7 @@ class MemberControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest))
         );
 
@@ -114,7 +119,7 @@ class MemberControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
                 .contentType(objectMapper.writeValueAsString(signupRequest))
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest))
         );
 
