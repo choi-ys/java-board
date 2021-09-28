@@ -1,5 +1,6 @@
 package io.example.board.controller;
 
+import io.example.board.domain.dto.request.LoginRequest;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.MemberSimpleResponse;
 import io.example.board.service.MemberService;
@@ -49,6 +50,7 @@ public class MemberController {
 
         EntityModel<MemberSimpleResponse> entityModel = EntityModel.of(memberSimpleResponse);
         entityModel.add(selfLinkBuilder.withSelfRel());
+        entityModel.add(linkTo(methodOn(LoginController.class).login(new LoginRequest(signupRequest.getEmail(), signupRequest.getPassword()))).withRel("login"));
 
         // TODO: 용석(2021/09/21): Add to api docs link info
         return ResponseEntity.created(createdUri).body(entityModel);

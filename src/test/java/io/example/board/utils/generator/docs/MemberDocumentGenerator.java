@@ -22,7 +22,8 @@ public class MemberDocumentGenerator {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 links(
-                        linkWithRel("self").description("생성된 리소스의 link 정보")
+                        linkWithRel("self").description("생성된 리소스의 link 정보"),
+                        linkWithRel("login").description("로그인 리소스의 link 정보")
                 ),
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
@@ -43,7 +44,8 @@ public class MemberDocumentGenerator {
                         fieldWithPath("email").description("사용자 이메일"),
                         fieldWithPath("name").description("사용자 이름"),
                         fieldWithPath("nickname").description("사용자 닉네임"),
-                        fieldWithPath("_links.self.href").description("생성된 리소스의 link 정보")
+                        fieldWithPath("_links.self.href").description("생성된 리소스의 link 정보"),
+                        fieldWithPath("_links.login.href").description("로그인 리소스의 link 정보")
                 )
         );
     }
