@@ -13,12 +13,17 @@ import io.example.board.utils.generator.mock.TokenGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.context.annotation.Import;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static io.example.board.utils.generator.docs.LoginDocumentGenerator.generateLoginDocument;
+import static io.example.board.utils.generator.docs.LoginDocumentGenerator.generateRefreshDocument;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTestConfig
 @Import({TokenGenerator.class, MemberGenerator.class})
+@AutoConfigureRestDocs
 @DisplayName("API:Login")
 class LoginControllerTest {
 
@@ -63,7 +69,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(loginRequest))
         );
 
@@ -79,6 +85,8 @@ class LoginControllerTest {
                 .andExpect(jsonPath("token.refreshToken").exists())
                 .andExpect(jsonPath("token.accessExpired").exists())
                 .andExpect(jsonPath("token.refreshExpired").exists())
+                .andExpect(jsonPath("_links.refresh.href").exists())
+                .andDo(generateLoginDocument())
         ;
     }
 
@@ -88,7 +96,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
         );
 
         // Then
@@ -112,7 +120,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(loginRequest))
         );
 
@@ -138,7 +146,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(loginRequest))
         );
 
@@ -164,7 +172,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(loginRequest))
         );
 
@@ -187,9 +195,9 @@ class LoginControllerTest {
         Token token = tokenGenerator.generateToken();
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getRefreshToken()))
         );
 
@@ -200,6 +208,7 @@ class LoginControllerTest {
                 .andExpect(jsonPath("refreshToken").exists())
                 .andExpect(jsonPath("accessExpired").exists())
                 .andExpect(jsonPath("refreshExpired").exists())
+                .andDo(generateRefreshDocument())
         ;
     }
 
@@ -212,7 +221,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(get(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getRefreshToken()))
         );
 
@@ -236,7 +245,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
                 .content(token.getRefreshToken())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token.getRefreshToken()))
         );
 
@@ -257,7 +266,7 @@ class LoginControllerTest {
         // When
         ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
         );
 
         // Then
@@ -274,7 +283,7 @@ class LoginControllerTest {
         String token = "aaa.bbb.ccc";
         ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token))
         );
 
@@ -292,7 +301,7 @@ class LoginControllerTest {
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token))
         );
 
@@ -311,7 +320,7 @@ class LoginControllerTest {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTVUJKRUNUIiwiYXVkIjoiQVVESUVOQ0UiLCJ1c2UiOiJBQ0NFU1MiLCJpc3MiOiJJU1NVRVIiLCJleHAiOjE2MzI0MTA0MzAsImlhdCI6MTYzMjQxMDQyOSwiYXV0aG9yaXRpZXMiOiJST0xFX01FTUJFUiIsInVzZXJuYW1lIjoicHJvamVjdC5sb2cuMDYyQGdtYWlsLmNvbSJ9.P7SWGwPAX3IF8_muQgqS6zUmpnC1t2aWGv3EoV1A9jU";
         ResultActions resultActions = this.mockMvc.perform(post(REFRESH_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
                 .header(AUTHORIZATION, TokenGenerator.getBearerToken(token))
         );
 
