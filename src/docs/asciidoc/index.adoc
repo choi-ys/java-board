@@ -248,29 +248,55 @@ Index API는 서비스 진입점을 제공 합니다.
 === ** 목차 조회 : `*GET*` Index **
 
 ====
-`*GET*` 요청을 사용하여 목차에 접근할 수 있습니다*
+`*GET*` 요청을 사용하여 목차에 접근할 수 있습니다.
 
 operation::index-controller-test/index[snippets='response-body,http-response,links']
 
 ====
 
-[[resources-index]]
+[[resources-post]]
 == ** 게시글 **
 
-NOTE: ** Index API **
+NOTE: ** Post API **
 
 ----
-post API는 게시글 관련 API Interface를 제공 합니다.
+Post API는 게시글 관련 API Interface를 제공 합니다.
 ----
 
-[[resources-index-access]]
+[[resources-post-create]]
 === ** 게시글 생성 : `*POST*` Post **
 
 ====
-`*Post*` 요청을 사용하여 게시글을 생성할 수 있습니다.*
+`*Post*` 요청을 사용하여 게시글을 생성할 수 있습니다.
 
-operation::post-controller-test/create[snippets='request-headers,request-fields,request-body,response-fields,response-body,http-response,links']
+operation::post-controller-test/create[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
+====
 
+
+[[resources-post-access]]
+=== ** 게시글 조회 : `*GET*` Post **
+====
+`*GET*` 요청을 사용하여 게시글을 조회할 수 있습니다.
+
+operation::post-controller-test/find-by-id-and-display-true[snippets='http-request,request-headers,path-parameters,response-fields,response-body,http-response']
+====
+
+
+[[resources-post-update]]
+=== ** 게시글 수정 : `*PATCH*` Post **
+====
+`*PATCH*` 요청을 사용하여 게시글을 수정할 수 있습니다.
+
+operation::post-controller-test/update[snippets='http-request,request-headers,path-parameters,request-fields,request-body,response-fields,response-body,http-response']
+====
+
+
+[[resources-post-delete]]
+=== ** 게시글 삭제 : `*DELETE*` Post **
+====
+`*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
+
+operation::post-controller-test/delete-post[snippets='http-request,request-headers,path-parameters,http-response']
 ====
 
 ---
