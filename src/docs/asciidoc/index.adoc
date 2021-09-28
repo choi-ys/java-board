@@ -250,7 +250,7 @@ Index API는 서비스 진입점을 제공 합니다.
 ====
 `*GET*` 요청을 사용하여 목차에 접근할 수 있습니다.
 
-operation::index-controller-test/index[snippets='response-body,http-response,links']
+operation::index-controller-test/index[snippets='http-request,response-body,http-response,links']
 
 ====
 
@@ -263,7 +263,7 @@ NOTE: ** Member API **
 Member API는 사용자 관련 API Interface를 제공 합니다.
 ----
 
-[[resources-member-create]]
+[[resources-create-member]]
 === ** 회원 생성 : `*POST*` Member **
 
 ====
@@ -281,7 +281,7 @@ NOTE: ** Authorization API **
 Authorization API는 인증 관련 API Interface를 제공 합니다.
 ----
 
-[[resources-authorization-create]]
+[[resources-login]]
 === ** 로그인 : `*POST*` Login **
 
 ====
@@ -290,7 +290,7 @@ Authorization API는 인증 관련 API Interface를 제공 합니다.
 operation::login-controller-test/login[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
 ====
 
-[[resources-authorization-refresh]]
+[[resources-refresh]]
 === ** 토큰 갱신 : `*POST*` Refresh **
 
 ====
@@ -309,7 +309,7 @@ NOTE: ** Post API **
 Post API는 게시글 관련 API Interface를 제공 합니다.
 ----
 
-[[resources-post-create]]
+[[resources-create-post]]
 === ** 게시글 생성 : `*POST*` Post **
 
 ====
@@ -319,7 +319,7 @@ operation::post-controller-test/create[snippets='http-request,request-headers,re
 ====
 
 
-[[resources-post-access]]
+[[resources-get-an-post]]
 === ** 게시글 조회 : `*GET*` Post **
 ====
 `*GET*` 요청을 사용하여 게시글을 조회할 수 있습니다.
@@ -328,7 +328,7 @@ operation::post-controller-test/find-by-id-and-display-true[snippets='http-reque
 ====
 
 
-[[resources-post-update]]
+[[resources-update-an-post]]
 === ** 게시글 수정 : `*PATCH*` Post **
 ====
 `*PATCH*` 요청을 사용하여 게시글을 수정할 수 있습니다.
@@ -337,7 +337,7 @@ operation::post-controller-test/update[snippets='http-request,request-headers,pa
 ====
 
 
-[[resources-post-delete]]
+[[resources-delte-an-post]]
 === ** 게시글 삭제 : `*DELETE*` Post **
 ====
 `*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
