@@ -1,7 +1,6 @@
 package io.example.board.controller;
 
 import io.example.board.utils.docs.DocsRelations;
-import lombok.val;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Links;
 import org.springframework.hateoas.MediaTypes;
@@ -32,7 +31,7 @@ public class IndexController {
 
     @GetMapping
     public RepresentationModel index() {
-        val indexRepresentationModel = new RepresentationModel();
+        var indexRepresentationModel = new RepresentationModel();
         indexRepresentationModel.add(indexLinks());
         indexRepresentationModel.add(memberLinks());
         indexRepresentationModel.add(LoginLinks());
