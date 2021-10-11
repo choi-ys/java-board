@@ -77,7 +77,6 @@ class MemberControllerTest {
         // Then
         resultActions.andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
                 .andExpect(jsonPath("method").exists())
                 .andExpect(jsonPath("path").exists())
                 .andExpect(jsonPath("code").value(ErrorCode.HTTP_MESSAGE_NOT_READABLE.name()))
