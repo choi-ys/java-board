@@ -68,3 +68,28 @@ task copyDocument(type: Copy) {
 build {
     dependsOn copyDocument
 }
+
+/**
+ * Gradle build 최적화
+ * - https://kangwoojin.github.io/programing/gradle-build-performace-2/#report-generation
+ */
+// Parallel Testing Option : 이용 가능한 CPU의 반을 사용하여 TC 수행
+tasks.withType(Test) {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+}
+
+// Parallel Testing
+tasks.withType(Test) {
+    forkEvery = 100
+}
+
+// Report generationPermalink Options : TC 수행 결과 Report 생성 제외로 인한 성능 향상
+tasks.withType(Test) {
+    reports.html.enabled = false
+    reports.junitXml.enabled = false
+}
+
+// Compiler daemon Options
+tasks.withType(JavaCompile) {
+    options.fork = true
+}
