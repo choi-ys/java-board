@@ -36,6 +36,7 @@ import static org.mockito.Mockito.verify;
  * @date : 2021-09-26 오후 5:51
  */
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Service:Post")
 class PostServiceTest {
 
     @Mock
