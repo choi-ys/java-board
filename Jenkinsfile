@@ -1,6 +1,15 @@
 node {
     stage("Checkout") {
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-Repo', url: 'https://github.com/choi-ys/java-board.git']]]
+        checkout
+            changelog: false,
+            poll: false,
+            scm:
+                [
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    extensions: [],
+                    userRemoteConfigs: [[credentialsId: 'Github-Repo', url: 'https://github.com/choi-ys/java-board.git']]
+                ]
         sh "echo 'Checkout SCM'"
     }
     stage('Build') {
