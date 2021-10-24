@@ -41,6 +41,6 @@ node {
             usePromotionTimestamp: false,
             useWorkspaceInPromotion: false,
             verbose: false)])
-            sh "echo 'Deploy AWS'"
+            sh "echo 'Deploy to AWS'"
     }
 }
