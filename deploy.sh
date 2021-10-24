@@ -4,7 +4,7 @@ if [[ $CURRENT_PID == "" ]]
 then
   echo java-board.jar is not running
 else
-  kill -15 "$CURRENT_PID"
+  kill -9 "$CURRENT_PID"
   echo java-board.jar process killed forcefully, process id "$CURRENT_PID"
   sleep 5
 fi
