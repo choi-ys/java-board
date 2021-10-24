@@ -52,4 +52,8 @@ node {
             verbose: false)])
             sh "echo 'Deploy to AWS'"
     }
+    stage('[TODO] Build docker image') {
+    }
+    stage('[TODO] Push image to ECR') {
+    }
 }
