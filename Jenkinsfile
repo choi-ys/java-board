@@ -52,8 +52,10 @@ node {
             verbose: false)])
             sh "echo 'Deploy to AWS'"
     }
-    stage('[TODO] Build docker image') {
+    stage('[TODO] Build image') {
+        sh "echo 'Build docker image'"
     }
-    stage('[TODO] Push image to ECR') {
+    stage('[TODO] Push image ') {
+        sh "echo 'Push image to ECR'"
     }
 }
