@@ -12,14 +12,14 @@ node {
         sh "echo 'Build jar'"
     }
     stage('Docker build') {
-        app = docker.build("413809178474.dkr.ecr.ap-northeast-2.amazonaws.com/cloudm-admin-api")
+        app = docker.build("iam-number.dkr.ecr.ap-northeast-2.amazonaws.com/cloudm-admin-api")
         sh "echo 'Build docker'"
     }
     stage('ECR Push') {
         sh 'rm  ~/.dockercfg || true'
         sh 'rm ~/.docker/config.json || true'
 
-        docker.withRegistry('https://413809178474.dkr.ecr.ap-northeast-2.amazonaws.com', 'ecr:ap-northeast-2:iam-ecr-credentials') {
+        docker.withRegistry('https://iam-number.dkr.ecr.ap-northeast-2.amazonaws.com', 'ecr:ap-northeast-2:iam-ecr-credentials') {
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
