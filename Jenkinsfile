@@ -25,7 +25,7 @@ node {
         }
         sh "echo 'Push image to ECR'"
     }
-    stage('Deplopy'){
+    stage('Deploy'){
         sshagent(['cloudm-admin-server']) {
             sh 'ssh -o StrictHostKeyChecking=no centos@172.31.22.224 ./deploy.sh'
         }
