@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'jacoco'
 }
 
 group = 'io.example'
@@ -50,6 +51,68 @@ dependencies {
 test {
     useJUnitPlatform()
     outputs.dir snippetsDir
+    finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        csv.enabled false
+        xml.enabled false
+    }
+
+    // QueryDSL로 인해 생성되는 *QEntity를 Test Coverage 산정 리포트에서 제외
+    def Qdomains = []
+    for (qPattern in '**/QA'..'**/QZ') { // qPattern = '**/QA', '**/QB', ... '*.QZ'
+        Qdomains.add(qPattern + '*')
+    }
+
+    // 여기부터
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application.class",
+                            "**/config/redis/*",
+                            "**/config/p6spy/*"
+                    ] + Qdomains)
+                })
+        )
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+// https://www.baeldung.com/jacoco-report-exclude
+jacocoTestCoverageVerification {
+    // QueryDSL로 인해 생성되는 *QEntity를 Test Coverage 산정 시 제외
+    def Qdomains = []
+    for (qPattern in '*.QA'..'*.QZ') { // qPattern = '*.QA', '*.QB', ... '*.QZ'
+        Qdomains.add(qPattern + '*')
+    }
+
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            excludes = [
+                    "**/*Application.class",
+                    "**/config/redis/*",
+                    "**/config/p6spy/*"
+            ] + Qdomains
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.5
+            }
+        }
+    }
 }
 
 asciidoctor {
