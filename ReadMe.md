@@ -4,23 +4,31 @@ Java Board Project
 > > JPA, spring-security, spring-hateoas, spring-rest-docs
 ---
 
-## Run test cases
+## Run test cases and extract test coverage
+
 ```gradle
 ./gradlew test
 ```
 
-![image](https://user-images.githubusercontent.com/14158670/138407815-7aa44828-84fa-4d4c-a527-b2a4c7b5f146.png)
-- reports path : {your repository path}/build/reports/tests/test/index.html
+> Run junit Test cases with jacoco and test coverage result report by html
+
+![image](https://user-images.githubusercontent.com/14158670/142552514-a6ff2ef5-a446-4a54-a20f-5ffa8697bbca.png)
+
+- reports path : {your repository path}/build/reports/jacoco/test/html/index.html
+
 ---
 
 ## Run build
+
 ```gradle
 build : ./gradlew clean build
 run : java -jar {your repository path}/build/libs/java-board-0.0.1-SNAPSHOT.jar
 ```
+
 ---
 
 ## Package structure
+
 ```
 └─src
     ├─docs
