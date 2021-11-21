@@ -53,6 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 용석(2021-09-28) : Spring REST Docs 설정 추가로 인한 Spring Boot static resource의 요청 허용 설정
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().mvcMatchers("/docs/rest-docs.html", "/docs/redoc.html");
+        web.ignoring().mvcMatchers("/docs/index.html");
     }
 }
