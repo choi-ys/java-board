@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
     id 'jacoco'
+    id 'com.epages.restdocs-api-spec' version '0.11.5'
 }
 
 group = 'io.example'
@@ -45,7 +46,16 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.11.5'
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+openapi3 {
+    server = 'http://localhost:8084'
+    title = 'USER-API'
+    description = '사용자 리소스 API 입니다.'
+    version = '0.1.0'
+    format = 'yaml'
 }
 
 test {
