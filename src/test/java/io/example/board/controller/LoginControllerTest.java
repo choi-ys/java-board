@@ -67,7 +67,7 @@ class LoginControllerTest {
         LoginRequest loginRequest = new LoginRequest(memberSimpleResponse.getEmail(), MemberGenerator.password);
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(post(LOGIN_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post(LOGIN_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(loginRequest))

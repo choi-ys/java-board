@@ -3,11 +3,11 @@ package io.example.board.utils.generator.docs;
 import io.example.board.utils.docs.DocsRelations;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static io.example.board.config.docs.ApiDocumentUtils.getDocumentRequest;
 import static io.example.board.config.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 /**
  * @author : choi-ys

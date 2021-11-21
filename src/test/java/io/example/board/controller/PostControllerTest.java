@@ -63,7 +63,7 @@ class PostControllerTest {
         PostCreateRequest postCreateRequest = PostGenerator.postRequest();
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(post(POST_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post(POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(postCreateRequest))

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -45,7 +46,7 @@ class MemberControllerTest {
         SignupRequest signupRequest = MemberGenerator.signupRequest();
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post(MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest))

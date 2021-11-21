@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -39,7 +40,7 @@ class IndexControllerTest {
     @DisplayName("[200:GET]API 목차 조회")
     public void index() throws Exception {
         // When
-        ResultActions resultActions = this.mockMvc.perform(get(INDEX_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get(INDEX_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON_VALUE)
         );
