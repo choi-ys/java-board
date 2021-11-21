@@ -17,6 +17,29 @@ Java Board Project
 - reports path : {your repository path}/build/reports/jacoco/test/html/index.html
 
 ---
+## Generated API Docs with Spring REST Docs + OpenAPI3 + Redoc
+```groovy
+./gradle openapi3
+```
+> generate openapi3.yaml for OAS spec document
+
+```groovy
+npm install redoc-cli
+```
+> install with your run or ci environment
+
+```groovy
+cd {repository path}/build/api-spec
+npx redoc-cli bundle openapi3.yaml
+```
+> export it to a static HTML file
+
+What do you think useful as an API documentation tools
+ - Spring REST Docs : http://localhost:8084/docs/rest-docs.html
+   - ![img.png](img.png)
+ - OAS3 with Redoc : http://localhost:8084/docs/redoc.html
+   - ![img_1.png](img_1.png)
+---
 
 ## Run build
 
