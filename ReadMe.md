@@ -18,8 +18,52 @@ Java Board Project
 
 ---
 ## Generated API Docs with Spring REST Docs + OpenAPI3 + Redoc
+refer URI : [github : restdocs-api-spec](https://github.com/ePages-de/restdocs-api-spec)
+
+add redoc dependencies
 ```groovy
-./gradle openapi3
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'com.epages.restdocs-api-spec' version '0.11.5'
+}
+
+dependencies {
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.11.5'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+openapi3 {
+    servers = [ { url = "http://some.api-host" } ]
+    title = 'My API title'
+    version = '1.0.1'
+    format = 'yaml'
+    separatePublicApi = true
+    outputFileNamePrefix = 'my-api-spec'
+    oauth2SecuritySchemeDefinition = {
+        flows = ['authorizationCode']
+        tokenUrl = 'http://example.com/token'
+        authorizationUrl = 'http://example.com/authorize'
+        scopeDescriptionsPropertiesFile = "scopeDescriptions.yaml"
+    }
+}
+
+```
+
+change create document setting
+```
+AS-IS : 
+- MockMvcRestDocumentation.document()
+- MockMvcRequestBuilders.*
+  - get(), post(), patch(), delete() ...
+
+TO-BE : - MockMvcRestDocumentationWrapper.doc
+- RestDocumentationRequestBuilders.*
+  - get(), post(), patch(), delete() ...
+```
+
+```groovy
+./gradlew clean build openapi3
 ```
 > generate openapi3.yaml for OAS spec document
 
