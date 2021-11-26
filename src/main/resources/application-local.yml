@@ -16,6 +16,10 @@ spring:
     username: sa
     password:
 
+  h2:
+    console:
+      enabled: true
+
   # [Redis]
   redis:
     host: localhost
