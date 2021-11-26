@@ -1,0 +1,13 @@
+# 회원가입
+POST {{localhost}}/member
+Content-Type: application/json
+
+{
+  "email": "project.log.062@gmail.com",
+  "password": "password",
+  "name": "choi-ys",
+  "nickname": "whypie"
+}
+> {%
+client.global.set("savedMemberId", response.body.id)
+%}
