@@ -1,4 +1,8 @@
 spring:
+  h2:
+    console:
+      enabled: true
+
   # [JPA]
   jpa:
     hibernate:

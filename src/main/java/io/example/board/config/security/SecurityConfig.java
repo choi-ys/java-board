@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             it.antMatchers(HttpMethod.PATCH, AuthenticationEndpointByRoles.MEMBER.patterns(HttpMethod.PATCH)).hasRole(MemberRole.MEMBER.name());
                             it.antMatchers(HttpMethod.DELETE, AuthenticationEndpointByRoles.MEMBER.patterns(HttpMethod.DELETE)).hasRole(MemberRole.MEMBER.name());
 
+                            it.antMatchers(HttpMethod.GET, "/h2-console/**").permitAll();
                             it.anyRequest().authenticated();
                         }
                 )
@@ -53,6 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 용석(2021-09-28) : Spring REST Docs 설정 추가로 인한 Spring Boot static resource의 요청 허용 설정
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().mvcMatchers("/docs/index.html");
+        web.ignoring().mvcMatchers("/docs/index.html", "/h2-console/**");
     }
 }
