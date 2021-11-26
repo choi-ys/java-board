@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class ServerExceptionAdvice {
 
-    // [500] 서버 에러
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity runtimeException(RuntimeException exception, HttpServletRequest request) {
+    // [500] 서버 에러 : exception global handling
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity unexpectedException(Exception exception, HttpServletRequest request) {
         exception.printStackTrace();
         return ResponseEntity.internalServerError()
                 .body(new ErrorResource(ErrorCode.SERVER_ERROR, request));
