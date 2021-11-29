@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static io.example.board.utils.generator.docs.PostDocumentGenerator.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -75,14 +76,14 @@ class PostControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect(header().exists(HttpHeaders.CONTENT_TYPE))
-                .andExpect(jsonPath("id").exists())
-                .andExpect(jsonPath("title").value(postCreateRequest.getTitle()))
-                .andExpect(jsonPath("content").value(postCreateRequest.getContent()))
-                .andExpect(jsonPath("viewCount").value(0L))
-                .andExpect(jsonPath("display").value(true))
-                .andExpect(jsonPath("writer").isNotEmpty())
-                .andExpect(jsonPath("_links.self").exists())
-                .andExpect(jsonPath("_links.profile").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.title", is(postCreateRequest.getTitle())))
+                .andExpect(jsonPath("$.content").value(postCreateRequest.getContent()))
+                .andExpect(jsonPath("$.viewCount").value(0L))
+                .andExpect(jsonPath("$.display").value(true))
+                .andExpect(jsonPath("$.writer").isNotEmpty())
+                .andExpect(jsonPath("$._links.self").exists())
+                .andExpect(jsonPath("$._links.profile").exists())
                 .andDo(generateCreatePostDocument())
         ;
     }
