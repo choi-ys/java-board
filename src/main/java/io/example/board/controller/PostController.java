@@ -38,7 +38,10 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody PostCreateRequest postCreateRequest, @CurrentUser LoginUser loginUser) {
+    public ResponseEntity create(
+            @Valid @RequestBody final PostCreateRequest postCreateRequest,
+            @CurrentUser final LoginUser loginUser
+    ) {
         PostResponse postResponse = postService.create(postCreateRequest, loginUser);
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())
                 .create(postCreateRequest, loginUser))
@@ -53,19 +56,26 @@ public class PostController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity findById(@PathVariable("id") Long id) {
+    public ResponseEntity findById(@PathVariable("id") final Long id) {
         // TODO: 용석(2021-09-27) : [PATCH, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.ok(postService.findByIdAndDisplayTrue(id));
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody PostUpdateRequest postUpdateRequest, @CurrentUser LoginUser loginUser) {
+    public ResponseEntity update(
+            @PathVariable("id") final Long id,
+            @Valid @RequestBody final PostUpdateRequest postUpdateRequest,
+            @CurrentUser final LoginUser loginUser
+    ) {
         // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
         return ResponseEntity.ok(postService.update(postUpdateRequest, loginUser));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable("id") Long id, @CurrentUser LoginUser loginUser) {
+    public ResponseEntity delete(
+            @PathVariable("id") final Long id,
+            @CurrentUser final LoginUser loginUser
+    ) {
         // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
         postService.delete(id, loginUser);
         return ResponseEntity.noContent().build();

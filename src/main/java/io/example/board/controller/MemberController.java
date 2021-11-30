@@ -39,7 +39,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity signup(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity signup(@Valid @RequestBody final SignupRequest signupRequest) {
         MemberSimpleResponse memberSimpleResponse = memberService.signup(signupRequest);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(methodOn(this.getClass())

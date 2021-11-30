@@ -41,7 +41,7 @@ public class LoginController {
     }
 
     @PostMapping("login")
-    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity login(@Valid @RequestBody final LoginRequest loginRequest) {
         LoginResponse loginResponse = loginService.login(loginRequest);
 
         EntityModel<MemberSimpleResponse> entityModel = EntityModel.of(loginResponse);
