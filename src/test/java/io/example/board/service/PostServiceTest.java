@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -58,13 +59,25 @@ class PostServiceTest {
 
         given(memberRepo.findByEmail(anyString())).willReturn(Optional.of(member));
         given(postRepo.save(any(Post.class))).will(AdditionalAnswers.returnsFirstArg());
+        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
 
         // When
         postService.create(postCreateRequest, loginUserAdapter.getLoginUser());
 
         // Then
         verify(memberRepo, times(1)).findByEmail(anyString());
-        verify(postRepo, times(1)).save(any(Post.class));
+        verify(postRepo, times(1)).save(postArgumentCaptor.capture());
+
+        Post expected = postArgumentCaptor.getValue();
+        assertAll(
+                () -> assertEquals(expected.getId(), null),
+                () -> assertEquals(expected.getTitle(), postCreateRequest.getTitle()),
+                () -> assertEquals(expected.getContent(), postCreateRequest.getContent()),
+                () -> assertEquals(expected.getMember(), member),
+                () -> assertEquals(expected.isDisplay(), true),
+                () -> assertEquals(expected.getViewCount(), 0L),
+                () -> assertEquals(expected.isDeleted(), false)
+        );
     }
 
     @Test
