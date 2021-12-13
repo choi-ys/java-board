@@ -1,7 +1,9 @@
 package io.example.board.repository.rdb.post;
 
 import io.example.board.config.test.DataJpaTestConfig;
+import io.example.board.domain.dto.request.PostSearchRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.dto.response.PostSearchResponse;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.utils.generator.mock.MemberGenerator;
@@ -9,10 +11,15 @@ import io.example.board.utils.generator.mock.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -191,5 +198,38 @@ class PostRepoTest {
 
         // Then
         assertThrows(NoSuchElementException.class, () -> postRepo.findById(savedPost.getId()).orElseThrow());
+    }
+
+    @Test
+    @DisplayName("게시글 검색")
+    public void searchPost() {
+        // Given
+        postGenerator.savedPost();
+        entityManager.flush();
+
+        String title = "제목";
+        String content = "본문";
+        String writerName = "choi-ys";
+        LocalDateTime createdAt = LocalDateTime.now().minusDays(1L);
+        LocalDateTime updatedAt = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
+                title, content, writerName, createdAt, updatedAt, pageable
+        );
+
+        // When
+        Page<PostSearchResponse> expected = postRepo.findPostPageBySearchParams(postSearchRequest);
+
+        // Then
+        assertThat(expected)
+                .hasSize(1)
+                .allSatisfy(postSearchResponse -> {
+                    assertTrue(postSearchResponse.getTitle().contains(postSearchRequest.getTitle()));
+                    assertTrue(postSearchResponse.getContent().contains(postSearchRequest.getContent()));
+                    assertTrue(postSearchResponse.getWriter().getName().equals(postSearchRequest.getWriterName()));
+                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(postSearchRequest.getCreatedAt());
+                    assertThat(postSearchResponse.getCreatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
+                });
     }
 }
