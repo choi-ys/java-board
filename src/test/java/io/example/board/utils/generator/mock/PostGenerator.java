@@ -1,12 +1,17 @@
 package io.example.board.utils.generator.mock;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
+import io.example.board.domain.dto.request.PostSearchRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.repository.rdb.post.PostRepo;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
 
 /**
  * @author : choi-ys
@@ -67,6 +72,19 @@ public class PostGenerator {
                 "수정된 제목",
                 "수정된 본문",
                 true
+        );
+    }
+
+    public static PostSearchRequest postSearchRequest(){
+        String title = "제목";
+        String content = "본문";
+        String writerName = "choi-ys";
+        LocalDateTime createdAt = LocalDateTime.now().minusDays(1L);
+        LocalDateTime updatedAt = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        return new PostSearchRequest(
+                title, content, writerName, createdAt, updatedAt, pageable
         );
     }
 }
