@@ -28,12 +28,12 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation 'com.auth0:java-jwt:3.16.0'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.0'
@@ -50,20 +50,13 @@ dependencies {
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
-openapi3 {
-    server = 'http://localhost:8084'
-    title = 'USER-API'
-    description = '사용자 리소스 API 입니다.'
-    version = '0.1.0'
-    format = 'yaml'
-}
-
 test {
     useJUnitPlatform()
     outputs.dir snippetsDir
     finalizedBy 'jacocoTestReport'
 }
 
+/* [JaCoCo] Start */
 jacoco {
     toolVersion = "0.8.7"
 }
@@ -123,7 +116,9 @@ jacocoTestCoverageVerification {
         }
     }
 }
+/* [JaCoCo] End */
 
+/* [AsciiDoctor:Spring RETS Docs] Start */
 asciidoctor {
     configurations 'asciidoctorExtensions'
     inputs.dir snippetsDir
@@ -140,6 +135,17 @@ task copyDocument(type: Copy) {
 build {
     dependsOn copyDocument
 }
+/* [AsciiDoctor:Spring RETS Docs] End */
+
+/* [OAS with redoc] Start */
+openapi3 {
+    server = 'http://localhost:8084'
+    title = 'USER-API'
+    description = '사용자 리소스 API 입니다.'
+    version = '0.1.0'
+    format = 'yaml'
+}
+/* [OAS with redoc] End */
 
 /**
  * Gradle build 최적화
