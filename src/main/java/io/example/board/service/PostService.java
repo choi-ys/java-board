@@ -2,14 +2,18 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
+import io.example.board.domain.dto.request.PostSearchRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
+import io.example.board.domain.dto.response.PostSearchResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.login.LoginUser;
+import io.example.board.repository.rdb.common.PageResponse;
 import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.repository.rdb.post.PostRepo;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +45,7 @@ public class PostService {
 
     public PostResponse findByIdAndDisplayTrue(long postId) {
         return PostResponse.mapTo(postRepo.findByIdAndDisplayTrue(postId).orElseThrow(
-                () -> new ResourceNotFoundException()
+                ResourceNotFoundException::new
         ));
     }
 
@@ -60,5 +64,10 @@ public class PostService {
                 () -> new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.message)
         );
         post.delete();
+    }
+
+    public PageResponse searchPost(PostSearchRequest postSearchRequest) {
+        Page<PostSearchResponse> postPageBySearchParams = postRepo.findPostPageBySearchParams(postSearchRequest);
+        return PageResponse.mapTo(postPageBySearchParams, postPageBySearchParams.getContent());
     }
 }

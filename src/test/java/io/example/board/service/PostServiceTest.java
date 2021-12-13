@@ -2,13 +2,16 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
+import io.example.board.domain.dto.request.PostSearchRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
+import io.example.board.domain.dto.response.PostSearchResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.login.LoginUser;
 import io.example.board.domain.vo.login.LoginUserAdapter;
+import io.example.board.repository.rdb.common.PageResponse;
 import io.example.board.repository.rdb.member.MemberRepo;
 import io.example.board.repository.rdb.post.PostRepo;
 import io.example.board.utils.generator.mock.MemberGenerator;
@@ -21,11 +24,18 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -172,5 +182,35 @@ class PostServiceTest {
         // Then
         verify(postRepo, times(1)).findByIdAndMemberEmail(anyLong(), anyString());
         assertTrue(expected instanceof RuntimeException);
+    }
+
+    @Test
+    @DisplayName("게시글 검색")
+    public void searchPost() {
+        // Given
+        PostSearchRequest postSearchRequest = PostGenerator.postSearchRequest();
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PostSearchResponse postSearchResponseMock = new PostSearchResponse(0L, "제목", "본문", 0L, LocalDateTime.now().minusDays(1L), LocalDateTime.now(), MemberGenerator.member());
+        List<PostSearchResponse> postSearchResponseList = new ArrayList<>();
+        postSearchResponseList.add(postSearchResponseMock);
+        Page<PostSearchResponse> postPageBySearchParams = new PageImpl(postSearchResponseList, pageRequest, postSearchResponseList.size());
+
+        given(postRepo.findPostPageBySearchParams(postSearchRequest))
+                .willReturn(postPageBySearchParams);
+
+        // When
+        PageResponse<PostSearchResponse> expected = postService.searchPost(postSearchRequest);
+
+        // Then
+        assertThat(expected.getEmbedded())
+                .allSatisfy(postSearchResponse -> {
+                    assertTrue(postSearchResponse.getTitle().contains(postSearchRequest.getTitle()));
+                    assertTrue(postSearchResponse.getContent().contains(postSearchRequest.getContent()));
+                    assertEquals(postSearchRequest.getWriterName(), postSearchResponse.getWriter().getName());
+                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(postSearchRequest.getCreatedAt());
+                    assertThat(postSearchResponse.getUpdatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
+                });
+        verify(postRepo, times(1)).findPostPageBySearchParams(postSearchRequest);
     }
 }
