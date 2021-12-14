@@ -3,8 +3,8 @@ package io.example.board.repository.rdb.post;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
-import io.example.board.domain.dto.request.PostSearchRequest;
-import io.example.board.domain.dto.response.PostSearchResponse;
+import io.example.board.domain.dto.request.SearchPostRequest;
+import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.rdb.post.QPost;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
     }
 
     @Override
-    public Page<PostSearchResponse> findPostPageBySearchParams(PostSearchRequest postSearchRequest) {
+    public Page<SearchPostResponse> findPostPageBySearchParams(SearchPostRequest searchPostRequest) {
 
         /**
          * Entity에서 질의 대상 항목만 선정하는 Custom Projection 구성 방법
@@ -34,8 +34,8 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
          * 2. Setter
          * 3. QueryProjection Annotation
          */
-        JPQLQuery<PostSearchResponse> query = from(post)
-                .select(Projections.constructor(PostSearchResponse.class,
+        JPQLQuery<SearchPostResponse> query = from(post)
+                .select(Projections.constructor(SearchPostResponse.class,
                         post.id,
                         post.title,
                         post.content,
@@ -45,17 +45,17 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
                         post.member
                 ))
                 .where(
-                        likePostTitle(postSearchRequest.getTitle()),
-                        likePostContent(postSearchRequest.getContent()),
-                        likePostWriterName(postSearchRequest.getWriterName()),
-                        postCreatedAtGoe(postSearchRequest.getCreatedAt()),
-                        postUpdatedAtLoe(postSearchRequest.getUpdatedAt())
+                        likePostTitle(searchPostRequest.getTitle()),
+                        likePostContent(searchPostRequest.getContent()),
+                        likePostWriterName(searchPostRequest.getWriterName()),
+                        postCreatedAtGoe(searchPostRequest.getCreatedAt()),
+                        postUpdatedAtLoe(searchPostRequest.getUpdatedAt())
                 );
 
         return new PageImpl<>(getQuerydsl()
-                .applyPagination(postSearchRequest.getPageable(), query)
+                .applyPagination(searchPostRequest.getPageable(), query)
                 .fetch(),
-                postSearchRequest.getPageable(),
+                searchPostRequest.getPageable(),
                 query.fetchCount()
         );
     }

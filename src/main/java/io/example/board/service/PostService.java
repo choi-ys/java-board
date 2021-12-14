@@ -2,10 +2,10 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
-import io.example.board.domain.dto.request.PostSearchRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
-import io.example.board.domain.dto.response.PostSearchResponse;
+import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -66,8 +66,8 @@ public class PostService {
         post.delete();
     }
 
-    public PageResponse searchPost(PostSearchRequest postSearchRequest) {
-        Page<PostSearchResponse> postPageBySearchParams = postRepo.findPostPageBySearchParams(postSearchRequest);
+    public PageResponse searchPost(SearchPostRequest searchPostRequest) {
+        Page<SearchPostResponse> postPageBySearchParams = postRepo.findPostPageBySearchParams(searchPostRequest);
         return PageResponse.mapTo(postPageBySearchParams, postPageBySearchParams.getContent());
     }
 }

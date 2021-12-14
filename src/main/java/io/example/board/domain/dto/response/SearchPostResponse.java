@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostSearchResponse {
+public class SearchPostResponse {
     private Long id;
     private String title;
     private String content;
@@ -22,7 +22,7 @@ public class PostSearchResponse {
     private LocalDateTime updatedAt;
     private MemberSimpleResponse writer;
 
-    public PostSearchResponse(
+    public SearchPostResponse(
             Long id,
             String title,
             String content,

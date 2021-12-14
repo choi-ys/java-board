@@ -1,9 +1,9 @@
 package io.example.board.repository.rdb.post;
 
 import io.example.board.config.test.DataJpaTestConfig;
-import io.example.board.domain.dto.request.PostSearchRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
-import io.example.board.domain.dto.response.PostSearchResponse;
+import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.utils.generator.mock.MemberGenerator;
@@ -214,22 +214,22 @@ class PostRepoTest {
         LocalDateTime updatedAt = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, 10);
 
-        PostSearchRequest postSearchRequest = new PostSearchRequest(
+        SearchPostRequest searchPostRequest = new SearchPostRequest(
                 title, content, writerName, createdAt, updatedAt, pageable
         );
 
         // When
-        Page<PostSearchResponse> expected = postRepo.findPostPageBySearchParams(postSearchRequest);
+        Page<SearchPostResponse> expected = postRepo.findPostPageBySearchParams(searchPostRequest);
 
         // Then
         assertThat(expected)
                 .hasSize(1)
                 .allSatisfy(postSearchResponse -> {
-                    assertTrue(postSearchResponse.getTitle().contains(postSearchRequest.getTitle()));
-                    assertTrue(postSearchResponse.getContent().contains(postSearchRequest.getContent()));
-                    assertTrue(postSearchResponse.getWriter().getName().equals(postSearchRequest.getWriterName()));
-                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(postSearchRequest.getCreatedAt());
-                    assertThat(postSearchResponse.getCreatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
+                    assertTrue(postSearchResponse.getTitle().contains(searchPostRequest.getTitle()));
+                    assertTrue(postSearchResponse.getContent().contains(searchPostRequest.getContent()));
+                    assertTrue(postSearchResponse.getWriter().getName().equals(searchPostRequest.getWriterName()));
+                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(searchPostRequest.getCreatedAt());
+                    assertThat(postSearchResponse.getCreatedAt()).isBeforeOrEqualTo(searchPostRequest.getUpdatedAt());
                 });
     }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostSearchRequest {
+public class SearchPostRequest {
     private String title;
     private String content;
     private String writerName;
@@ -21,7 +21,7 @@ public class PostSearchRequest {
     private LocalDateTime updatedAt;
     private Pageable pageable;
 
-    public PostSearchRequest(String title,
+    public SearchPostRequest(String title,
                              String content,
                              String writerName,
                              LocalDateTime createdAt,
