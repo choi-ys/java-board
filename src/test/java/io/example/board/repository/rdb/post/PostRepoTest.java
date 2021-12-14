@@ -11,6 +11,7 @@ import io.example.board.utils.generator.mock.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -231,5 +233,52 @@ class PostRepoTest {
                     assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(searchPostRequest.getCreatedAt());
                     assertThat(postSearchResponse.getCreatedAt()).isBeforeOrEqualTo(searchPostRequest.getUpdatedAt());
                 });
+    }
+
+    @Test
+    @DisplayName("게시글 검색: 검색 조건이 없는 경우")
+    public void givenNullSearchParams_whenFindPostPage_thenReturnSearchedFirstPostPage() {
+        // Given
+        postGenerator.savedPost();
+        entityManager.flush();
+
+        SearchPostRequest searchPostRequest = new SearchPostRequest(
+                null,
+                null,
+                null,
+                null,
+                null,
+                PageRequest.of(0, 5)
+        );
+
+        // When
+        Page<SearchPostResponse> expected = postRepo.findPostPageBySearchParams(searchPostRequest);
+
+        // Then
+        assertThat(expected).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("게시글 검색: 검색조건과 페이지 요청 정보가 없는 경우")
+    public void givenNullSearchParamsAndPageRequest_whenFindPostPage_thenReturnSearchedFirstPostPage() {
+        // Given
+        postGenerator.savedPost();
+        entityManager.flush();
+
+        SearchPostRequest searchPostRequest = new SearchPostRequest(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // When
+        Exception exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> postRepo.findPostPageBySearchParams(searchPostRequest));
+
+        // Then
+        assertThat(exception)
+                .isInstanceOf(RuntimeException.class);
     }
 }

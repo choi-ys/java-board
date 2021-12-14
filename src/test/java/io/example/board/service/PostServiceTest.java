@@ -2,8 +2,8 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
-import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
@@ -24,18 +24,18 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -185,19 +185,14 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 검색: 검색 조건과 페이징 요청을 포함하는 경우")
-    public void searchPost() {
+    @DisplayName("게시글 검색: 검색조건과 페이지 요청이 포함된 경우")
+    public void givenSearchParamsAndPageRequest_whenFindingPostPage_thenReturnSearchedPostPageResponse() {
         // Given
         SearchPostRequest searchPostRequest = PostGenerator.searchPostRequest();
-
-        PageRequest pageRequest = PageRequest.of(0, 10);
-        SearchPostResponse searchPostResponseMock = new SearchPostResponse(0L, "제목", "본문", 0L, LocalDateTime.now().minusDays(1L), LocalDateTime.now(), MemberGenerator.member());
-        List<SearchPostResponse> searchPostResponseList = new ArrayList<>();
-        searchPostResponseList.add(searchPostResponseMock);
-        Page<SearchPostResponse> postPageBySearchParams = new PageImpl(searchPostResponseList, pageRequest, searchPostResponseList.size());
+        SearchPostResponse searchPostResponseMock = PostGenerator.searchPostResponse();
 
         given(postRepo.findPostPageBySearchParams(searchPostRequest))
-                .willReturn(postPageBySearchParams);
+                .willReturn(new PageImpl(Arrays.asList(searchPostResponseMock)));
 
         // When
         PageResponse<SearchPostResponse> expected = postService.searchPost(searchPostRequest);
@@ -209,8 +204,35 @@ class PostServiceTest {
                     assertTrue(postSearchResponse.getContent().contains(searchPostRequest.getContent()));
                     assertEquals(searchPostRequest.getWriterName(), postSearchResponse.getWriter().getName());
                     assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(searchPostRequest.getCreatedAt());
-//                    assertThat(postSearchResponse.getUpdatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
+                    assertThat(postSearchResponse.getUpdatedAt()).isBeforeOrEqualTo(searchPostRequest.getUpdatedAt());
                 });
+        verify(postRepo, times(1)).findPostPageBySearchParams(searchPostRequest);
+    }
+
+    @Test
+    @DisplayName("게시글 검색: 검색조건만 있고, 페이지 요청이 없는 경우")
+    public void givenSearchParamsWithoutPageRequest_whenFindPostPage_thenResultSearchedFirstPostPageResponse() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+
+        SearchPostRequest searchPostRequest = new SearchPostRequest(
+                "제목",
+                "본문",
+                "choi-ys",
+                now.minusDays(2L),
+                now,
+                null
+        );
+
+        given(postRepo.findPostPageBySearchParams(searchPostRequest))
+                .willThrow(InvalidDataAccessApiUsageException.class);
+
+        // When
+        Exception exception = assertThrows(Exception.class, () -> postService.searchPost(searchPostRequest));
+
+        // Then
+        assertThat(exception)
+                .isInstanceOf(RuntimeException.class);
         verify(postRepo, times(1)).findPostPageBySearchParams(searchPostRequest);
     }
 }

@@ -1,15 +1,15 @@
 package io.example.board.utils.generator.mock;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
-import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
+import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.repository.rdb.post.PostRepo;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 
@@ -75,16 +75,32 @@ public class PostGenerator {
         );
     }
 
-    public static SearchPostRequest searchPostRequest(){
-        String title = "제목";
-        String content = "본문";
-        String writerName = "choi-ys";
-        LocalDateTime createdAt = LocalDateTime.now().minusDays(1L);
-        LocalDateTime updatedAt = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(0, 10);
+    private static final String searchTitleKeyword = "제목";
+    private static final String searchContentKeyword = "본문";
+    private static final String searchWriterNameKeyword = "choi-ys";
+    private static final LocalDateTime now = LocalDateTime.now();
+    private static final PageRequest firstPageRequest = PageRequest.of(0, 10);
 
+    public static SearchPostRequest searchPostRequest() {
         return new SearchPostRequest(
-                title, content, writerName, createdAt, updatedAt, pageable
+                searchTitleKeyword,
+                searchContentKeyword,
+                searchWriterNameKeyword,
+                now.minusDays(2L),
+                now,
+                firstPageRequest
+        );
+    }
+
+    public static SearchPostResponse searchPostResponse() {
+        return new SearchPostResponse(
+                0L,
+                title,
+                content,
+                0L,
+                now.minusDays(1L),
+                now,
+                MemberGenerator.member()
         );
     }
 }
