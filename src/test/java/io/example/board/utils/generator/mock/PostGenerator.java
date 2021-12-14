@@ -75,7 +75,7 @@ public class PostGenerator {
         );
     }
 
-    public static SearchPostRequest postSearchRequest(){
+    public static SearchPostRequest searchPostRequest(){
         String title = "제목";
         String content = "본문";
         String writerName = "choi-ys";

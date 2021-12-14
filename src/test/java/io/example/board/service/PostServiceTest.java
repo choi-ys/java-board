@@ -188,7 +188,7 @@ class PostServiceTest {
     @DisplayName("게시글 검색: 검색 조건과 페이징 요청을 포함하는 경우")
     public void searchPost() {
         // Given
-        SearchPostRequest searchPostRequest = PostGenerator.postSearchRequest();
+        SearchPostRequest searchPostRequest = PostGenerator.searchPostRequest();
 
         PageRequest pageRequest = PageRequest.of(0, 10);
         SearchPostResponse searchPostResponseMock = new SearchPostResponse(0L, "제목", "본문", 0L, LocalDateTime.now().minusDays(1L), LocalDateTime.now(), MemberGenerator.member());
