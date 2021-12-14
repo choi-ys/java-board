@@ -2,10 +2,10 @@ package io.example.board.service;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.request.PostCreateRequest;
-import io.example.board.domain.dto.request.PostSearchRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.PostResponse;
-import io.example.board.domain.dto.response.PostSearchResponse;
+import io.example.board.domain.dto.response.SearchPostResponse;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -185,32 +185,32 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 검색")
+    @DisplayName("게시글 검색: 검색 조건과 페이징 요청을 포함하는 경우")
     public void searchPost() {
         // Given
-        PostSearchRequest postSearchRequest = PostGenerator.postSearchRequest();
+        SearchPostRequest searchPostRequest = PostGenerator.postSearchRequest();
 
         PageRequest pageRequest = PageRequest.of(0, 10);
-        PostSearchResponse postSearchResponseMock = new PostSearchResponse(0L, "제목", "본문", 0L, LocalDateTime.now().minusDays(1L), LocalDateTime.now(), MemberGenerator.member());
-        List<PostSearchResponse> postSearchResponseList = new ArrayList<>();
-        postSearchResponseList.add(postSearchResponseMock);
-        Page<PostSearchResponse> postPageBySearchParams = new PageImpl(postSearchResponseList, pageRequest, postSearchResponseList.size());
+        SearchPostResponse searchPostResponseMock = new SearchPostResponse(0L, "제목", "본문", 0L, LocalDateTime.now().minusDays(1L), LocalDateTime.now(), MemberGenerator.member());
+        List<SearchPostResponse> searchPostResponseList = new ArrayList<>();
+        searchPostResponseList.add(searchPostResponseMock);
+        Page<SearchPostResponse> postPageBySearchParams = new PageImpl(searchPostResponseList, pageRequest, searchPostResponseList.size());
 
-        given(postRepo.findPostPageBySearchParams(postSearchRequest))
+        given(postRepo.findPostPageBySearchParams(searchPostRequest))
                 .willReturn(postPageBySearchParams);
 
         // When
-        PageResponse<PostSearchResponse> expected = postService.searchPost(postSearchRequest);
+        PageResponse<SearchPostResponse> expected = postService.searchPost(searchPostRequest);
 
         // Then
         assertThat(expected.getEmbedded())
                 .allSatisfy(postSearchResponse -> {
-                    assertTrue(postSearchResponse.getTitle().contains(postSearchRequest.getTitle()));
-                    assertTrue(postSearchResponse.getContent().contains(postSearchRequest.getContent()));
-                    assertEquals(postSearchRequest.getWriterName(), postSearchResponse.getWriter().getName());
-                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(postSearchRequest.getCreatedAt());
-                    assertThat(postSearchResponse.getUpdatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
+                    assertTrue(postSearchResponse.getTitle().contains(searchPostRequest.getTitle()));
+                    assertTrue(postSearchResponse.getContent().contains(searchPostRequest.getContent()));
+                    assertEquals(searchPostRequest.getWriterName(), postSearchResponse.getWriter().getName());
+                    assertThat(postSearchResponse.getCreatedAt()).isAfterOrEqualTo(searchPostRequest.getCreatedAt());
+//                    assertThat(postSearchResponse.getUpdatedAt()).isBeforeOrEqualTo(postSearchRequest.getUpdatedAt());
                 });
-        verify(postRepo, times(1)).findPostPageBySearchParams(postSearchRequest);
+        verify(postRepo, times(1)).findPostPageBySearchParams(searchPostRequest);
     }
 }

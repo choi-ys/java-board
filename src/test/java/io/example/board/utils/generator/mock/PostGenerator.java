@@ -1,7 +1,7 @@
 package io.example.board.utils.generator.mock;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
-import io.example.board.domain.dto.request.PostSearchRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
 import io.example.board.domain.rdb.post.Post;
@@ -75,7 +75,7 @@ public class PostGenerator {
         );
     }
 
-    public static PostSearchRequest postSearchRequest(){
+    public static SearchPostRequest postSearchRequest(){
         String title = "제목";
         String content = "본문";
         String writerName = "choi-ys";
@@ -83,7 +83,7 @@ public class PostGenerator {
         LocalDateTime updatedAt = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, 10);
 
-        return new PostSearchRequest(
+        return new SearchPostRequest(
                 title, content, writerName, createdAt, updatedAt, pageable
         );
     }
