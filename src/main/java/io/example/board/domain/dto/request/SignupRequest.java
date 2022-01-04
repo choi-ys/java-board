@@ -1,6 +1,7 @@
 package io.example.board.domain.dto.request;
 
 import io.example.board.domain.rdb.member.Member;
+import io.example.board.validation.EmailUnique;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Size;
 public class SignupRequest {
     @NotBlank(message = "이메일은 필수 입력 사항입니다.")
     @Email(message = "이메일 형식에 맞게 입력하세요.")
+    @EmailUnique
     private String email;
 
     @NotBlank(message = "비밀번호는 필수 입력 사항입니다.")

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.example.board.config.test.SpringBootTestConfig;
 import io.example.board.domain.dto.request.SignupRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
+import io.example.board.domain.rdb.member.Member;
 import io.example.board.utils.generator.mock.MemberGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,14 +29,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTestConfig
 @AutoConfigureRestDocs
 @DisplayName("API:Member")
+@Import(MemberGenerator.class)
 class MemberControllerTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final MemberGenerator memberGenerator;
 
-    public MemberControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+    public MemberControllerTest(
+            MockMvc mockMvc,
+            ObjectMapper objectMapper,
+            MemberGenerator memberGenerator
+    ) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.memberGenerator = memberGenerator;
     }
 
     private final String MEMBER_URL = "/member";
@@ -93,6 +102,37 @@ class MemberControllerTest {
 
         // When
         ResultActions resultActions = this.mockMvc.perform(post(MEMBER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(signupRequest))
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("method").exists())
+                .andExpect(jsonPath("path").exists())
+                .andExpect(jsonPath("code").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.name()))
+                .andExpect(jsonPath("message").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.message))
+                .andExpect(jsonPath("errorDetails").exists())
+        ;
+    }
+
+    @Test
+    @DisplayName("[400:POST]회원 가입 실패(중복된 이메일 요청)")
+    public void givenDuplicatedEmail_whenSignupRequest_thenReturnDuplicatedErrorResponse() throws Exception {
+        // Given
+        Member savedMember = memberGenerator.savedMember();
+        SignupRequest signupRequest = new SignupRequest(
+                savedMember.getEmail(),
+                savedMember.getPassword(),
+                savedMember.getName(),
+                savedMember.getNickname()
+        );
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post(MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest))
