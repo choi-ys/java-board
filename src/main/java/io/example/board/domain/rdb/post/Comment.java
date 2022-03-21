@@ -37,5 +37,6 @@ public class Comment extends Auditor {
         this.content = content;
         this.post = post;
         this.member = member;
+        this.post.addComments(this);
     }
 }
