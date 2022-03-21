@@ -25,6 +25,10 @@ public class MemberGenerator {
         return memberRepo.saveAndFlush(member());
     }
 
+    public Member savedMember(Member member) {
+        return memberRepo.saveAndFlush(member);
+    }
+
     public static String email = "project.log.062@gmail.com";
     public static final String password = "password";
     public static final String name = "choi-ys";
