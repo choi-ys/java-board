@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : choi-ys
@@ -40,9 +42,12 @@ public class Post extends Auditor {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     // * --------------------------------------------------------------
     // * Header : 도메인 생성
