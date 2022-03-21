@@ -52,7 +52,7 @@ public class CommentGenerator {
         List<Comment> comments = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             comments.add(
-                    new Comment(COMMENT_CONTENT.concat(":".concat(String.valueOf(count))),
+                    new Comment(COMMENT_CONTENT.concat(":".concat(String.valueOf(i))),
                             savedPost,
                             savedCommentWriter)
             );

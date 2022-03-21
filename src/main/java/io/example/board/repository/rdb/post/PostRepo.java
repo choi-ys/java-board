@@ -1,7 +1,6 @@
 package io.example.board.repository.rdb.post;
 
 import io.example.board.domain.rdb.post.Post;
-import io.example.board.repository.rdb.post.PostQueryRepo;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +17,7 @@ public interface PostRepo extends JpaRepository<Post, Long>, PostQueryRepo {
 
     @EntityGraph(attributePaths = "member")
     Optional<Post> findByIdAndMemberEmail(Long id, String email);
+
+    @EntityGraph(attributePaths = {"member", "comments"})
+    Optional<Post> findById(Long id);
 }
