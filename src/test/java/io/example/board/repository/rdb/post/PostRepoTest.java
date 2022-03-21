@@ -3,7 +3,9 @@ package io.example.board.repository.rdb.post;
 import io.example.board.config.test.DataJpaTestConfig;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.rdb.member.Member;
+import io.example.board.domain.rdb.post.Comment;
 import io.example.board.domain.rdb.post.Post;
+import io.example.board.utils.generator.mock.CommentGenerator;
 import io.example.board.utils.generator.mock.MemberGenerator;
 import io.example.board.utils.generator.mock.PostGenerator;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date : 2021-09-25 오전 5:08
  */
 @DataJpaTestConfig
-@Import({MemberGenerator.class, PostGenerator.class})
+@Import({MemberGenerator.class, PostGenerator.class, CommentGenerator.class})
 @DisplayName("Repo:Post")
 class PostRepoTest {
 
@@ -28,17 +32,20 @@ class PostRepoTest {
     private final EntityManager entityManager;
     private final MemberGenerator memberGenerator;
     private final PostGenerator postGenerator;
+    private final CommentGenerator commentGenerator;
 
     public PostRepoTest(
             PostRepo postRepo,
             EntityManager entityManager,
             MemberGenerator memberGenerator,
-            PostGenerator postGenerator
+            PostGenerator postGenerator,
+            CommentGenerator commentGenerator
     ) {
         this.postRepo = postRepo;
         this.entityManager = entityManager;
         this.memberGenerator = memberGenerator;
         this.postGenerator = postGenerator;
+        this.commentGenerator = commentGenerator;
     }
 
     public static final String content = "게시글 본문";
@@ -78,6 +85,32 @@ class PostRepoTest {
         assertAll(
                 () -> assertEquals(expected.getId(), savedPost.getId()),
                 () -> assertNotNull(expected.getMember())
+        );
+    }
+
+    @Test
+    @DisplayName("작성된 댓글 목록을 포함한 게시글 조회")
+    public void findById_withComments() {
+        // Given
+        Post savedPost = postGenerator.savedPost();
+        Member savedCommentWriter = memberGenerator.savedMember(MemberGenerator.secondMember());
+        List<Comment> savedComments = commentGenerator.savedComments(savedPost, savedCommentWriter);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // When
+        Post expected = postRepo.findById(savedPost.getId()).orElseThrow();
+
+        // Then
+        assertAll(
+                () -> assertEquals(expected.getMember().getId(), savedPost.getMember().getId()),
+                () -> assertEquals(expected.getComments().size(), savedComments.size()),
+                () -> assertTrue(
+                        expected.getComments().stream()
+                                .map(comment -> comment.getPost().getId())
+                                .allMatch(Predicate.isEqual(savedPost.getId()))
+                )
         );
     }
 
