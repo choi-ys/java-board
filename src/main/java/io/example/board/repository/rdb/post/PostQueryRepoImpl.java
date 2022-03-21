@@ -5,7 +5,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.response.SearchPostResponse;
+import io.example.board.domain.dto.response.SearchPostWithCommentsResponse;
 import io.example.board.domain.rdb.post.Post;
+import io.example.board.domain.rdb.post.QComment;
 import io.example.board.domain.rdb.post.QPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,6 +15,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author : choi-ys
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
  */
 public class PostQueryRepoImpl extends QuerydslRepositorySupport implements PostQueryRepo {
     QPost post = QPost.post;
+    QComment comment = QComment.comment;
 
     public PostQueryRepoImpl() {
         super(Post.class);
@@ -52,9 +57,40 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
                         postUpdatedAtLoe(searchPostRequest.getUpdatedAt())
                 );
 
-        return new PageImpl<>(getQuerydsl()
+        return new PageImpl<>(Objects.requireNonNull(getQuerydsl())
                 .applyPagination(searchPostRequest.getPageable(), query)
                 .fetch(),
+                searchPostRequest.getPageable(),
+                query.fetchCount()
+        );
+    }
+
+    // QueryDSL Official Guide]Post <-> Comments(1:N) Result Aggregation
+    // - http://querydsl.com/static/querydsl/latest/reference/html/ch03s02.html
+    // - https://jojoldu.tistory.com/342
+    // - group by result aggregation with paging : https://dev-gorany.tistory.com/32
+    // Querydsl-JPA GroupBy 사용했을 경우 Paging 처리 : https://jessyt.tistory.com/129
+    // @jsonautodetect(fieldvisibility = jsonautodetect.visibility.any)
+    @Override
+    public Page<SearchPostWithCommentsResponse> findPostWithCommentsPageBySearchParams(SearchPostRequest searchPostRequest) {
+        JPQLQuery<Post> query = from(post)
+                .select(post)
+                .leftJoin(post.comments, comment)
+                .innerJoin(post.member).fetchJoin()
+                .groupBy(post)
+                .where(
+                        likePostTitle(searchPostRequest.getTitle()),
+                        likePostContent(searchPostRequest.getContent()),
+                        likePostWriterName(searchPostRequest.getWriterName()),
+                        postCreatedAtGoe(searchPostRequest.getCreatedAt()),
+                        postUpdatedAtLoe(searchPostRequest.getUpdatedAt())
+                );
+
+        return new PageImpl<>(Objects.requireNonNull(getQuerydsl())
+                .applyPagination(searchPostRequest.getPageable(), query)
+                .fetch().stream()
+                .map(post -> new SearchPostWithCommentsResponse(post, post.getMember(), post.getComments()))
+                .collect(Collectors.toList()),
                 searchPostRequest.getPageable(),
                 query.fetchCount()
         );

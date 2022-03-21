@@ -2,6 +2,7 @@ package io.example.board.repository.rdb.post;
 
 import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.response.SearchPostResponse;
+import io.example.board.domain.dto.response.SearchPostWithCommentsResponse;
 import org.springframework.data.domain.Page;
 
 /**
@@ -10,4 +11,6 @@ import org.springframework.data.domain.Page;
  */
 public interface PostQueryRepo {
     Page<SearchPostResponse> findPostPageBySearchParams(SearchPostRequest searchPostRequest);
+
+    Page<SearchPostWithCommentsResponse> findPostWithCommentsPageBySearchParams(SearchPostRequest searchPostRequest);
 }
