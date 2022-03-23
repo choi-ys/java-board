@@ -33,6 +33,23 @@ public class SearchPostRequest {
         this.writerName = writerName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.pageable = pageable;
+        this.pageable = pageNumberToIndex(pageable);
+    }
+
+    public static SearchPostRequest of(
+            String title,
+            String content,
+            String writerName,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            Pageable pageable
+    ) {
+        return new SearchPostRequest(title, content, writerName, createdAt, updatedAt, pageNumberToIndex(pageable));
+    }
+
+    private static Pageable pageNumberToIndex(Pageable pageable) {
+        return pageable.getPageNumber() != 0 ?
+                pageable.withPage(pageable.getPageNumber() - 1) :
+                pageable;
     }
 }

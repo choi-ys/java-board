@@ -127,7 +127,7 @@ class PostQueryRepoImplTest {
                     assertThat(postWithCommentsSearchResponse.getCreatedAt()).isBeforeOrEqualTo(searchPostRequest.getUpdatedAt());
                     assertTrue(
                             postWithCommentsSearchResponse.getComments().stream()
-                                    .map(comment -> comment.getPost().getId())
+                                    .map(comment -> comment.getPostId())
                                     .allMatch(Predicate.isEqual(savedPost.getId()))
                     );
                     assertEquals(postWithCommentsSearchResponse.getWriter().getId(), savedPost.getMember().getId());

@@ -65,18 +65,12 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
         );
     }
 
-    // QueryDSL Official Guide]Post <-> Comments(1:N) Result Aggregation
-    // - http://querydsl.com/static/querydsl/latest/reference/html/ch03s02.html
-    // - https://jojoldu.tistory.com/342
-    // - group by result aggregation with paging : https://dev-gorany.tistory.com/32
-    // Querydsl-JPA GroupBy 사용했을 경우 Paging 처리 : https://jessyt.tistory.com/129
-    // @jsonautodetect(fieldvisibility = jsonautodetect.visibility.any)
     @Override
     public Page<SearchPostWithCommentsResponse> findPostWithCommentsPageBySearchParams(SearchPostRequest searchPostRequest) {
         JPQLQuery<Post> query = from(post)
                 .select(post)
-                .leftJoin(post.comments, comment)
                 .innerJoin(post.member).fetchJoin()
+                .leftJoin(post.comments, comment)
                 .groupBy(post)
                 .where(
                         likePostTitle(searchPostRequest.getTitle()),
@@ -89,7 +83,11 @@ public class PostQueryRepoImpl extends QuerydslRepositorySupport implements Post
         return new PageImpl<>(Objects.requireNonNull(getQuerydsl())
                 .applyPagination(searchPostRequest.getPageable(), query)
                 .fetch().stream()
-                .map(post -> new SearchPostWithCommentsResponse(post, post.getMember(), post.getComments()))
+                .map(post -> new SearchPostWithCommentsResponse(
+                        post,
+                        post.getMember(),
+                        post.getComments())
+                )
                 .collect(Collectors.toList()),
                 searchPostRequest.getPageable(),
                 query.fetchCount()
