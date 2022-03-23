@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author : choi-ys
@@ -24,7 +25,7 @@ public class SearchPostWithCommentsResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private MemberSimpleResponse writer;
-    private List<Comment> comments;
+    private List<CommentResponse> comments;
 
     public SearchPostWithCommentsResponse(
             Post post,
@@ -38,6 +39,8 @@ public class SearchPostWithCommentsResponse {
         this.createdAt = post.getCreatedAt();
         this.updatedAt = post.getUpdatedAt();
         this.writer = MemberSimpleResponse.mapTo(member);
-        this.comments = comments;
+        this.comments = comments.stream()
+                .map(comment -> CommentResponse.mapTo(comment))
+                .collect(Collectors.toList());
     }
 }

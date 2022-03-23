@@ -6,8 +6,10 @@ import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
 import io.example.board.domain.dto.response.error.ErrorCode;
 import io.example.board.domain.rdb.member.Member;
+import io.example.board.domain.rdb.post.Comment;
 import io.example.board.domain.rdb.post.Post;
 import io.example.board.domain.vo.token.Token;
+import io.example.board.utils.generator.mock.CommentGenerator;
 import io.example.board.utils.generator.mock.MemberGenerator;
 import io.example.board.utils.generator.mock.PostGenerator;
 import io.example.board.utils.generator.mock.TokenGenerator;
@@ -16,12 +18,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static io.example.board.utils.generator.docs.PostDocumentGenerator.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @date : 2021-09-27 오전 1:05
  */
 @SpringBootTestConfig
-@Import({TokenGenerator.class, MemberGenerator.class, PostGenerator.class})
+@Import({TokenGenerator.class, MemberGenerator.class, PostGenerator.class, CommentGenerator.class})
 @AutoConfigureRestDocs
 @DisplayName("API:Post")
 class PostControllerTest {
@@ -44,14 +49,22 @@ class PostControllerTest {
     private final MemberGenerator memberGenerator;
     private final TokenGenerator tokenGenerator;
     private final PostGenerator postGenerator;
+    private final CommentGenerator commentGenerator;
 
-    public PostControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, MemberGenerator memberGenerator,
-                              TokenGenerator tokenGenerator, PostGenerator postGenerator) {
+    public PostControllerTest(
+            MockMvc mockMvc,
+            ObjectMapper objectMapper,
+            MemberGenerator memberGenerator,
+            TokenGenerator tokenGenerator,
+            PostGenerator postGenerator,
+            CommentGenerator commentGenerator
+    ) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.memberGenerator = memberGenerator;
         this.tokenGenerator = tokenGenerator;
         this.postGenerator = postGenerator;
+        this.commentGenerator = commentGenerator;
     }
 
     private final String POST_URL = "/post";
@@ -338,6 +351,51 @@ class PostControllerTest {
                 .andExpect(jsonPath("path").value(urlTemplate))
                 .andExpect(jsonPath("code").value(ErrorCode.BAD_CREDENTIALS.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.BAD_CREDENTIALS.message))
+        ;
+    }
+
+    @Test
+    @DisplayName("[200:GET]게시글 검색(해당 게시글의 댓글 목록 포함)")
+    public void givenPostAndComments_whenSearchPostAsParams_thenReturnPostAndCommentsPageResponse() throws Exception {
+        // Given
+        Member savedMember = memberGenerator.savedMember();
+
+        Post savedPost = postGenerator.savedPost(savedMember);
+        List<Comment> comments = commentGenerator.savedComments(savedPost, savedMember, 3);
+
+        final String title = "제목";
+        final String content = "";
+        final String writerName = "";
+        final int page = 0;
+        final int size = 0;
+        final String[] sort = new String[]{"createdAt"};
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(get(POST_URL)
+                .param("title", title)
+                .param("content", content)
+                .param("writerName", writerName)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
+                .param("sort", sort)
+                .param("direction", Sort.Direction.DESC.name())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
+        );
+
+        // Then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("totalPages").exists())
+                .andExpect(jsonPath("totalElementCount").exists())
+                .andExpect(jsonPath("currentPage").exists())
+                .andExpect(jsonPath("currentElementCount").exists())
+                .andExpect(jsonPath("perPageNumber").exists())
+                .andExpect(jsonPath("firstPage").exists())
+                .andExpect(jsonPath("lastPage").exists())
+                .andExpect(jsonPath("hasNextPage").exists())
+                .andExpect(jsonPath("hasPrevious").exists())
+                .andExpect(jsonPath("$.embedded[*]").isNotEmpty())
         ;
     }
 }

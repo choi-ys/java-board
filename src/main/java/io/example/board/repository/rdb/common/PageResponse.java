@@ -51,7 +51,7 @@ public class PageResponse<T> {
         this.embedded = embedded;
     }
 
-    public static <T> PageResponse mapTo(Page<T> page, List<T> embedded) {
+    public static <T> PageResponse mapTo(Page<T> page) {
         return new PageResponse(
                 page.getTotalPages(),
                 page.getTotalElements(),
@@ -62,7 +62,7 @@ public class PageResponse<T> {
                 page.isLast(),
                 page.hasNext(),
                 page.hasPrevious(),
-                embedded
+                page.getContent()
         );
     }
 }

@@ -2,10 +2,15 @@ package io.example.board.controller;
 
 import io.example.board.domain.dto.request.PostCreateRequest;
 import io.example.board.domain.dto.request.PostUpdateRequest;
+import io.example.board.domain.dto.request.SearchPostRequest;
 import io.example.board.domain.dto.response.PostResponse;
 import io.example.board.domain.vo.login.CurrentUser;
 import io.example.board.domain.vo.login.LoginUser;
 import io.example.board.service.PostService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -14,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 import static io.example.board.controller.IndexController.profileUrl;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -29,6 +35,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaTypes.HAL_JSON_VALUE
 )
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -79,5 +86,33 @@ public class PostController {
         // TODO: 용석(2021-09-27) : [GET, DELETE /post, GET /search] link 정보 추가
         postService.delete(id, loginUser);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity search(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) String writerName,
+            @RequestParam(required = false) LocalDateTime createdAt,
+            @RequestParam(required = false) LocalDateTime updatedAt,
+            @PageableDefault(
+                    page = 0,
+                    size = 10,
+                    sort = {"createdAt"},
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                postService.searchPostWithComments(
+                        SearchPostRequest.of(
+                                title,
+                                content,
+                                writerName,
+                                createdAt,
+                                updatedAt,
+                                pageable
+                        )
+                )
+        );
     }
 }
