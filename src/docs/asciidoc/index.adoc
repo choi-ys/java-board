@@ -345,4 +345,12 @@ operation::post-controller-test/update[snippets='http-request,request-headers,pa
 operation::post-controller-test/delete-post[snippets='http-request,request-headers,path-parameters,http-response']
 ====
 
+[[resources-search-posts]]
+=== ** 게시글 검색 : `*Search*` Post **
+====
+`*GET*` 요청을 사용하여 게시글을 검색할 수 있습니다.
+
+operation::post-controller-test/search[snippets='http-request,request-headers,request-parameters,http-response']
+====
+
 ---

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author : choi-ys
@@ -48,8 +49,11 @@ public class SearchPostRequest {
     }
 
     private static Pageable pageNumberToIndex(Pageable pageable) {
-        return pageable.getPageNumber() != 0 ?
-                pageable.withPage(pageable.getPageNumber() - 1) :
-                pageable;
+        if (!Objects.isNull(pageable)) {
+            return pageable.getPageNumber() != 0 ?
+                    pageable.withPage(pageable.getPageNumber() - 1) :
+                    pageable;
+        }
+        return null;
     }
 }

@@ -3,16 +3,15 @@ package io.example.board.utils.generator.docs;
 import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static io.example.board.config.docs.ApiDocumentUtils.getDocumentRequest;
 import static io.example.board.config.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 /**
  * @author : choi-ys
@@ -56,7 +55,7 @@ public class PostDocumentGenerator {
         );
     }
 
-    public static RestDocumentationResultHandler generateGetAnPostDocument(){
+    public static RestDocumentationResultHandler generateGetAnPostDocument() {
         return document("{class-name}/{method-name}",
                 getDocumentRequest(),
                 getDocumentResponse(),
@@ -84,7 +83,7 @@ public class PostDocumentGenerator {
         );
     }
 
-    public static RestDocumentationResultHandler generateUpdateAnPostDocument(){
+    public static RestDocumentationResultHandler generateUpdateAnPostDocument() {
         return document("{class-name}/{method-name}",
                 getDocumentRequest(),
                 getDocumentResponse(),
@@ -119,7 +118,7 @@ public class PostDocumentGenerator {
         );
     }
 
-    public static RestDocumentationResultHandler generateDeleteAnPostDocument(){
+    public static RestDocumentationResultHandler generateDeleteAnPostDocument() {
         return document("{class-name}/{method-name}",
                 getDocumentRequest(),
                 getDocumentResponse(),
@@ -130,6 +129,63 @@ public class PostDocumentGenerator {
                 ),
                 pathParameters(
                         parameterWithName("id").description("게시글 ID")
+                )
+        );
+    }
+
+    public static RestDocumentationResultHandler generateSearchPostDocument() {
+        return document("{class-name}/{method-name}",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                requestParameters(
+                        parameterWithName("title").description("게시글 제목"),
+                        parameterWithName("content").description("게시글 내용"),
+                        parameterWithName("writerName").description("게시글 작성자"),
+                        parameterWithName("page").description("요청 페이지 번호"),
+                        parameterWithName("size").description("페이지당 항목 수"),
+                        parameterWithName("sort").description("정렬 기준 : 정렬 항목 명"),
+                        parameterWithName("direction").description("정렬 기준 : 순서(ASC, DESC)")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Response content type")
+                ),
+                responseFields(
+                        fieldWithPath("totalPages").description("전페 페이지 수"),
+                        fieldWithPath("totalElementCount").description("전체 요소 수"),
+                        fieldWithPath("currentPage").description("현제 페이지 번호"),
+                        fieldWithPath("currentElementCount").description("현재 페이지의 요수 수"),
+                        fieldWithPath("perPageNumber").description("페이지당 요소 수"),
+                        fieldWithPath("firstPage").description("첫 페이지 여부"),
+                        fieldWithPath("lastPage").description("마지막 페이지 여부"),
+                        fieldWithPath("hasNextPage").description("다음 페이지 존재 여부"),
+                        fieldWithPath("hasPrevious").description("이전 페이지 존재 여부"),
+                        fieldWithPath("embedded").description("응답 본문 배열"),
+                        fieldWithPath("embedded[0].id").description("게시글 ID"),
+                        fieldWithPath("embedded[0].title").description("게시글 제목"),
+                        fieldWithPath("embedded[0].content").description("게시글 내용"),
+                        fieldWithPath("embedded[0].viewCount").description("게시글 조회 수"),
+                        fieldWithPath("embedded[0].createdAt").description("게시글 생성일"),
+                        fieldWithPath("embedded[0].updatedAt").description("게시글 수정일"),
+                        fieldWithPath("embedded[0].writer").description("게시글 작성자 정보"),
+                        fieldWithPath("embedded[0].writer.id").description("게시글 작성자 ID"),
+                        fieldWithPath("embedded[0].writer.email").description("게시글 작성자 이메일"),
+                        fieldWithPath("embedded[0].writer.name").description("게시글 작성자 이름"),
+                        fieldWithPath("embedded[0].writer.nickname").description("게시글 작성자 닉네임"),
+                        fieldWithPath("embedded[0].comments").description("게시글 댓글 배열"),
+                        fieldWithPath("embedded[0].comments[0].id").description("댓글 ID"),
+                        fieldWithPath("embedded[0].comments[0].postId").description("댓글이 작성된 게시글 ID"),
+                        fieldWithPath("embedded[0].comments[0].content").description("댓글 내용"),
+                        fieldWithPath("embedded[0].comments[0].writer").description("댓글 작성자 정보"),
+                        fieldWithPath("embedded[0].comments[0].writer.id").description("댓글 작성자 ID"),
+                        fieldWithPath("embedded[0].comments[0].writer.email").description("댓글 작성자 이메일"),
+                        fieldWithPath("embedded[0].comments[0].writer.name").description("댓글 작성자 이름"),
+                        fieldWithPath("embedded[0].comments[0].writer.nickname").description("댓글 작성자 이름"),
+                        fieldWithPath("embedded[0].comments[0].createdAt").description("댓글 생성일"),
+                        fieldWithPath("embedded[0].comments[0].updatedAt").description("댓글 수정일")
                 )
         );
     }
