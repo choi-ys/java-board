@@ -356,12 +356,11 @@ class PostControllerTest {
 
     @Test
     @DisplayName("[200:GET]게시글 검색(해당 게시글의 댓글 목록 포함)")
-    public void givenPostAndComments_whenSearchPostAsParams_thenReturnPostAndCommentsPageResponse() throws Exception {
+    public void search() throws Exception {
         // Given
         Member savedMember = memberGenerator.savedMember();
-
         Post savedPost = postGenerator.savedPost(savedMember);
-        List<Comment> comments = commentGenerator.savedComments(savedPost, savedMember, 3);
+        List<Comment> comments = commentGenerator.savedComments(savedPost, savedMember, 2);
 
         final String title = "제목";
         final String content = "";
@@ -371,7 +370,7 @@ class PostControllerTest {
         final String[] sort = new String[]{"createdAt"};
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(get(POST_URL)
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get(POST_URL)
                 .param("title", title)
                 .param("content", content)
                 .param("writerName", writerName)
@@ -396,6 +395,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("hasNextPage").exists())
                 .andExpect(jsonPath("hasPrevious").exists())
                 .andExpect(jsonPath("$.embedded[*]").isNotEmpty())
+                .andDo(generateSearchPostDocument())
         ;
     }
 }
