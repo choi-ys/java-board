@@ -4,8 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static io.example.board.config.docs.ApiDocumentUtils.getDocumentRequest;
-import static io.example.board.config.docs.ApiDocumentUtils.getDocumentResponse;
+import static io.example.board.config.docs.ApiDocumentUtils.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -19,7 +18,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
  */
 public class PostDocumentGenerator {
     public static RestDocumentationResultHandler generateCreatePostDocument() {
-        return document("{class-name}/{method-name}",
+        return document(DOCUMENT_IDENTIFIER,
                 getDocumentRequest(),
                 getDocumentResponse(),
                 links(
@@ -56,7 +55,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateGetAnPostDocument() {
-        return document("{class-name}/{method-name}",
+        return document(DOCUMENT_IDENTIFIER,
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
@@ -84,7 +83,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateUpdateAnPostDocument() {
-        return document("{class-name}/{method-name}",
+        return document(DOCUMENT_IDENTIFIER,
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
@@ -119,7 +118,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateDeleteAnPostDocument() {
-        return document("{class-name}/{method-name}",
+        return document(DOCUMENT_IDENTIFIER,
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
@@ -134,7 +133,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateSearchPostDocument() {
-        return document("{class-name}/{method-name}",
+        return document(DOCUMENT_IDENTIFIER,
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
