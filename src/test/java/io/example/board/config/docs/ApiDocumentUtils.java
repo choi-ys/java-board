@@ -17,6 +17,8 @@ public interface ApiDocumentUtils {
     final String STG_HOST = "stg-api.board.io";
     final String PRD_HOST = "prd-api.board.io";
 
+    final String DOCUMENT_IDENTIFIER = "{class-name}/{method-name}";
+
     static OperationRequestPreprocessor getDocumentRequest() {
         return preprocessRequest(
                 modifyUris()
