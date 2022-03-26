@@ -17,9 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 public class MemberDocumentGenerator {
 
     public static RestDocumentationResultHandler generateSignupMemberDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 links(
                         linkWithRel("self").description("생성된 리소스의 link 정보"),
                         linkWithRel("login").description("로그인 리소스의 link 정보")

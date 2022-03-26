@@ -15,9 +15,7 @@ import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.li
 public class IndexDocumentGenerator {
 
     public static RestDocumentationResultHandler generateIndexDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 links(
                         linkWithRel(DocsRelations.INDEX.relation).description("목차 API link"),
                         linkWithRel(DocsRelations.INDEX.profileName()).description("목차 API 문서 link"),

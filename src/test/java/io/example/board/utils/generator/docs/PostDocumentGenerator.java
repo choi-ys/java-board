@@ -18,9 +18,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
  */
 public class PostDocumentGenerator {
     public static RestDocumentationResultHandler generateCreatePostDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 links(
                         linkWithRel("self").description("생성된 리소스의 link 정보"),
                         linkWithRel("profile").description("API 목차 link 정보")
@@ -55,9 +53,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateGetAnPostDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
@@ -83,9 +79,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateUpdateAnPostDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
@@ -118,9 +112,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateDeleteAnPostDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
@@ -133,9 +125,7 @@ public class PostDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateSearchPostDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
