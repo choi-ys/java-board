@@ -18,9 +18,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 public class LoginDocumentGenerator {
 
     public static RestDocumentationResultHandler generateLoginDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 links(
                         linkWithRel("refresh").description("토큰 갱신 리소스의 link 정보")
                 ),
@@ -50,9 +48,7 @@ public class LoginDocumentGenerator {
     }
 
     public static RestDocumentationResultHandler generateRefreshDocument() {
-        return document(DOCUMENT_IDENTIFIER,
-                getDocumentRequest(),
-                getDocumentResponse(),
+        return createDocument(
                 requestHeaders(
                         headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
