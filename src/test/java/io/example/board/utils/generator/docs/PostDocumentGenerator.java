@@ -29,7 +29,7 @@ public class PostDocumentGenerator {
                         headerWithName(AUTHORIZATION).description("access token header")
                 ),
                 requestFields(
-                        fieldWithPath("title").description("게시글 제목"),
+                        fieldWithPath("title").description("게시글 제목").attributes(format("1~10자의 문자열")),
                         fieldWithPath("content").description("게시글 본문")
                 ),
                 responseHeaders(
