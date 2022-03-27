@@ -3,6 +3,7 @@ package io.example.board.config.docs;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
+import org.springframework.restdocs.snippet.Attributes.Attribute;
 import org.springframework.restdocs.snippet.Snippet;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -51,5 +52,9 @@ public interface ApiDocumentUtils {
     // TODO (2022-03-26) : 실행 환경의 Profile 정보로부터 TC 기반 API Docs 생성 시, Link 정보 생성에 필요한 Host 정보를 반환
     private static String host() {
         return String.format("dev-api.%s", BASE_HOST);
+    }
+
+    static Attribute format(String value) {
+        return new Attribute("format", value);
     }
 }

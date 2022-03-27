@@ -4,7 +4,8 @@
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 3
+:toc-title: 목차
+:toclevels: 5
 :sectlinks:
 //:operation-curl-request-title: Example Request
 //:operation-http-response-title: Example Response
@@ -54,40 +55,89 @@ TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HT
 **
 ====
 
+[cols="1h,2l,4s,4m"]
 |===
-| Http Status Code | Description
+| Code | Message | Error Code | Description
 
-| `*200 OK*`
-| 요청이 성공적으로 처리 되었습니다.
+| 200
+| OK
+| -
+| 요청이 성공적으로 처리 되었음을 의미합니다.
 성공의 의미는 `*HTTP Method*` 에 따라 달라집니다.
 
-| `*201 Created*`
-| 요청이 성공적이었으며 그 결과로 새로운 리소스가 생성되었습니다. +
-이 응답은 일반적으로 `POST` 요청 또는 일부 `PUT` 요청 이후에 따라옵니다.
+| 201
+| Created
+| -
+| 요청이 성공적이었으며, 그 결과 새로운 리소스가 생성되었습니다. +
+이 응답은 일반적으로 `*POST*` 요청 또는 일부 `*PUT*` 요청 이후에 따라옵니다.
 응답의 `Location` 헤더에 해당 리소스의 URI가 담겨있습니다.
 
-| `*204 No Content*`
-| `*POST*` 성공 상태 응답 코드는 요청이 성공했으나 클라이언트가 현재 페이지에서 벗어나지 않아도 된다는 것을 나타냅니다. +
+| 204
+| No Content
+| -
+| 요청이 성공적이었으며, 반환할 응답 바디가 없습니다.
+`*POST*` 성공 상태 응답 코드는 요청이 성공했으나 클라이언트가 현재 페이지에서 벗어나지 않아도 된다는 것을 나타냅니다. +
 기본값에서 204 응답은 캐시에 저장할 수 있습니다. +
 캐시에서 가져온 응답인 경우 ETag 헤더를 포함합니다.
 
-| `*400 Bad Request*`
-| 잘못된 요청을 보낸 경우.
-응답 본문에 더 오류에 대한 정보가 담겨있다.
+| 400
+| Bad Request
+| HTTP_MESSAGE_NOT_READABLE
+| 요청값을 확인할 수 없는 경우
 
-| `*401 Unauthorized*`
-| 인증 실패
+| 400
+| Bad Request
+| METHOD_ARGUMENT_TYPE_MISMATCH
+| 요청값의 자료형이 잘못된 경우
 
-| `*403 Forbidden*`
-| 접근 권한 없음
+| 400
+| Bad Request
+| METHOD_ARGUMENT_NOT_VALID
+| 유효하지 못한 요청인 경우
 
-| `*404 Not Found*`
-| 요청한 리소스가 없음
+| 401
+| Unauthorized
+| BAD_CREDENTIALS
+| 인증 실패: 잘못된 자격 증명인 경우
 
-| `*415 Unsupported Media Type*`
-| 요청한 `Midea Type` 을 지원하지 않음
+| 401
+| Unauthorized
+| AUTHENTICATION_CREDENTIALS_NOT_FOUND
+| 인증 실패: 자격 증명 정보를 찾을 수 없는 경우
 
-| `*429 Too Many Requests*`
+| 403
+| Forbidden
+| UNAUTHORIZED
+| 접근 권한 없음 : 유효한 자격증명이 아닌 경우
+
+| 403
+| Forbidden
+| ACCESS_DENIED
+| 접근 권한 없음 : 유효한 자격증명이 아닌 경우
+
+| 404
+| Not Found
+| RESOURCE_NOT_FOUND
+| 요청에 해당하는 자원을 찾을 수 없는 경우
+
+| 405
+| Method Not Allowed
+| HTTP_REQUEST_METHOD_NOT_SUPPORTED
+| 허용하지 않는 Http Method 요청인 경우
+
+| 405
+| Not Acceptable
+| HTTP_MEDIA_TYPE_NOT_ACCEPTABLE
+| 지원하지 않는 Accept Type인 경우
+
+| 415
+| Unsupported Media Type
+| HTTP_MEDIA_TYPE_NOT_SUPPORTED
+| 요청한 `Midea Type` 을 지원하지 않는 경우
+
+| 429
+| Too Many Requests
+| TOO_MANY_REQUEST
 | 일정 기간내 너무 많은 요청이 접수됨
 |===
 
@@ -111,11 +161,11 @@ TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HT
 [[common-domain]]
 == ** 도메인 정보 **
 
-TIP: ** 도메인 정보 **
+****
 
-----
-API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다.
-----
+TIP: API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다.
+
+.Domain
 
 |===
 | 환경 | 도메인
@@ -128,6 +178,8 @@ API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다.
 
 | PRD | api.board.io
 |===
+****
+
 
 [[common-request]]
 == ** 요청 메세지 구조 **
@@ -165,7 +217,7 @@ TIP: ** Pagination **
 [[common-response-errors]]
 === ** Error **
 
-IMPORTANT: ** API 호출 시 에러가 발생했을 때 (상태 코드 >= 400), 응답 본문에 해당 문제를 기술한 JSON 객채를 반환합니다.
+IMPORTANT: ** API 호출 시 에러가 발생했을 때 (상태 코드 >= 400), 응답 본문에 해당 문제를 기술한 JSON 객체를 반환합니다.
 에러 객체는 다음과 같은 구조로 구성되어 있습니다.
 **
 
