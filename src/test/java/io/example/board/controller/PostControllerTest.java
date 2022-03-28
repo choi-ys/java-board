@@ -122,12 +122,12 @@ class PostControllerTest {
                 .andExpect(jsonPath("path").exists())
                 .andExpect(jsonPath("code").value(ErrorCode.HTTP_MESSAGE_NOT_READABLE.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.HTTP_MESSAGE_NOT_READABLE.message))
+                .andDo(generateEmptyCreatePostRequestDocument())
         ;
     }
 
     @Test
     @DisplayName("[400:POST]게시글 생성 실패(값이 잘못된 요청)")
-    @Disabled
     public void create_Fail_Cause_InvalidArgument() throws Exception {
         // Given
         Token token = tokenGenerator.generateToken();
@@ -150,6 +150,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("code").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.name()))
                 .andExpect(jsonPath("message").value(ErrorCode.METHOD_ARGUMENT_NOT_VALID.message))
                 .andExpect(jsonPath("errorDetails").isNotEmpty())
+                .andDo(generateInvalidCreatePostRequestDocument())
         ;
     }
 

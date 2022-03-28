@@ -2,9 +2,15 @@ package io.example.board.utils.generator.docs;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static io.example.board.config.docs.ApiDocumentUtils.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.example.board.config.docs.ApiDocumentUtils.createDocument;
+import static io.example.board.config.docs.ApiDocumentUtils.format;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -48,6 +54,43 @@ public class PostDocumentGenerator {
                         fieldWithPath("writer.nickname").description("작성자 닉네임"),
                         fieldWithPath("_links.self.href").description("생성된 리소스의 link 정보"),
                         fieldWithPath("_links.profile.href").description("API 목차 link 정보")
+                )
+        );
+    }
+
+    public static RestDocumentationResultHandler generateEmptyCreatePostRequestDocument() {
+        return createDocument(
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
+                        headerWithName(AUTHORIZATION).description("access token header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Response content type")
+                ),
+                responseFields(
+                        commonErrorFieldWithPath()
+                )
+        );
+    }
+
+    public static RestDocumentationResultHandler generateInvalidCreatePostRequestDocument() {
+        return createDocument(
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
+                        headerWithName(AUTHORIZATION).description("access token header")
+                ),
+                requestFields(
+                        fieldWithPath("title").description("게시글 제목").attributes(format("1~10자의 문자열")),
+                        fieldWithPath("content").description("게시글 본문")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Response content type")
+                ),
+                responseFields(
+                        Stream.concat(commonErrorFieldWithPath().stream(), invalidErrorFieldWithPath().stream())
+                                .collect(Collectors.toList())
                 )
         );
     }
@@ -176,6 +219,27 @@ public class PostDocumentGenerator {
                         fieldWithPath("embedded[*].comments[*].createdAt").description("댓글 생성일"),
                         fieldWithPath("embedded[*].comments[*].updatedAt").description("댓글 수정일")
                 )
+        );
+    }
+
+    private static List<FieldDescriptor> commonErrorFieldWithPath() {
+        return Arrays.asList(
+                fieldWithPath("timestamp").description("에러 일시"),
+                fieldWithPath("code").description("에러 뷴류 코드"),
+                fieldWithPath("message").description("에러 메세지"),
+                fieldWithPath("method").description("요청 HTTP Method"),
+                fieldWithPath("path").description("요청 URL")
+        );
+    }
+
+    private static List<FieldDescriptor> invalidErrorFieldWithPath() {
+        return Arrays.asList(
+                fieldWithPath("errorDetails[*]").description("에러 상세 정보 배열"),
+                fieldWithPath("errorDetails[*].object").description("에러 객체명"),
+                fieldWithPath("errorDetails[*].field").description("에러 필드"),
+                fieldWithPath("errorDetails[*].code").description("에러 상세 코드"),
+                fieldWithPath("errorDetails[*].rejectMessage").description("에러 사유"),
+                fieldWithPath("errorDetails[*].rejectedValue").description("에러 발생값")
         );
     }
 }

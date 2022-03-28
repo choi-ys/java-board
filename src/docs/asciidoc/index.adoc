@@ -166,7 +166,6 @@ TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HT
 TIP: API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다.
 
 .Domain
-
 |===
 | 환경 | 도메인
 
@@ -180,25 +179,18 @@ TIP: API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니
 |===
 ****
 
-
 [[common-request]]
 == ** 요청 메세지 구조 **
 
-TIP: ** 요청 메세지 구조 **
-
-----
-API 호출에 필요한 요청 메세지 구조에 대한 정보를 제공합니다.
- - 요청 파라미터는 CamelCase 구조를 따릅니다.
-----
+TIP: ** API 호출에 필요한 요청 메세지 구조에 대한 정보를 제공합니다.
+- 요청 파라미터는 CamelCase 구조를 따릅니다.
+**
 
 [[common-response]]
 == ** 응답 메세지 구조 **
 
-TIP: ** 응답 메세지 구조 **
-
-----
-API 호출 시 응답 메세지 구조에 대한 정보를 제공합니다.
-----
+TIP: ** API 호출 시 응답 메세지 구조에 대한 정보를 제공합니다.
+**
 
 ---
 
@@ -206,11 +198,8 @@ API 호출 시 응답 메세지 구조에 대한 정보를 제공합니다.
 [[common-response-pagination]]
 === ** Pagination **
 
-TIP: ** Pagination **
-
-----
-목록 API 호출 시 응답 내 페이징 처리에 대한 구조 정보를 제공합니다.
-----
+TIP: ** 목록 API 호출 시 응답 내 페이징 처리에 대한 구조 정보를 제공합니다.
+**
 
 ---
 
@@ -218,68 +207,14 @@ TIP: ** Pagination **
 === ** Error **
 
 IMPORTANT: ** API 호출 시 에러가 발생했을 때 (상태 코드 >= 400), 응답 본문에 해당 문제를 기술한 JSON 객체를 반환합니다.
-에러 객체는 다음과 같은 구조로 구성되어 있습니다.
+에러 응답 객체는 다음과 같은 구조로 구성되어 있습니다.
 **
 
-----
-{
-    timestamp : 오류 일시
-    code : 오류 코드
-    message : 오류 사유
-    method : 요청 Http Method
-    path : 요청 Http URI
-    errorDetails : {
-        object : 오류 객체
-        field : 오류 항목
-        code : 오류 코드
-        rejectMessage : 오류 사유
-        rejectedValue : 오류 파라미터 값
-    }
-}
-----
+operation::post-controller-test/create_-fail_-cause_-no-argument[snippets='response-fields,response-body']
 
+WARNING: ** 예를 들어, 잘못된 요청으로 게시글을 생성하려고 했을 때 다음과 같은 `400 Bad Request` 응답을 반환합니다.**
 
-//include::{snippets}/response-fields.adoc[]
-
-
-WARNING: ** 예를 들어, 잘못된 요청으로 게시글을 생성하려고 했을 때 다음과 같은 `400 Bad Request` 응답을 반환합니다.
-**
-
-----
-{
-  "timestamp": "2021-09-28 02:37:31",
-  "code": "METHOD_ARGUMENT_NOT_VALID",
-  "message": "잘못된 요청입니다. 요청값을 확인해주세요.",
-  "method": "POST",
-  "path": "/post",
-  "errorDetails": [
-    {
-      "object": "postCreateRequest",
-      "field": "title",
-      "code": "Size",
-      "rejectMessage": "게시글 제목은 1~50자 이내로 입력하세요.",
-      "rejectedValue": ""
-    },
-    {
-      "object": "postCreateRequest",
-      "field": "title",
-      "code": "NotBlank",
-      "rejectMessage": "제목은 필수 입력 사항입니다.",
-      "rejectedValue": ""
-    },
-    {
-      "object": "postCreateRequest",
-      "field": "content",
-      "code": "NotBlank",
-      "rejectMessage": "본문은 필수 입력 사항입니다.",
-      "rejectedValue": ""
-    }
-  ]
-}
-----
-
-
-//include::{snippets}/errors/http-response.adoc[]
+operation::post-controller-test/create_-fail_-cause_-invalid-argument[snippets='response-fields,http-request,http-response']
 
 
 [[resources]]
@@ -340,7 +275,7 @@ Authorization API는 인증 관련 API Interface를 제공 합니다.
 `*POST*` 요청을 사용하여 로그인 할 수 있습니다.
 
 operation::login-controller-test/login[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
-====
+====≤
 
 [[resources-refresh]]
 === ** 토큰 갱신 : `*POST*` Refresh **
@@ -350,7 +285,6 @@ operation::login-controller-test/login[snippets='http-request,request-headers,re
 
 operation::login-controller-test/refresh[snippets='http-request,request-headers,response-body,response-fields,http-response']
 ====
-
 
 [[resources-post]]
 == ** 게시글 **
@@ -370,27 +304,27 @@ Post API는 게시글 관련 API Interface를 제공 합니다.
 operation::post-controller-test/create[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
 ====
 
-
 [[resources-get-an-post]]
 === ** 게시글 조회 : `*GET*` Post **
+
 ====
 `*GET*` 요청을 사용하여 게시글을 조회할 수 있습니다.
 
 operation::post-controller-test/find-by-id-and-display-true[snippets='http-request,request-headers,path-parameters,response-fields,response-body,http-response']
 ====
 
-
 [[resources-update-an-post]]
 === ** 게시글 수정 : `*PATCH*` Post **
+
 ====
 `*PATCH*` 요청을 사용하여 게시글을 수정할 수 있습니다.
 
 operation::post-controller-test/update[snippets='http-request,request-headers,path-parameters,request-fields,request-body,response-fields,response-body,http-response']
 ====
 
-
 [[resources-delte-an-post]]
 === ** 게시글 삭제 : `*DELETE*` Post **
+
 ====
 `*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
 
@@ -399,6 +333,7 @@ operation::post-controller-test/delete-post[snippets='http-request,request-heade
 
 [[resources-search-posts]]
 === ** 게시글 검색 : `*Search*` Post **
+
 ====
 `*GET*` 요청을 사용하여 게시글을 검색할 수 있습니다.
 

@@ -3,8 +3,7 @@ package io.example.board.utils.generator.docs;
 import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static io.example.board.config.docs.ApiDocumentUtils.*;
+import static io.example.board.config.docs.ApiDocumentUtils.createDocument;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
