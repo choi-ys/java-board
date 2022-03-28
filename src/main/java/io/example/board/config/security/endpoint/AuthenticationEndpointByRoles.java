@@ -13,7 +13,7 @@ public enum AuthenticationEndpointByRoles {
 
     NONE(Arrays.asList(
             new AuthenticationRequest(HttpMethod.GET, Arrays.asList(
-                    "/post/**", "/index"
+                    "/post/**", "/index/**"
             )),
             new AuthenticationRequest(HttpMethod.POST, Arrays.asList(
                     "/member",

@@ -7,8 +7,6 @@
 :toc-title: 목차
 :toclevels: 5
 :sectlinks:
-//:operation-curl-request-title: Example Request
-//:operation-http-response-title: Example Response
 
 [[overview]]
 = ** 개요 **
@@ -20,13 +18,8 @@ API에 대한 전체적인 설명을 포함합니다.
 
 [[overview-http-verbs]]
 == ** HTTP 동사 **
-
----
-
-====
-TIP: ** 본 API에서 사용하는 HTTP 동사(verbs)는 가능한 한 표준 HTTP와 REST 규약을 따릅니다.
-**
-====
+****
+TIP: ** 본 API에서 사용하는 HTTP 동사(verbs)는 가능한 한 표준 HTTP와 REST 규약을 따릅니다. **
 
 |===
 | Http Method | Description
@@ -43,17 +36,13 @@ TIP: ** 본 API에서 사용하는 HTTP 동사(verbs)는 가능한 한 표준 HT
 | `*DELETE*`
 | *기존 리소스를 삭제*
 |===
+****
 
 //https://hyeonstorage.tistory.com/97
 [[overview-http-status-codes]]
 == ** HTTP 상태 코드 **
-
----
-
-====
-TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HTTP와 REST 규약을 따릅니다.
-**
-====
+****
+TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HTTP와 REST 규약을 따릅니다. **
 
 [cols="1h,2l,4s,4m"]
 |===
@@ -140,32 +129,27 @@ TIP: ** 본 API에서 사용하는 HTTP 상태 코드는 가능한 한 표준 HT
 | TOO_MANY_REQUEST
 | 일정 기간내 너무 많은 요청이 접수됨
 |===
+****
 
 [[overview-hypermedia]]
 == ** 하이퍼미디어 **
+****
+TIP: ** 본 API의 응답에는 하이퍼미디어 정보를 포함합니다.**
 
----
-
-----
+[horizontal]
 - 본 API는 하이퍼미디어와 사용하며, 응답에 담겨있는 리소스는 관계된 다른 리소스에 대한 링크를 가지고 있습니다.
 - 응답은 [Hypertext Application from resource to resource. Language (HAL)] 형식을 따릅니다.
 - 링크는 '_links' 라는 키로 제공합니다.
 - 본 API의 사용자(클라이언트)는 URI를 직접 생성하지 않아야 하며, 리소스에서 제공하는 링크를 사용해야 합니다.
-----
+****
 
 [[common]]
 = ** 공통사항 **
----
-
 
 [[common-domain]]
 == ** 도메인 정보 **
-
 ****
-
-TIP: API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다.
-
-.Domain
+TIP: ** API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니다. **
 |===
 | 환경 | 도메인
 
@@ -181,163 +165,148 @@ TIP: API 호출 시 Endpoint구성에 필요한 도메인 정보를 제공합니
 
 [[common-request]]
 == ** 요청 메세지 구조 **
+====
+TIP: ** API 호출에 필요한 요청 메세지 구조에 대한 정보를 제공합니다. 요청 파라미터는 CamelCase 구조를 따릅니다. **
 
-TIP: ** API 호출에 필요한 요청 메세지 구조에 대한 정보를 제공합니다.
-- 요청 파라미터는 CamelCase 구조를 따릅니다.
-**
+====
 
 [[common-response]]
 == ** 응답 메세지 구조 **
 
-TIP: ** API 호출 시 응답 메세지 구조에 대한 정보를 제공합니다.
-**
-
----
-
-
 [[common-response-pagination]]
 === ** Pagination **
+====
 
-TIP: ** 목록 API 호출 시 응답 내 페이징 처리에 대한 구조 정보를 제공합니다.
-**
+TIP: ** 목록 API 호출 시 응답 내 페이징 처리에 대한 구조 정보를 제공합니다. **
 
----
+operation::common-docs-snippet-controller-test/common-pagination-response[snippets='response-fields']
+====
+
 
 [[common-response-errors]]
 === ** Error **
-
+====
 IMPORTANT: ** API 호출 시 에러가 발생했을 때 (상태 코드 >= 400), 응답 본문에 해당 문제를 기술한 JSON 객체를 반환합니다.
-에러 응답 객체는 다음과 같은 구조로 구성되어 있습니다.
-**
+에러 응답 객체는 다음과 같은 구조로 구성되어 있습니다. **
 
 operation::post-controller-test/create_-fail_-cause_-no-argument[snippets='response-fields,response-body']
 
-WARNING: ** 예를 들어, 잘못된 요청으로 게시글을 생성하려고 했을 때 다음과 같은 `400 Bad Request` 응답을 반환합니다.**
+WARNING: ** 예를 들어, 잘못된 요청으로 게시글을 생성하려고 했을 때 다음과 같은 `400 Bad Request` 응답을 반환합니다. **
 
 operation::post-controller-test/create_-fail_-cause_-invalid-argument[snippets='response-fields,http-request,http-response']
-
+====
 
 [[resources]]
 = ** API **
----
-
 
 [[resources-index]]
 == ** 목차 **
 
-NOTE: ** Index API **
-
-----
-Index API는 서비스 진입점을 제공 합니다.
-----
+NOTE: ** Index API는 서비스 진입점을 제공 합니다. **
 
 [[resources-index-access]]
 === ** 목차 조회 : `*GET*` Index **
-
-====
+[example]
 `*GET*` 요청을 사용하여 목차에 접근할 수 있습니다.
 
-operation::index-controller-test/index[snippets='http-request,response-body,http-response,links']
+====
+//`*GET*` 요청을 사용하여 목차에 접근할 수 있습니다.
+
+operation::index-controller-test/index[snippets='http-request,http-response,links']
 
 ====
 
 [[resources-member]]
 == ** 회원 **
 
-NOTE: ** Member API **
-
-----
-Member API는 사용자 관련 API Interface를 제공 합니다.
-----
+NOTE: Member API는 사용자 관련 API Interface를 제공 합니다.
 
 [[resources-create-member]]
 === ** 회원 생성 : `*POST*` Member **
-
-====
+[example]
 `*POST*` 요청을 사용하여 회원가입 할 수 있습니다.
 
-operation::member-controller-test/signup[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
+====
+
+operation::member-controller-test/signup[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
 ====
 
 [[resources-authorization]]
 == ** 인증 **
 
-NOTE: ** Authorization API **
-
-----
-Authorization API는 인증 관련 API Interface를 제공 합니다.
-----
+NOTE: ** Authorization API는 인증 관련 API Interface를 제공 합니다. **
 
 [[resources-login]]
 === ** 로그인 : `*POST*` Login **
-
-====
+[example]
 `*POST*` 요청을 사용하여 로그인 할 수 있습니다.
 
-operation::login-controller-test/login[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
-====≤
+====
+
+operation::login-controller-test/login[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
+====
 
 [[resources-refresh]]
 === ** 토큰 갱신 : `*POST*` Refresh **
-
-====
+[example]
 `*POST*` 요청을 사용하여 토큰을 갱신 할 수 있습니다.
 
-operation::login-controller-test/refresh[snippets='http-request,request-headers,response-body,response-fields,http-response']
+====
+
+operation::login-controller-test/refresh[snippets='http-request,request-headers,http-response,response-fields']
 ====
 
 [[resources-post]]
 == ** 게시글 **
 
-NOTE: ** Post API **
-
-----
-Post API는 게시글 관련 API Interface를 제공 합니다.
-----
+NOTE: ** Post API는 게시글 관련 API Interface를 제공 합니다. **
 
 [[resources-create-post]]
 === ** 게시글 생성 : `*POST*` Post **
-
-====
+[example]
 `*POST*` 요청을 사용하여 게시글을 생성할 수 있습니다.
 
-operation::post-controller-test/create[snippets='http-request,request-headers,request-body,request-fields,response-body,response-fields,http-response,links']
+====
+
+operation::post-controller-test/create[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
 ====
 
 [[resources-get-an-post]]
 === ** 게시글 조회 : `*GET*` Post **
-
-====
+[example]
 `*GET*` 요청을 사용하여 게시글을 조회할 수 있습니다.
 
-operation::post-controller-test/find-by-id-and-display-true[snippets='http-request,request-headers,path-parameters,response-fields,response-body,http-response']
+====
+
+operation::post-controller-test/find-by-id-and-display-true[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 ====
 
 [[resources-update-an-post]]
 === ** 게시글 수정 : `*PATCH*` Post **
-
-====
+[example]
 `*PATCH*` 요청을 사용하여 게시글을 수정할 수 있습니다.
 
-operation::post-controller-test/update[snippets='http-request,request-headers,path-parameters,request-fields,request-body,response-fields,response-body,http-response']
+====
+
+operation::post-controller-test/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 ====
 
 [[resources-delte-an-post]]
 === ** 게시글 삭제 : `*DELETE*` Post **
+[example]
+`*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
 
 ====
-`*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
 
 operation::post-controller-test/delete-post[snippets='http-request,request-headers,path-parameters,http-response']
 ====
 
 [[resources-search-posts]]
 === ** 게시글 검색 : `*Search*` Post **
-
-====
+[example]
 `*GET*` 요청을 사용하여 게시글을 검색할 수 있습니다.
 
-operation::post-controller-test/search[snippets='http-request,request-headers,request-parameters,http-response']
 ====
 
----
+operation::post-controller-test/search[snippets='http-request,request-headers,http-response,request-parameters']
+====
