@@ -1,11 +1,16 @@
 package io.example.board.utils.generator.docs.common;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static io.example.board.config.docs.ApiDocumentUtils.createDocument;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 /**
  * @author : choi-ys
@@ -31,6 +36,36 @@ public class CommonFieldDescriptor {
                 fieldWithPath("errorDetails[*].code").description("에러 상세 코드"),
                 fieldWithPath("errorDetails[*].rejectMessage").description("에러 사유"),
                 fieldWithPath("errorDetails[*].rejectedValue").description("에러 발생값")
+        );
+    }
+
+    public static RestDocumentationResultHandler generateCommonPaginationDocument() {
+        return createDocument(
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Response content type")
+                ),
+                responseFields(
+                        commonPaginationFieldWithPath()
+                )
+        );
+    }
+
+    public static List<FieldDescriptor> commonPaginationFieldWithPath(){
+        return Arrays.asList(
+                fieldWithPath("totalPages").description("전페 페이지 수"),
+                fieldWithPath("totalElementCount").description("전체 요소 수"),
+                fieldWithPath("currentPage").description("현제 페이지 번호"),
+                fieldWithPath("currentElementCount").description("현재 페이지의 요수 수"),
+                fieldWithPath("perPageNumber").description("페이지당 요소 수"),
+                fieldWithPath("firstPage").description("첫 페이지 여부"),
+                fieldWithPath("lastPage").description("마지막 페이지 여부"),
+                fieldWithPath("hasNextPage").description("다음 페이지 존재 여부"),
+                fieldWithPath("hasPrevious").description("이전 페이지 존재 여부"),
+                fieldWithPath("embedded[*]").description("응답 본문 배열")
         );
     }
 }
