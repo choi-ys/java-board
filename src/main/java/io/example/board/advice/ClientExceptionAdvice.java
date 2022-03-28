@@ -2,8 +2,8 @@ package io.example.board.advice;
 
 import io.example.board.advice.exception.ResourceNotFoundException;
 import io.example.board.domain.dto.response.error.ErrorCode;
-import io.example.board.domain.dto.response.error.ErrorResource;
-import io.example.board.domain.dto.response.error.MethodArgumentNotValidErrorResource;
+import io.example.board.domain.dto.response.error.ErrorResponse;
+import io.example.board.domain.dto.response.error.MethodArgumentNotValidErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -33,7 +33,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity httpMessageNotReadableException(HttpMessageNotReadableException exception, HttpServletRequest request) {
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResource(ErrorCode.HTTP_MESSAGE_NOT_READABLE, request));
+                .body(new ErrorResponse(ErrorCode.HTTP_MESSAGE_NOT_READABLE, request));
     }
 
     // [400] @Valid를 이용한 유효성 검사 시, @RequestBody의 값이 잘못된 경우 JSR 380 Annotations이 적용된 필드의 Binding Exception
@@ -41,7 +41,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity methodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
         return ResponseEntity
                 .badRequest()
-                .body(new MethodArgumentNotValidErrorResource(
+                .body(new MethodArgumentNotValidErrorResponse(
                         ErrorCode.METHOD_ARGUMENT_NOT_VALID,
                         request,
                         exception.getFieldErrors())
@@ -53,21 +53,21 @@ public class ClientExceptionAdvice {
     public ResponseEntity methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResource(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH, request));
+                .body(new ErrorResponse(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH, request));
     }
 
     // [401] 유효한 자격 증명이 아닌 접근인 경우, Unauthorized Exception
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity AuthenticationException(Exception exception, HttpServletRequest request) {
-        ErrorResource errorResource;
+        ErrorResponse errorResponse;
         if (exception instanceof AuthenticationCredentialsNotFoundException) {
-            errorResource = new ErrorResource(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND, exception.getMessage(), request);
+            errorResponse = new ErrorResponse(ErrorCode.AUTHENTICATION_CREDENTIALS_NOT_FOUND, exception.getMessage(), request);
         } else if (exception instanceof BadCredentialsException) {
-            errorResource = new ErrorResource(ErrorCode.BAD_CREDENTIALS, exception.getMessage(), request);
+            errorResponse = new ErrorResponse(ErrorCode.BAD_CREDENTIALS, exception.getMessage(), request);
         } else {
-            errorResource = new ErrorResource(ErrorCode.UNAUTHORIZED, request);
+            errorResponse = new ErrorResponse(ErrorCode.UNAUTHORIZED, request);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResource);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     // [403] 리소스 접근에 필요한 권한이 존재 하지 않는 경우, Unauthorized Exception
@@ -75,7 +75,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity accessDeniedException(AccessDeniedException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new ErrorResource(ErrorCode.ACCESS_DENIED, exception.getMessage(), request));
+                .body(new ErrorResponse(ErrorCode.ACCESS_DENIED, exception.getMessage(), request));
     }
 
     // [404] 요청에 해당하는 자원이 존재하지 않는 경우
@@ -83,7 +83,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity resourceNotFoundException(ResourceNotFoundException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResource(ErrorCode.RESOURCE_NOT_FOUND, request));
+                .body(new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND, request));
     }
 
     // [405] 허용하지 않는 Http Method 요청인 경우
@@ -91,7 +91,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new ErrorResource(ErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED, request));
+                .body(new ErrorResponse(ErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED, request));
     }
 
     // [406] 요청 Accept Type이 잘못된 경우
@@ -99,7 +99,7 @@ public class ClientExceptionAdvice {
     public ResponseEntity httpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new ErrorResource(ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE, request));
+                .body(new ErrorResponse(ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE, request));
     }
 
     // [415] 요청 Media Type이 잘못된 경우
@@ -107,6 +107,6 @@ public class ClientExceptionAdvice {
     public ResponseEntity httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .body(new ErrorResource(ErrorCode.HTTP_MEDIA_TYPE_NOT_SUPPORTED, request));
+                .body(new ErrorResponse(ErrorCode.HTTP_MEDIA_TYPE_NOT_SUPPORTED, request));
     }
 }

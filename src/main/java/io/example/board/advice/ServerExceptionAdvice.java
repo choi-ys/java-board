@@ -1,7 +1,7 @@
 package io.example.board.advice;
 
 import io.example.board.domain.dto.response.error.ErrorCode;
-import io.example.board.domain.dto.response.error.ErrorResource;
+import io.example.board.domain.dto.response.error.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,7 +26,7 @@ public class ServerExceptionAdvice {
     public ResponseEntity unexpectedException(Exception exception, HttpServletRequest request) {
         exception.printStackTrace();
         return ResponseEntity.internalServerError()
-                .body(new ErrorResource(ErrorCode.SERVER_ERROR, request));
+                .body(new ErrorResponse(ErrorCode.SERVER_ERROR, request));
     }
 
     /**
@@ -42,6 +42,6 @@ public class ServerExceptionAdvice {
     public ResponseEntity unexpectedRuntimeException(RuntimeException runtimeException, HttpServletRequest request) {
         runtimeException.printStackTrace();
         return ResponseEntity.internalServerError()
-                .body(new ErrorResource(ErrorCode.SERVER_ERROR, request));
+                .body(new ErrorResponse(ErrorCode.SERVER_ERROR, request));
     }
 }

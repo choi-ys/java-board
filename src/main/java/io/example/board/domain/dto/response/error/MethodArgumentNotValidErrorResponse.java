@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MethodArgumentNotValidErrorResource extends ErrorResource {
+public class MethodArgumentNotValidErrorResponse extends ErrorResponse {
     private List<ErrorDetail> errorDetails;
 
     // * --------------------------------------------------------------
@@ -22,7 +22,7 @@ public class MethodArgumentNotValidErrorResource extends ErrorResource {
     // * @author : choi-ys
     // * @date : 2021/09/21 6:24 오후
     // * --------------------------------------------------------------
-    public MethodArgumentNotValidErrorResource(ErrorCode errorCode, HttpServletRequest httpServletRequest, List<FieldError> fieldErrors) {
+    public MethodArgumentNotValidErrorResponse(ErrorCode errorCode, HttpServletRequest httpServletRequest, List<FieldError> fieldErrors) {
         super(errorCode, httpServletRequest);
         this.errorDetails = ErrorDetail.mapTo(fieldErrors);
     }

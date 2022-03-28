@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ErrorResource {
+public class ErrorResponse {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime timestamp;
@@ -33,7 +33,7 @@ public class ErrorResource {
     // * @author : choi-ys
     // * @date : 2021/09/21 6:23 오후
     // * --------------------------------------------------------------
-    public ErrorResource(ErrorCode errorCode, HttpServletRequest httpServletRequest) {
+    public ErrorResponse(ErrorCode errorCode, HttpServletRequest httpServletRequest) {
         this.code = errorCode.name();
         this.message = errorCode.message;
         this.method = httpServletRequest.getMethod();
@@ -46,7 +46,7 @@ public class ErrorResource {
     // * @author : choi-ys
     // * @date : 2021/09/23 3:02 오전
     // * --------------------------------------------------------------
-    public ErrorResource(ErrorCode errorCode, String message, HttpServletRequest httpServletRequest) {
+    public ErrorResponse(ErrorCode errorCode, String message, HttpServletRequest httpServletRequest) {
         this.code = errorCode.name();
         this.message = StringUtils.hasText(message) ? message : errorCode.message;
         this.method = httpServletRequest.getMethod();
