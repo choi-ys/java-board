@@ -87,3 +87,7 @@ run : java -jar {your repository path}/build/libs/java-board-0.0.1-SNAPSHOT.jar
     │          └─docs : Generated api docs by spring-rest-docs
     └─test : application test cases
 ```
+
+---
+## Configuration
+ - [Spring REST Docs snippet template](https://gist.github.com/choi-ys/8d7c76968fb6a0d272a084f8ff46daaf)
