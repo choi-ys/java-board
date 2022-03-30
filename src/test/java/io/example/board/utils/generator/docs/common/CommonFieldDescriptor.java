@@ -1,16 +1,11 @@
 package io.example.board.utils.generator.docs.common;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static io.example.board.config.docs.ApiDocumentUtils.createDocument;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 /**
  * @author : choi-ys
@@ -39,22 +34,7 @@ public class CommonFieldDescriptor {
         );
     }
 
-    public static RestDocumentationResultHandler generateCommonPaginationDocument() {
-        return createDocument(
-                requestHeaders(
-                        headerWithName(HttpHeaders.ACCEPT).description("accept type header"),
-                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
-                ),
-                responseHeaders(
-                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Response content type")
-                ),
-                responseFields(
-                        commonPaginationFieldWithPath()
-                )
-        );
-    }
-
-    public static List<FieldDescriptor> commonPaginationFieldWithPath(){
+    public static List<FieldDescriptor> commonPaginationFieldWithPath() {
         return Arrays.asList(
                 fieldWithPath("totalPages").description("전페 페이지 수"),
                 fieldWithPath("totalElementCount").description("전체 요소 수"),
