@@ -1,6 +1,9 @@
-package io.example.board.controller;
+package io.example.board.controller.common;
 
+import io.example.board.domain.rdb.base.EnumType;
+import io.example.board.domain.rdb.member.MemberStatus;
 import io.example.board.repository.rdb.common.PageResponse;
+import io.example.board.utils.generator.docs.custom.EnumDocument;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.MediaTypes;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author : choi-ys
@@ -33,5 +39,20 @@ public class CommonDocsSnippetController {
                         0
                 )
         ));
+    }
+
+    @GetMapping("enum")
+    public ResponseEntity enumDocs() {
+        return ResponseEntity.ok(EnumDocument.of(
+                getDocs(MemberStatus.values())
+        ));
+    }
+
+    private Map<String, String> getDocs(EnumType[] enumTypes) {
+        return Arrays.stream(enumTypes)
+                .collect(Collectors.toMap(
+                        EnumType::getName,
+                        EnumType::getDescription
+                ));
     }
 }
