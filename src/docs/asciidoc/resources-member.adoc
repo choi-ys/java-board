@@ -1,0 +1,16 @@
+[[resources-member]]
+== ** 회원 **
+
+NOTE: Member API는 사용자 관련 API Interface를 제공 합니다.
+
+[[resources-create-member]]
+=== ** 회원 생성 : `*POST*` Member **
+[example]
+`*POST*` 요청을 사용하여 회원가입 할 수 있습니다.
+
+====
+
+operation::member-controller-test/signup[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
+
+operation::common-docs-snippet-controller-test/enum-docs[snippets='enum-response-fields-memberStatus']
+====
