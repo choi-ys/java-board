@@ -150,6 +150,12 @@ asciidoctor {
     configurations 'asciidoctorExtensions'
     inputs.dir snippetsDir
     dependsOn test
+
+//    sources{
+//        include("**/index.adoc","**/common/*.adoc")
+//    }
+
+    baseDirFollowsSourceFile()
 }
 
 task copyDocument(type: Copy) {

@@ -1,0 +1,54 @@
+[[resources-post]]
+== ** 게시글 **
+
+NOTE: ** Post API는 게시글 관련 API Interface를 제공 합니다. **
+
+[[resources-create-post]]
+=== ** 게시글 생성 : `*POST*` Post **
+[example]
+`*POST*` 요청을 사용하여 게시글을 생성할 수 있습니다.
+
+====
+
+operation::post-controller-test/create[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
+====
+
+[[resources-get-an-post]]
+=== ** 게시글 조회 : `*GET*` Post **
+[example]
+`*GET*` 요청을 사용하여 게시글을 조회할 수 있습니다.
+
+====
+
+operation::post-controller-test/find-by-id-and-display-true[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+====
+
+[[resources-update-an-post]]
+=== ** 게시글 수정 : `*PATCH*` Post **
+[example]
+`*PATCH*` 요청을 사용하여 게시글을 수정할 수 있습니다.
+
+====
+
+operation::post-controller-test/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+====
+
+[[resources-delte-an-post]]
+=== ** 게시글 삭제 : `*DELETE*` Post **
+[example]
+`*DELETE*` 요청을 사용하여 게시글을 수정할 수 있습니다.
+
+====
+
+operation::post-controller-test/delete-post[snippets='http-request,request-headers,path-parameters,http-response']
+====
+
+[[resources-search-posts]]
+=== ** 게시글 검색 : `*Search*` Post **
+[example]
+`*GET*` 요청을 사용하여 게시글을 검색할 수 있습니다.
+
+====
+
+operation::post-controller-test/search[snippets='http-request,request-headers,http-response,request-parameters']
+====

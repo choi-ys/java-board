@@ -1,0 +1,24 @@
+[[resources-authorization]]
+== ** 인증 **
+
+NOTE: ** Authorization API는 인증 관련 API Interface를 제공 합니다. **
+
+[[resources-login]]
+=== ** 로그인 : `*POST*` Login **
+[example]
+`*POST*` 요청을 사용하여 로그인 할 수 있습니다.
+
+====
+
+operation::login-controller-test/login[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
+====
+
+[[resources-refresh]]
+=== ** 토큰 갱신 : `*POST*` Refresh **
+[example]
+`*POST*` 요청을 사용하여 토큰을 갱신 할 수 있습니다.
+
+====
+
+operation::login-controller-test/refresh[snippets='http-request,request-headers,http-response,response-fields']
+====
