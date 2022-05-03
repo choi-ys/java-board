@@ -14,3 +14,13 @@ operation::member-controller-test/signup[snippets='http-request,request-headers,
 
 operation::common-docs-snippet-controller-test/enum-docs[snippets='enum-response-fields-memberStatus']
 ====
+
+[[resources-get-an-member]]
+=== ** 회원 조회 : `*GET*` Member **
+[example]
+`*GET*` 요청을 사용하여 특정 회원을 조회할 수 있습니다.
+
+====
+
+operation::member-controller-test/get-an-member-test[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+====

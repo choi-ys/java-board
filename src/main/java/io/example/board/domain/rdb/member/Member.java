@@ -1,17 +1,28 @@
 package io.example.board.domain.rdb.member;
 
+import static javax.persistence.FetchType.EAGER;
+
 import io.example.board.domain.rdb.base.Auditor;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static javax.persistence.FetchType.EAGER;
 
 /**
  * @author : choi-ys
@@ -20,11 +31,11 @@ import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(
-        name = "member_tb",
-        uniqueConstraints = @UniqueConstraint(
-                name = "MEMBER_EMAIL_UNIQUE",
-                columnNames = "email"
-        )
+    name = "member_tb",
+    uniqueConstraints = @UniqueConstraint(
+        name = "MEMBER_EMAIL_UNIQUE",
+        columnNames = "email"
+    )
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,14 +60,17 @@ public class Member extends Auditor {
 
     @ElementCollection(fetch = EAGER)
     @CollectionTable(
-            name = "member_role_tb",
-            joinColumns = @JoinColumn(
-                    name = "member_id",
-                    foreignKey = @ForeignKey(name = "TB_MEMBER_ROLE_MEMBER_ID_FOREIGN_KEY")
-            )
+        name = "member_role_tb",
+        joinColumns = @JoinColumn(
+            name = "member_id",
+            foreignKey = @ForeignKey(name = "TB_MEMBER_ROLE_MEMBER_ID_FOREIGN_KEY")
+        )
     )
     @Enumerated(EnumType.STRING)
     private Set<MemberRole> roles = new HashSet<>();
+
+    @Column(name = "memberStatus", nullable = false, length = 30)
+    private MemberStatus memberStatus;
 
     @Column(name = "certify", nullable = false)
     private boolean certify;
@@ -74,6 +88,7 @@ public class Member extends Auditor {
         this.password = password;
         this.name = name;
         this.nickname = nickname;
+        this.memberStatus = MemberStatus.ACCEPTED_BUT_DISABLED;
         addRoles(Set.of(MemberRole.MEMBER));
     }
 
@@ -93,7 +108,7 @@ public class Member extends Auditor {
     public Set<SimpleGrantedAuthority> mapToSimpleGrantedAuthority() {
         final String rolePrefix = "ROLE_";
         return roles.stream()
-                .map(it -> new SimpleGrantedAuthority(rolePrefix + it))
-                .collect(Collectors.toSet());
+            .map(it -> new SimpleGrantedAuthority(rolePrefix + it))
+            .collect(Collectors.toSet());
     }
 }
