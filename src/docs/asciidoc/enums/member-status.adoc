@@ -1,0 +1,5 @@
+:doctype: book
+:icons: font
+
+[[member-status]]
+include::{snippets}/common-docs-snippet-controller-test/enum-docs/enum-response-fields-memberStatus.adoc[]

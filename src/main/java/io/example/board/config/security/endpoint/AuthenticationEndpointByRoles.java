@@ -1,9 +1,8 @@
 package io.example.board.config.security.endpoint;
 
-import org.springframework.http.HttpMethod;
-
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author : choi-ys
@@ -12,24 +11,24 @@ import java.util.List;
 public enum AuthenticationEndpointByRoles {
 
     NONE(Arrays.asList(
-            new AuthenticationRequest(HttpMethod.GET, Arrays.asList(
-                    "/post/**", "/index/**"
-            )),
-            new AuthenticationRequest(HttpMethod.POST, Arrays.asList(
-                    "/member",
-                    "/login"
-            ))
+        new AuthenticationRequest(HttpMethod.GET, Arrays.asList(
+            "/post/**", "/index/**", "/docs/**"
+        )),
+        new AuthenticationRequest(HttpMethod.POST, Arrays.asList(
+            "/member",
+            "/login"
+        ))
     )),
     MEMBER(Arrays.asList(
-            new AuthenticationRequest(HttpMethod.POST, Arrays.asList(
-                    "/refresh", "/post"
-            )),
-            new AuthenticationRequest(HttpMethod.PATCH, Arrays.asList(
-                    "/post"
-            )),
-            new AuthenticationRequest(HttpMethod.DELETE, Arrays.asList(
-                    "/post/**"
-            ))
+        new AuthenticationRequest(HttpMethod.POST, Arrays.asList(
+            "/refresh", "/post"
+        )),
+        new AuthenticationRequest(HttpMethod.PATCH, Arrays.asList(
+            "/post"
+        )),
+        new AuthenticationRequest(HttpMethod.DELETE, Arrays.asList(
+            "/post/**"
+        ))
     ));
 
     private List<AuthenticationRequest> matchers;
@@ -40,10 +39,10 @@ public enum AuthenticationEndpointByRoles {
 
     public String[] patterns(HttpMethod httpMethod) {
         return matchers.stream()
-                .filter(it -> it.getHttpMethod().equals(httpMethod))
-                .map(it -> it.getScope())
-                .flatMap(arr -> Arrays.stream(arr.toArray(String[]::new)))
-                .toArray(String[]::new)
-                ;
+            .filter(it -> it.getHttpMethod().equals(httpMethod))
+            .map(it -> it.getScope())
+            .flatMap(arr -> Arrays.stream(arr.toArray(String[]::new)))
+            .toArray(String[]::new)
+            ;
     }
 }

@@ -1,6 +1,8 @@
 package io.example.board.utils.generator.docs;
 
 import static io.example.board.config.docs.ApiDocumentUtils.createDocument;
+import static io.example.board.utils.generator.docs.common.EnumDocumentLinkGenerator.TargetEnum.MEMBER_STATUS;
+import static io.example.board.utils.generator.docs.common.EnumDocumentLinkGenerator.enumLinkGenerator;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -71,7 +73,7 @@ public class MemberDocumentGenerator {
                 fieldWithPath("email").description("사용자 이메일"),
                 fieldWithPath("name").description("사용자 이름"),
                 fieldWithPath("nickname").description("사용자 닉네임"),
-                fieldWithPath("memberStatus").description("사용자 상태")
+                fieldWithPath("memberStatus").description(enumLinkGenerator(MEMBER_STATUS))
             )
         );
     }

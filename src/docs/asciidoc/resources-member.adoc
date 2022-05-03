@@ -23,5 +23,4 @@ operation::member-controller-test/signup[snippets='http-request,request-headers,
 
 operation::member-controller-test/get-an-member-test[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
-operation::common-docs-snippet-controller-test/enum-docs[snippets='enum-response-fields-memberStatus']
 ====
