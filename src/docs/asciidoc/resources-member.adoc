@@ -12,5 +12,16 @@ NOTE: Member API는 사용자 관련 API Interface를 제공 합니다.
 
 operation::member-controller-test/signup[snippets='http-request,request-headers,request-fields,http-response,response-fields,links']
 
+====
+
+[[resources-get-an-member]]
+=== ** 회원 조회 : `*GET*` Member **
+[example]
+`*GET*` 요청을 사용하여 특정 회원을 조회할 수 있습니다.
+
+====
+
+operation::member-controller-test/get-an-member-test[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
 operation::common-docs-snippet-controller-test/enum-docs[snippets='enum-response-fields-memberStatus']
 ====
